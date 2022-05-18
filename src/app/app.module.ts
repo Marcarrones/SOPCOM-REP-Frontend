@@ -4,17 +4,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { CriterionComponent } from './criterion/criterion.component';
+import { MatInputModule } from '@angular/material/input';
+import { MethodChunkComponent } from './components/method-chunk/method-chunk.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CriterionComponent
+    MethodChunkComponent,
   ],
   imports: [
     BrowserModule,
     NoopAnimationsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatInputModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
