@@ -14,16 +14,46 @@ export class MethodChunkComponent implements OnInit {
 
   @Input() id: string;
   
-  private methodChunk: MethodChunk;
-  
+  private methodChunk;
+
   constructor(
-    private endpoint: EndpointService
+    private endpointService: EndpointService
   ) { }
 
   ngOnInit(): void {
     if(this.id !== undefined) {
-      this.endpoint.getMethodChunkById(this.id).subscribe(data => console.log(data))
+      this.endpointService.getMethodChunkById(this.id).subscribe(data => this.methodChunk = this.parseMethodChunk(data))
     }
+  }
+
+  private parseMethodChunk(data) {
+    console.log(data)
+    const goal = new Goal(data['Intention'][0]['id'], data['Intention'][0]['name']);
+    console.log(goal);
+    let tools: MethodElement[] = [];
+    let productPart: MethodElement[] = [];
+    let roles: MethodElement[] = [];
+    let situation: MethodElement[] = [];
+    let contextCriteria: Criterion[] = [];
+    for(let t in data['Tools']){
+      tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data['Tools'][t]['description'], "", 1))
+    }
+    for(let t in data['Situation']){
+      situation.push(new MethodElement(data['Situation'][t]['id'], data['Situation'][t]['name'], data['Situation'][t]['description'], "", 2))
+    }
+    for(let t in data['Product part']){
+      productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data['Product part'][t]['description'], "", 2))
+    }
+    for(let t in data['Roles']){
+      roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data['Roles'][t]['description'], "", 4))
+    }
+    let activity: MethodElement = new MethodElement(data["Process part"][0]["id"], data["Process part"][0]["id"], data["Process part"][0]["id"], "", 3);
+    console.log(tools);
+    console.log(productPart);
+    console.log(roles);
+    console.log(situation);
+    console.log(activity);
+    return null;
   }
 
 }

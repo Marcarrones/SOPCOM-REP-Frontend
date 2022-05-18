@@ -3,14 +3,14 @@ export class MethodElement {
     private name: string;
     private description: string;
     private figure: string;
-    private type: string;
+    private type: number;
 
     constructor(
         id: string, 
         name: string, 
         description: string, 
         figure: string, 
-        type: string
+        type: number
     ) {
         this.id = id
         this.name = name
