@@ -4,6 +4,7 @@ import { MethodElement } from 'src/app/models/method-element';
 import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
+import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-method-chunk',
@@ -14,7 +15,10 @@ export class MethodChunkComponent implements OnInit {
 
   @Input() id: string;
   
-  private methodChunk;
+  public mode: ProgressSpinnerMode = 'indeterminate';
+  public loaded = false;
+
+  public methodChunk;
 
   constructor(
     private endpointService: EndpointService
@@ -22,7 +26,11 @@ export class MethodChunkComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.id !== undefined) {
-      this.endpointService.getMethodChunkById(this.id).subscribe(data => this.methodChunk = this.parseMethodChunk(data))
+      this.endpointService.getMethodChunkById(this.id).subscribe(data => {
+        this.methodChunk = this.parseMethodChunk(data)
+        setTimeout(() => {this.loaded = true;}, 2000)
+        
+      })
     }
   }
 
@@ -53,7 +61,7 @@ export class MethodChunkComponent implements OnInit {
     console.log(roles);
     console.log(situation);
     console.log(activity);
-    return null;
+    return new MethodChunk(data['0']['id'], data['0']['name'], data['0']['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, []);
   }
 
 }
