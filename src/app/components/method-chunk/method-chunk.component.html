@@ -1,128 +1,144 @@
 <b style="font-size: 40;"> Method Chunk</b>
 <ng-container *ngIf="this.loaded; else loading">
-    <div>
-        <p>General information</p>
-        <form>
-            <mat-form-field style="width: 100%;">
-                <mat-label>ID</mat-label>
-                <input matInput [disabled]="this.id !== undefined" [value]="this.id">
-            </mat-form-field>
-            <mat-form-field style="width: 100%;">
-                <mat-label>Name</mat-label>
-                <input matInput [value]="this.methodChunk.name">
-            </mat-form-field>
-            <mat-form-field style="width: 100%;">
-                <mat-label>Description</mat-label>
-                <input matInput [value]="this.methodChunk.description">
-            </mat-form-field>
-            <!--
-            <mat-form-field style="width: 100%;">
-                <mat-checkbox>
-                Abstract 
-                </mat-checkbox>
-            </mat-form-field>-->
-        </form>
-    </div>
-    <div>
-        <p>Intention</p>
-        <form>
-            <mat-form-field style="width: 100%;">
-                <mat-label>Goal</mat-label>
-                <input matInput [disabled]="this.id !== undefined" [value]="this.methodChunk.intention.name">
-            </mat-form-field>
-        </form>
-    </div>
-    <div>
-        <p>Activity</p>
-        <form>
-            <mat-form-field style="width: 100%;">
-                <mat-label>ID</mat-label>
-                <input matInput [disabled]="this.id !== undefined" [value]="this.methodChunk.processPart.id">
-            </mat-form-field>
-            <mat-form-field style="width: 100%;">
-                <mat-label>Name</mat-label>
-                <input matInput [value]="this.methodChunk.processPart.name">
-            </mat-form-field>
-            <mat-form-field style="width: 100%;">
-                <mat-label>Description</mat-label>
-                <input matInput [value]="this.methodChunk.processPart.description">
-            </mat-form-field>
-        </form>
+    <div style="display: flex; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
+        <div style="margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
+            <p>General information</p>
+            <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="this.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="this.methodChunk.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="this.methodChunk.description">
+                    </mat-form-field>
+                    <!--
+                    <mat-form-field style="width: 100%;">
+                        <mat-checkbox>
+                        Abstract 
+                        </mat-checkbox>
+                    </mat-form-field>-->
+                </form>
+            </div>
+            <div>
+                <p>Intention</p>
+                <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em;">
+                    <form>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Goal</mat-label>
+                            <input matInput [disabled]="this.id !== undefined" [value]="this.methodChunk.intention.name">
+                        </mat-form-field>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div>
+            <p>Activity</p>
+            <div class="method-element-div">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="this.methodChunk.processPart.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="this.methodChunk.processPart.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="this.methodChunk.processPart.description">
+                    </mat-form-field>
+                </form>
+            </div>
+        </div>
     </div>
     <div>
         <p>Tools</p>
         <ng-container *ngFor="let t of this.methodChunk.tools" style="width: 100px;">
-            <form>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>ID</mat-label>
-                    <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Name</mat-label>
-                    <input matInput [value]="t.name">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Description</mat-label>
-                    <input matInput [value]="t.description">
-                </mat-form-field>
-            </form>
+            <div class="method-element-div">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="t.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="t.description">
+                    </mat-form-field>
+                </form>
+            </div>
         </ng-container>
     </div>
     <div>
         <p>Situation</p>
         <ng-container *ngFor="let t of this.methodChunk.situation">
-            <form>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>ID</mat-label>
-                    <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Name</mat-label>
-                    <input matInput [value]="t.name">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Description</mat-label>
-                    <input matInput [value]="t.description">
-                </mat-form-field>
-            </form>
+            <div class="method-element-div">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="t.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="t.description">
+                    </mat-form-field>
+                </form>
+            </div>
         </ng-container>
     </div>
     <div>
         <p>Product part</p>
         <ng-container *ngFor="let t of this.methodChunk.productPart">
-            <form>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>ID</mat-label>
-                    <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Name</mat-label>
-                    <input matInput [value]="t.name">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Description</mat-label>
-                    <input matInput [value]="t.description">
-                </mat-form-field>
-            </form>
+            <div class="method-element-div">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="t.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="t.description">
+                    </mat-form-field>
+                </form>
+            </div>
         </ng-container>
     </div>
     <div>
         <p>Roles</p>
         <ng-container *ngFor="let t of this.methodChunk.roles">
-            <form>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>ID</mat-label>
-                    <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Name</mat-label>
-                    <input matInput [value]="t.name">
-                </mat-form-field>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Description</mat-label>
-                    <input matInput [value]="t.description">
-                </mat-form-field>
-            </form>
+            <div class="method-element-div">
+                <form>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>ID</mat-label>
+                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Name</mat-label>
+                        <input matInput [value]="t.name">
+                    </mat-form-field>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>Description</mat-label>
+                        <input matInput [value]="t.description">
+                    </mat-form-field>
+                </form>
+            </div>
         </ng-container>
     </div>
 </ng-container>

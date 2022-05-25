@@ -1,0 +1,7 @@
+.method-element-div {
+    width: 250px;
+    display: inline-block;
+    margin: 10px;
+    border: 1px solid #99cccc;
+    padding: 1em;
+}

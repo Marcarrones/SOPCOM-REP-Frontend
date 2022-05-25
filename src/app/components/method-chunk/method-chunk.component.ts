@@ -5,6 +5,7 @@ import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-method-chunk',
@@ -19,6 +20,12 @@ export class MethodChunkComponent implements OnInit {
   public loaded = false;
 
   public methodChunk;
+
+  idFormControl = new FormControl('');
+  nameFormControl = new FormControl('');
+  descriptionFormControl = new FormControl('');
+  intentionFormControl = new FormControl('');
+  processPartFormControl = new FormControl('');
 
   constructor(
     private endpointService: EndpointService
@@ -55,7 +62,7 @@ export class MethodChunkComponent implements OnInit {
     for(let t in data['Roles']){
       roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data['Roles'][t]['description'], "", 4))
     }
-    let activity: MethodElement = new MethodElement(data["Process part"][0]["id"], data["Process part"][0]["id"], data["Process part"][0]["id"], "", 3);
+    let activity: MethodElement = new MethodElement(data["Process part"][0]["id"], data["Process part"][0]["name"], data["Process part"][0]["description"], "", 3);
     console.log(tools);
     console.log(productPart);
     console.log(roles);
