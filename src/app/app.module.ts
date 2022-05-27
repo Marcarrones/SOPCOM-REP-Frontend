@@ -11,12 +11,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './components/home/home/home.component';
+import { MethodElementComponent } from './components/method-element/method-element-detail/method-element.component';
+import { MethodElementListComponent } from './components/method-element/method-element-list/method-element-list.component';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
     AppComponent,
     MethodChunkComponent,
     HomeComponent,
+    MethodElementComponent,
+    MethodElementListComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,7 +31,8 @@ import { HomeComponent } from './components/home/home/home.component';
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
     MatCheckboxModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

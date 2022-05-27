@@ -12,7 +12,7 @@ export class Values {
 
     static RESOURCES = {
         METHOD_CHUNK: 'method-chunk',
-        METHOD_ELEMENT: 'method_element',
+        METHOD_ELEMENT: 'method-element',
         CRITERION: 'criterion',
         GOAL: 'goal',
         RELATIONS: 'relations',

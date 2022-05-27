@@ -20,4 +20,10 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response))
   }
 
+  public getAllMethodElementsByType(type) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '?type=' + type;
+    console.log(request)
+    return this.http.get<any[]>(request).pipe(map(response => response))
+  }
+
 }
