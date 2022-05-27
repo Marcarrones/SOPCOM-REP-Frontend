@@ -6,9 +6,9 @@ export class MethodChunk {
     private id: string;
     private name: string;
     private description: string;
-    private abstract: boolean;
-    private intention: Goal;
-    private processPart: MethodElement;
+    private abstract: boolean | null;
+    private intention: Goal | null;
+    private processPart: MethodElement | null;
     private tools: MethodElement[];
     private situation: MethodElement[];
     private productPart: MethodElement[];
@@ -20,9 +20,9 @@ export class MethodChunk {
         id: string, 
         name: string, 
         description: string, 
-        abstract: boolean, 
-        intention: Goal, 
-        processPart: MethodElement, 
+        abstract: boolean | null, 
+        intention: Goal | null, 
+        processPart: MethodElement | null, 
         tools: MethodElement[], 
         situation: MethodElement[], 
         productPart: MethodElement[], 

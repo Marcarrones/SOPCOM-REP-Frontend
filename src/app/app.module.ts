@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     HttpClientModule,
     MatProgressSpinnerModule,
     BrowserAnimationsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -32,12 +32,16 @@ export class MethodChunkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.id)
     if(this.id !== undefined) {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {
         this.methodChunk = this.parseMethodChunk(data)
         setTimeout(() => {this.loaded = true;}, 2000)
         
       })
+    } else {
+      this.methodChunk = new MethodChunk("", "", "", false, new Goal(0, ""), new MethodElement("", "", "", "", 3), [], [], [], [], []);
+      this.loaded = true;
     }
   }
 
