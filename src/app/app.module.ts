@@ -10,11 +10,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
+import { HomeComponent } from './components/home/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MethodChunkComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
