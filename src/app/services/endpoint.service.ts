@@ -26,4 +26,10 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response))
   }
 
+  public getMethodElement(id) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
+    console.log(request)
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
 }

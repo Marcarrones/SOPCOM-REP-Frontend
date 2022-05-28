@@ -1,1 +1,21 @@
-<p>method-element works!</p>
+<a mat-button routerLink="/tools">&lt;Go back</a>
+<h1>{{this.typeStr}}</h1>
+<ng-container *ngIf="this.loaded; else loading">
+    <form>
+        <mat-form-field style="width: 100%;">
+            <mat-label>ID</mat-label>
+            <input matInput [disabled]="this.id !== undefined" [value]="this.methodElement.id">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Name</mat-label>
+            <input matInput [value]="this.methodElement.name">
+        </mat-form-field>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Description</mat-label>
+            <input matInput [value]="this.methodElement.description">
+        </mat-form-field>
+    </form>
+</ng-container>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
