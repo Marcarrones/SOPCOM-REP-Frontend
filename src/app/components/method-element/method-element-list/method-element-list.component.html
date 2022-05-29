@@ -3,6 +3,7 @@
         <mat-grid-tile>
             <a [routerLink]="['/tool', me.id]">{{me.id}}</a>
             {{me.name}}
+            <button (click)="openDialog(me.id)">HOLA</button>
         </mat-grid-tile>
     </ng-container>
 </mat-grid-list>

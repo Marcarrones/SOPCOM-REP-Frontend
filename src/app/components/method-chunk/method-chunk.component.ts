@@ -32,6 +32,7 @@ export class MethodChunkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.id = "Chu-ReqEli-01";
     console.log(this.id)
     if(this.id !== undefined) {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {

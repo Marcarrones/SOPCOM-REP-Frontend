@@ -11,9 +11,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './components/home/home/home.component';
-import { MethodElementComponent } from './components/method-element/method-element-detail/method-element.component';
+import { MethodElementComponent } from './components/method-element/method-element.component';
 import { MethodElementListComponent } from './components/method-element/method-element-list/method-element-list.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MethodElementDialogComponent } from './components/method-element/method-element-dialog/method-element-dialog.component';
+import { MethodElementDetailComponent } from './components/method-element/method-element-detail/method-element-detail.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +25,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     HomeComponent,
     MethodElementComponent,
     MethodElementListComponent,
+    MethodElementDialogComponent,
+    MethodElementDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     BrowserAnimationsModule,
     MatCheckboxModule,
     AppRoutingModule,
-    MatGridListModule
+    MatGridListModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

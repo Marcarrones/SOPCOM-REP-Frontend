@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EndpointService } from 'src/app/services/endpoint.service';
+import { MethodElementDialogComponent } from 'src/app/components/method-element/method-element-dialog/method-element-dialog.component';
 
 @Component({
   selector: 'app-method-element-list',
@@ -10,17 +12,22 @@ import { EndpointService } from 'src/app/services/endpoint.service';
 export class MethodElementListComponent implements OnInit {
 
   public loading = true;
-  public type: number | undefined = 0;
+  public type;
+  public typeStr;
   public methodElementList: any[] = [];
 
   constructor(
     private endpointService: EndpointService,
-    private router: Router
-  ) { }
+    private route: ActivatedRoute,
+    public dialog: MatDialog
+  ) {
+    this.route.data.subscribe(params => {
+      this.type = params['type'];
+      this.typeStr = params['typeStr'];
+    });
+  }
 
   ngOnInit(): void {
-    this.type = this.getTypeId(this.router.url.slice(1));
-
 
     this.endpointService.getAllMethodElementsByType(this.type).subscribe(data => {
       console.log(data)
@@ -28,11 +35,11 @@ export class MethodElementListComponent implements OnInit {
     })
   }
 
-  private getTypeId(type) {
-    if(type == "tools") return 1;
-    if(type == "artefacts") return 2;
-    if(type == "activities") return 3;
-    if(type == "roles") return 4;
+  openDialog(id) {
+    const dialogRef = this.dialog.open(MethodElementDialogComponent, {
+      width: '250px',
+      data: {id: id},
+    });
   }
 
 }
