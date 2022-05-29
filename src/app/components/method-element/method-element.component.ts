@@ -8,8 +8,6 @@ import { EndpointService } from 'src/app/services/endpoint.service';
 })
 export class MethodElementComponent implements OnInit {
 
-  private paramsWindow;
-
   @Input() id: string;
   @Input() typeStr: string;
   @Input() type: number;
@@ -28,9 +26,12 @@ export class MethodElementComponent implements OnInit {
       console.log("Hola")
       this.endpointService.getMethodElement(this.id).subscribe(data => {
         console.log(data)
-        this.methodElement = this.parseMethodElement(data)
+        if(data['error'] !== undefined) {
+          this.methodElement = this.parseMethodElement(data) 
+        } else {
+          this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
+        }
         setTimeout(() => {this.loaded = true;}, 2000)
-        
       })
     } else {
       this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
@@ -40,5 +41,24 @@ export class MethodElementComponent implements OnInit {
 
   private parseMethodElement(data) {
     return new MethodElement(data['0']['id'], data['0']['name'], data['0']['abstract'], data['0']['description'], data['0']['figure'], this.type, [], [], []);
+  }
+
+  public saveMethodElement() {
+    let data = JSON.stringify(this.methodElement);
+    if(this.id !== undefined) {
+      this.endpointService.updateMethodElement(this.id, data).subscribe({
+
+      })
+    } else {
+      this.endpointService.addMethodElement(data).subscribe({
+
+      })
+    }
+  }
+
+  public deleteMethodElement() {
+    this.endpointService.deleteMethodElement(this.id).subscribe({
+
+    })
   }
 }

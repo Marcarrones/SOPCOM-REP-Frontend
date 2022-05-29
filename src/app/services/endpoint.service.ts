@@ -17,19 +17,34 @@ export class EndpointService {
   public getMethodChunkById(id: string) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     console.log(request)
-    return this.http.get<any[]>(request).pipe(map(response => response))
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getAllMethodElementsByType(type) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '?type=' + type;
     console.log(request)
-    return this.http.get<any[]>(request).pipe(map(response => response))
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getMethodElement(id) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
     console.log(request)
     return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public updateMethodElement(id, data) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
+    return this.http.put<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public addMethodElement(data) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public deleteMethodElement(id) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
+    return this.http.delete<any[]>(request).pipe(map(response => response));
   }
 
 }
