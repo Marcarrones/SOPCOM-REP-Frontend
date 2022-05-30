@@ -16,19 +16,16 @@ export class EndpointService {
 
   public getMethodChunkById(id: string) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
-    console.log(request)
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getAllMethodElementsByType(type) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '?type=' + type;
-    console.log(request)
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getMethodElement(id) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
-    console.log(request)
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 

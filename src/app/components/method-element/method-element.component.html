@@ -1,27 +1,25 @@
 <h1>{{this.typeStr}}</h1>
 <ng-container *ngIf="this.loaded; else loading">
-    <form>
-        <mat-form-field style="width: 100%;">
+    <form [formGroup]="this.methodElementFormGroup">
+        <mat-form-field id="meID" style="width: 100%;" type="text">
             <mat-label>ID</mat-label>
-            <input matInput [disabled]="this.id !== undefined" [value]="this.methodElement.id">
+            <input matInput formControlName="id">
         </mat-form-field>
         <mat-form-field style="width: 100%;">
             <mat-label>Name</mat-label>
-            <input matInput [value]="this.methodElement.name">
+            <input matInput formControlName="name">
         </mat-form-field>
         <mat-form-field style="width: 100%;">
             <mat-label>Description</mat-label>
-            <input matInput [value]="this.methodElement.description">
+            <input matInput formControlName="description">
         </mat-form-field>
-        <!--
-                    <mat-form-field style="width: 100%;">
-                        <mat-checkbox>
-                        Abstract 
-                        </mat-checkbox>
-                    </mat-form-field>-->
+        <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
+        <div></div>
+        <mat-label>Figure</mat-label>
+        <input formControlName="figure" type="file">
     </form>
     <button mat-raised-button color="primary" (click)="saveMethodElement()"> Save </button>
-    <button mat-raised-button color="primary" (click)="deleteMethodElement()"> Save </button>
+    <button mat-raised-button color="primary" (click)="deleteMethodElement()"> Delete </button>
 </ng-container>
 <ng-template #loading>
     <mat-spinner></mat-spinner>

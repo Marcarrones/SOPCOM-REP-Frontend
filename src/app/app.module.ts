@@ -17,6 +17,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from './components/method-element/method-element-dialog/method-element-dialog.component';
 import { MethodElementDetailComponent } from './components/method-element/method-element-detail/method-element-detail.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,9 @@ import { MethodElementDetailComponent } from './components/method-element/method
     AppRoutingModule,
     MatGridListModule,
     MatDialogModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MethodElement } from 'src/app/models/method-element';
 import { EndpointService } from 'src/app/services/endpoint.service';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 @Component({
   selector: 'app-method-element',
   templateUrl: './method-element.component.html',
@@ -16,27 +17,48 @@ export class MethodElementComponent implements OnInit {
   
   public methodElement;
 
+  public methodElementFormGroup: FormGroup = new FormGroup({});
+
   constructor(
     private endpointService: EndpointService
   ) {
-   }
+  }
 
   ngOnInit(): void {
     if(this.id !== undefined && this.id !== null && this.id !== "") {
-      console.log("Hola")
       this.endpointService.getMethodElement(this.id).subscribe(data => {
-        console.log(data)
         if(data['error'] !== undefined) {
-          this.methodElement = this.parseMethodElement(data) 
-        } else {
           this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
+        } else {
+          this.methodElement = this.parseMethodElement(data) 
         }
+        this.buildFormControl();
+        console.log(this.methodElementFormGroup)
+        console.log(this.methodElementFormGroup.get('id'))
         setTimeout(() => {this.loaded = true;}, 2000)
       })
     } else {
       this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
+      this.buildFormControl();
       this.loaded = true;
     }
+  }
+
+  private buildFormControl() {
+    console.log(this.id)
+    this.methodElementFormGroup = new FormGroup({
+      id: new FormControl({value:this.methodElement.id, disabled: this.id !== undefined && this.id !== null}),
+      name: new FormControl(this.methodElement.name),
+      description: new FormControl(this.methodElement.description),
+      abstract: new FormControl(this.methodElement.abstract),
+      figure: new FormControl(this.methodElement.figure)
+    })
+    this.methodElementFormGroup.valueChanges.subscribe(values => {
+      if(this.id === undefined || this.id === null) this.methodElement.id = values['id'];
+      this.methodElement.name = values['name'];
+      this.methodElement.description = values['description'];
+      this.methodElement.abstract = values['abstract']
+    })
   }
 
   private parseMethodElement(data) {
@@ -45,20 +67,23 @@ export class MethodElementComponent implements OnInit {
 
   public saveMethodElement() {
     let data = JSON.stringify(this.methodElement);
-    if(this.id !== undefined) {
-      this.endpointService.updateMethodElement(this.id, data).subscribe({
-
+    if(this.id !== undefined && this.id !== null) {
+      console.log("Update method element", this.methodElement, this.methodElementFormGroup.controls['description'])
+      this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
+        console.log("UPDATE", data)
       })
     } else {
-      this.endpointService.addMethodElement(data).subscribe({
-
+      console.log("Post method element", this.methodElement)
+      this.endpointService.addMethodElement(data).subscribe( data => {
+        console.log("POST", data)
       })
     }
   }
 
   public deleteMethodElement() {
-    this.endpointService.deleteMethodElement(this.id).subscribe({
-
+    console.log("Delete method element", this.methodElement)
+    this.endpointService.deleteMethodElement(this.id).subscribe( data => {
+      console.log("DELETE", data)
     })
   }
 }
