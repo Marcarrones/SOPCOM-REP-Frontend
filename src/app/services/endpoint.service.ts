@@ -44,4 +44,29 @@ export class EndpointService {
     return this.http.delete<any[]>(request).pipe(map(response => response));
   }
 
+  public getAllCriterions() {
+    const request = this.URL + Values.RESOURCES.CRITERION;
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public getCriterionById(id) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public addCriterion(data) {
+    const request = this.URL + Values.RESOURCES.CRITERION;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public updateCriterion(id, data) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
+    return this.http.put<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public deleteCriterion(id) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
+    return this.http.delete<any[]>(request).pipe(map(response => response));
+  }
+  
 }

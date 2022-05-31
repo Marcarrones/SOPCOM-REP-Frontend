@@ -4,6 +4,8 @@ import { MethodChunkComponent } from './components/method-chunk/method-chunk.com
 import { HomeComponent } from './components/home/home/home.component';
 import { MethodElementDetailComponent } from './components/method-element/method-element-detail/method-element-detail.component';
 import { MethodElementListComponent } from './components/method-element/method-element-list/method-element-list.component';
+import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
+import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
 
 const routes: Routes = [
   {path: 'method-chunk/:id', component: MethodChunkComponent},
@@ -21,7 +23,9 @@ const routes: Routes = [
   {path: 'role/:id', component: MethodElementDetailComponent, data: {type: 4, typeStr: "Role"}},
   {path: 'role', component: MethodElementDetailComponent, data: {type: 4, typeStr: "Role"}},
   {path: 'roles', component: MethodElementListComponent, data: {type: 4, typeStr: "Role"}},
-  //{path: 'criterion', component: MethodChunkComponent},
+  {path: 'criterion/:id', component: CriterionDetailComponent},
+  {path: 'criterion', component: CriterionDetailComponent},
+  {path: 'criterions', component: CriterionListComponent},
   {path: '', component: HomeComponent},
   {path: '**', redirectTo: '', pathMatch: 'full'},
 ];

@@ -21,6 +21,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { CriterionComponent } from './components/criterion/criterion.component';
+import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
+import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
+import { CriterionDialogComponent } from './components/criterion/criterion-dialog/criterion-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
     MethodElementListComponent,
     MethodElementDialogComponent,
     MethodElementDetailComponent,
+    CriterionComponent,
+    CriterionListComponent,
+    CriterionDetailComponent,
+    CriterionDialogComponent,
   ],
   imports: [
     BrowserModule,
