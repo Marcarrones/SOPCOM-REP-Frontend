@@ -53,6 +53,7 @@
                         <mat-label>Description</mat-label>
                         <input matInput [value]="this.methodChunk.processPart.description">
                     </mat-form-field>
+                    <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
                 </form>
             </div>
         </div>

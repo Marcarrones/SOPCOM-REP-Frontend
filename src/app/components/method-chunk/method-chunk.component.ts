@@ -6,6 +6,8 @@ import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
 
 @Component({
   selector: 'app-method-chunk',
@@ -28,7 +30,8 @@ export class MethodChunkComponent implements OnInit {
   processPartFormControl = new FormControl('');
 
   constructor(
-    private endpointService: EndpointService
+    private endpointService: EndpointService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -74,6 +77,13 @@ export class MethodChunkComponent implements OnInit {
     console.log(situation);
     console.log(activity);
     return new MethodChunk(data['0']['id'], data['0']['name'], data['0']['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, []);
+  }
+
+  openMethodElementDialog(id, type, typeStr) {
+    const dialogRef = this.dialog.open(MethodElementDialogComponent, {
+      width: '1000px',
+      data: {id: id, type: type, typeStr: typeStr},
+    });
   }
 
 }

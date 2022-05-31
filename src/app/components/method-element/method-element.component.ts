@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MethodElement } from 'src/app/models/method-element';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-method-element',
   templateUrl: './method-element.component.html',
@@ -9,7 +10,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 })
 export class MethodElementComponent implements OnInit {
 
-  @Input() id: string;
+  @Input() id: string | null;
   @Input() typeStr: string;
   @Input() type: number;
 
@@ -20,7 +21,8 @@ export class MethodElementComponent implements OnInit {
   public methodElementFormGroup: FormGroup = new FormGroup({});
 
   constructor(
-    private endpointService: EndpointService
+    private endpointService: EndpointService,
+    private router: Router
   ) {
   }
 
@@ -28,6 +30,7 @@ export class MethodElementComponent implements OnInit {
     if(this.id !== undefined && this.id !== null && this.id !== "") {
       this.endpointService.getMethodElement(this.id).subscribe(data => {
         if(data['error'] !== undefined) {
+          this.id = null;
           this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
         } else {
           this.methodElement = this.parseMethodElement(data) 
