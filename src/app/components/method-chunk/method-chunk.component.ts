@@ -59,16 +59,16 @@ export class MethodChunkComponent implements OnInit {
     let situation: MethodElement[] = [];
     let contextCriteria: Criterion[] = [];
     for(let t in data['Tools']){
-      //tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data['Tools'][t]['description'], "", 1))
+      tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data["Process part"][0]["abstract"], data['Tools'][t]['description'], "", 1, [], [], []))
     }
     for(let t in data['Situation']){
-      //situation.push(new MethodElement(data['Situation'][t]['id'], data['Situation'][t]['name'], data['Situation'][t]['description'], "", 2))
+      situation.push(new MethodElement(data['Situation'][t]['id'], data['Situation'][t]['name'], data["Process part"][0]["abstract"], data['Situation'][t]['description'], "", 2, [], [], []))
     }
     for(let t in data['Product part']){
-      //productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data['Product part'][t]['description'], "", 2))
+      productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data["Process part"][0]["abstract"], data['Product part'][t]['description'], "", 2, [], [], []))
     }
     for(let t in data['Roles']){
-      //roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data['Roles'][t]['description'], "", 4))
+      roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"][0]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []))
     }
     let activity: MethodElement = new MethodElement(data["Process part"][0]["id"], data["Process part"][0]["name"], data["Process part"][0]["abstract"], data["Process part"][0]["description"], "", 3, [], [], []);
     console.log(tools);

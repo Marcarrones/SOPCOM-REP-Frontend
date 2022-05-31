@@ -20,6 +20,7 @@ import { MethodElementDetailComponent } from './components/method-element/method
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatDialogModule,
     ReactiveFormsModule,
     FormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

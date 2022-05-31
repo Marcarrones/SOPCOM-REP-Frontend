@@ -76,6 +76,7 @@
                         <input matInput [value]="t.description">
                     </mat-form-field>
                 </form>
+                <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 1, 'Tool')"> Edit </button>
             </div>
         </ng-container>
     </div>
@@ -97,6 +98,7 @@
                         <input matInput [value]="t.description">
                     </mat-form-field>
                 </form>
+                <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 2, 'Artefact')"> Edit </button>
             </div>
         </ng-container>
     </div>
@@ -118,6 +120,7 @@
                         <input matInput [value]="t.description">
                     </mat-form-field>
                 </form>
+                <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 2, 'Artefact')"> Edit </button>
             </div>
         </ng-container>
     </div>
@@ -140,6 +143,7 @@
                     </mat-form-field>
                 </form>
             </div>
+            <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 4, 'Role')"> Edit </button>
         </ng-container>
     </div>
 </ng-container>
