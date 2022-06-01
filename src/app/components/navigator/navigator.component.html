@@ -1,0 +1,33 @@
+<mat-tab-group style="min-width: 50px;" (selectedTabChange)="tabChanged($event)">
+    <mat-tab label="Chunks" >
+        <ng-container *ngFor="let mc of methodChunkList">
+            {{mc.name}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Tools">
+        <ng-container *ngFor="let t of toolList">
+            {{t.name}} <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Artefacts">
+        <ng-container *ngFor="let ar of artefactList">
+            {{ar.name}} <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Activities">
+        <ng-container *ngFor="let ac of activityList">
+            {{ac.name}} <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Roles">
+        <ng-container *ngFor="let r of roleList">
+            {{r.name}} <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+            <mat-divider></mat-divider>
+        </ng-container>
+    </mat-tab>
+    <mat-tab label="Criterions"></mat-tab>
+</mat-tab-group>

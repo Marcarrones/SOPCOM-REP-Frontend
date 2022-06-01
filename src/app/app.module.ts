@@ -21,7 +21,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatTabsModule } from '@angular/material/tabs';
+import { NavigatorComponent } from './components/navigator/navigator.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     MethodElementListComponent,
     MethodElementDialogComponent,
     MethodElementDetailComponent,
+    NavigatorComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,10 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     FormsModule,
     MatFormFieldModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTabsModule,
+    MatDividerModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

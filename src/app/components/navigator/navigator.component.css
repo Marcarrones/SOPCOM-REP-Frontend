@@ -1,0 +1,4 @@
+::ng-deep .mat-tab-label
+{
+  min-width: 16.6%!important;
+}

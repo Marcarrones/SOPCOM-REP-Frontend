@@ -14,6 +14,11 @@ export class EndpointService {
 
   private URL = Values.SERVER_URL + Values.SERVER_PORT + Values.ENTRY_FILE;
 
+  public getAllMethodChunk() {
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
   public getMethodChunkById(id: string) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     return this.http.get<any[]>(request).pipe(map(response => response));

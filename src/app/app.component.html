@@ -7,5 +7,11 @@
   </a>
   <span>SOPCOM</span>
 </mat-toolbar>
-
-<router-outlet></router-outlet>
+<div style="display: flex;">
+  <div style="width: 30%; border: 2px solid #99cccc; height: fit-content;">
+    <app-navigator></app-navigator>
+  </div>
+  <div style="width: 70%;">
+    <router-outlet></router-outlet>
+  </div>
+</div>
