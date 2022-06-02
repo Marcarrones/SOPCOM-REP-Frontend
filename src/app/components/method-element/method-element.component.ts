@@ -13,6 +13,8 @@ export class MethodElementComponent implements OnInit {
   @Input() id: string | null;
   @Input() typeStr: string;
   @Input() type: number;
+  @Input() edit = false;
+  @Input() relations = true;
 
   public loaded
   
@@ -36,8 +38,7 @@ export class MethodElementComponent implements OnInit {
           this.methodElement = this.parseMethodElement(data) 
         }
         this.buildFormControl();
-        console.log(this.methodElementFormGroup)
-        console.log(this.methodElementFormGroup.get('id'))
+        console.log(this.methodElement)
         setTimeout(() => {this.loaded = true;}, 2000)
       })
     } else {
@@ -48,13 +49,12 @@ export class MethodElementComponent implements OnInit {
   }
 
   private buildFormControl() {
-    console.log(this.id)
     this.methodElementFormGroup = new FormGroup({
-      id: new FormControl({value:this.methodElement.id, disabled: this.id !== undefined && this.id !== null}),
-      name: new FormControl(this.methodElement.name),
-      description: new FormControl(this.methodElement.description),
-      abstract: new FormControl(this.methodElement.abstract),
-      figure: new FormControl(this.methodElement.figure)
+      id: new FormControl({value:this.methodElement.id, disabled: this.id !== undefined && this.id !== null && !this.edit}),
+      name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
+      description: new FormControl({value:this.methodElement.description, disabled: !this.edit}),
+      abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit}),
+      figure: new FormControl({value:this.methodElement.figure, disabled: !this.edit}) 
     })
     this.methodElementFormGroup.valueChanges.subscribe(values => {
       if(this.id === undefined || this.id === null) this.methodElement.id = values['id'];
@@ -65,7 +65,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   private parseMethodElement(data) {
-    return new MethodElement(data['0']['id'], data['0']['name'], data['0']['abstract'], data['0']['description'], data['0']['figure'], this.type, [], [], []);
+    return new MethodElement(data['0']['id'], data['0']['name'], data['0']['abstract'], data['0']['description'], data['0']['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
   }
 
   public saveMethodElement() {

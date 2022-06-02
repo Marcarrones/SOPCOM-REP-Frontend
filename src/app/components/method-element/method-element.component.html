@@ -18,6 +18,58 @@
         <mat-label>Figure</mat-label>
         <input formControlName="figure" type="file">
     </form>
+    <ng-container *ngIf="this.relations">
+        <div>
+            Relates to:
+            Structural relations:
+            <div>
+                <ng-container *ngFor="let srelto of this.methodElement.me_struct_rel_to">
+                    <a [routerLink]="['/', this.typeStr, '/', srelto.fromME]"> {{srelto.fromME}} </a>
+                    {{srelto.name}}
+                </ng-container>
+            </div>
+            Activity relations:
+            <div>
+                <ng-container *ngIf="this.type == 3">
+                    <ng-container *ngFor="let actrelto of this.methodElement.activity_rel_to">
+                        <a [routerLink]="['/activity', actrelto.fromME]"></a>
+                        {{actrelto.name}}
+                    </ng-container>
+                </ng-container>
+            </div>
+            Artefact relations:
+            <div>
+                <ng-container *ngIf="this.type == 2">
+                    <ng-container *ngFor="let artrelto of this.methodElement.artefact_rel_to">
+                        <a [routerLink]="['/artefact' + this.typeStr, artrelto.fromME]"></a>
+                        {{artrelto.name}}
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <div>
+            Relates from:
+            Structural relations:
+            <ng-container *ngFor="let srelfrom of this.methodElement.me_struct_rel_from">
+                <a [routerLink]="['/' + this.typeStr, srelfrom.id]"></a>
+                {{srelfrom.name}}
+            </ng-container>
+            Activity relations:
+            <ng-container *ngIf="this.type == 3">
+                <ng-container *ngFor="let actrelfrom of this.methodElement.activity_rel_from">
+                    <a [routerLink]="['/activity', actrelfrom.id]"></a>
+                    {{actrelfrom.name}}
+                </ng-container>
+            </ng-container>
+            Artefact relations:
+            <ng-container *ngIf="this.type == 2">
+                <ng-container *ngFor="let artrelfrom of this.methodElement.artefact_rel_from">
+                    <a [routerLink]="['/artefact', artrelfrom.id]"></a>
+                    {{artrelfrom.name}}
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
 </ng-container>
 <ng-template #loading>
     <mat-spinner></mat-spinner>

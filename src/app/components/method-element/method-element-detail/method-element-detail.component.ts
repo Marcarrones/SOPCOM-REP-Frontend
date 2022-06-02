@@ -28,7 +28,6 @@ export class MethodElementDetailComponent implements OnInit {
   }
 
   public saveMethodElement() {
-    console.log(this.meComponent)
     this.meComponent.saveMethodElement();
   }
   public deleteMethodElement() {

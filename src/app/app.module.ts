@@ -25,6 +25,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NavigatorComponent } from './components/navigator/navigator.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { MethodChunkListComponent } from './components/method-chunk/method-chunk-list/method-chunk-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
     MethodElementDialogComponent,
     MethodElementDetailComponent,
     NavigatorComponent,
+    MethodChunkListComponent,
   ],
   imports: [
     BrowserModule,

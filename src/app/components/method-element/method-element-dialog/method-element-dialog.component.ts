@@ -22,7 +22,6 @@ export class MethodElementDialogComponent implements OnInit {
   }
 
   public saveMethodElement() {
-    console.log(this.meComponent)
     this.meComponent.saveMethodElement();
   }
 

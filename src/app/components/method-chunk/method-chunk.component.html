@@ -40,21 +40,8 @@
         <div>
             <p>Activity</p>
             <div class="method-element-div">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.id !== undefined" [value]="this.methodChunk.processPart.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="this.methodChunk.processPart.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="this.methodChunk.processPart.description">
-                    </mat-form-field>
-                    <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
-                </form>
+                <app-method-element [id]="this.methodChunk.processPart.id" [relations]="false"></app-method-element>
+                <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
             </div>
         </div>
     </div>
@@ -62,20 +49,7 @@
         <p>Tools</p>
         <ng-container *ngFor="let t of this.methodChunk.tools" style="width: 100px;">
             <div class="method-element-div">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="t.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="t.description">
-                    </mat-form-field>
-                </form>
+                <app-method-element [id]="t.id" [relations]="false"></app-method-element>
                 <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 1, 'Tool')"> Edit </button>
             </div>
         </ng-container>
@@ -84,20 +58,7 @@
         <p>Situation</p>
         <ng-container *ngFor="let t of this.methodChunk.situation">
             <div class="method-element-div">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="t.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="t.description">
-                    </mat-form-field>
-                </form>
+                <app-method-element [id]="t.id" [relations]="false"></app-method-element>
                 <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 2, 'Artefact')"> Edit </button>
             </div>
         </ng-container>
@@ -106,20 +67,7 @@
         <p>Product part</p>
         <ng-container *ngFor="let t of this.methodChunk.productPart">
             <div class="method-element-div">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="t.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="t.description">
-                    </mat-form-field>
-                </form>
+                <app-method-element [id]="t.id" [relations]="false"></app-method-element>
                 <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 2, 'Artefact')"> Edit </button>
             </div>
         </ng-container>
@@ -128,20 +76,7 @@
         <p>Roles</p>
         <ng-container *ngFor="let t of this.methodChunk.roles">
             <div class="method-element-div">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.id !== undefined" [value]="t.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="t.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="t.description">
-                    </mat-form-field>
-                </form>
+                <app-method-element [id]="t.id" [relations]="false"></app-method-element>
             </div>
             <button (click)="openMethodElementDialog(this.methodChunk.processPart.id, 4, 'Role')"> Edit </button>
         </ng-container>
