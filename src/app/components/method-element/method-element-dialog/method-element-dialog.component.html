@@ -1,2 +1,6 @@
 <h1 mat-dialog-title>Method Element Dialog type: {{ this.data.typeStr }} </h1>
 <app-method-element id="{{this.data.id}}"></app-method-element>
+<mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="closeDialog()"> Cancel </button>
+    <button mat-raised-button color="primary" (click)="saveMethodElement()"> Save </button>
+</mat-dialog-actions>
