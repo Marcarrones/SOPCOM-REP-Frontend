@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EndpointService } from 'src/app/services/endpoint.service';
+import { NavigatorService } from 'src/app/services/navigator.service';
 
 @Component({
   selector: 'app-navigator',
@@ -9,34 +10,29 @@ import { EndpointService } from 'src/app/services/endpoint.service';
 })
 export class NavigatorComponent implements OnInit {
 
-  public methodChunkList: any[] = []
-  public toolList: any[] = []
-  public artefactList: any[] = []
-  public activityList: any[] = []
-  public roleList: any[] = []
-  public criterionList: any[] = []
-
   constructor(
     private endpointService: EndpointService,
-    private router: Router
+    private router: Router,
+    public navigatorService: NavigatorService
   ) { }
 
   ngOnInit(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.endpointService.getAllMethodChunk().subscribe(chunks => {
-      this.methodChunkList = chunks;
+      this.navigatorService.methodChunkList = chunks;
     })
 
     this.endpointService.getAllMethodElementsByType(1).subscribe(tools => {
-      this.toolList = tools;
+      this.navigatorService.toolList = tools;
     })
     this.endpointService.getAllMethodElementsByType(2).subscribe(artefacts => {
-      this.artefactList = artefacts;
+      this.navigatorService.artefactList = artefacts;
     })
     this.endpointService.getAllMethodElementsByType(3).subscribe(activities => {
-      this.activityList = activities;
+      this.navigatorService.activityList = activities;
     })
     this.endpointService.getAllMethodElementsByType(4).subscribe(roles => {
-      this.roleList = roles
+      this.navigatorService.roleList = roles
     })
   }
 

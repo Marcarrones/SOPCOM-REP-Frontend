@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MethodElement } from 'src/app/models/method-element';
 import { EndpointService } from 'src/app/services/endpoint.service';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-method-element',
@@ -39,6 +39,7 @@ export class MethodElementComponent implements OnInit {
         }
         this.buildFormControl();
         console.log(this.methodElement)
+        console.log(JSON.stringify(this.methodElement))
         setTimeout(() => {this.loaded = true;}, 2000)
       })
     } else {
@@ -46,11 +47,12 @@ export class MethodElementComponent implements OnInit {
       this.buildFormControl();
       this.loaded = true;
     }
+    console.log(this.edit)
   }
 
   private buildFormControl() {
     this.methodElementFormGroup = new FormGroup({
-      id: new FormControl({value:this.methodElement.id, disabled: this.id !== undefined && this.id !== null && !this.edit}),
+      id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}),
       name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
       description: new FormControl({value:this.methodElement.description, disabled: !this.edit}),
       abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit}),
@@ -66,6 +68,17 @@ export class MethodElementComponent implements OnInit {
 
   private parseMethodElement(data) {
     return new MethodElement(data['0']['id'], data['0']['name'], data['0']['abstract'], data['0']['description'], data['0']['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
+  }
+
+  private stringifyMethodElement() {
+    let aux = {
+      id: this.methodElement.id,
+      name: this.methodElement.name,
+      abstract: this.methodElement.abstract,
+      description: this.methodElement.description,
+      figure: this.methodElement.figure,
+      type: this.methodElement.type
+    };
   }
 
   public saveMethodElement() {
@@ -88,5 +101,22 @@ export class MethodElementComponent implements OnInit {
     this.endpointService.deleteMethodElement(this.id).subscribe( data => {
       console.log("DELETE", data)
     })
+  }
+
+  public changeEditStatus() {
+    this.edit = !this.edit
+    if(this.methodElementFormGroup.controls['name'].disabled) this.methodElementFormGroup.controls['name'].enable();
+    else this.methodElementFormGroup.controls['name'].disable();
+    if(this.methodElementFormGroup.controls['abstract'].disabled) this.methodElementFormGroup.controls['abstract'].enable();
+    else this.methodElementFormGroup.controls['abstract'].disable();
+    if(this.methodElementFormGroup.controls['description'].disabled) this.methodElementFormGroup.controls['description'].enable();
+    else this.methodElementFormGroup.controls['description'].disable();
+    if(this.methodElementFormGroup.controls['figure'].disabled) this.methodElementFormGroup.controls['figure'].enable();
+    else this.methodElementFormGroup.controls['figure'].disable();
+    console.log(this.methodElementFormGroup)
+  }
+
+  public routeToElement() {
+    this.router.navigateByUrl('/')
   }
 }
