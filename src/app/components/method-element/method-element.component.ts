@@ -116,7 +116,7 @@ export class MethodElementComponent implements OnInit {
     console.log(this.methodElementFormGroup)
   }
 
-  public routeToElement() {
-    this.router.navigateByUrl('/')
+  public dropped(event) {
+    console.log(event)
   }
 }

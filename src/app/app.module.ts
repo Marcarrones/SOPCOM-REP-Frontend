@@ -26,6 +26,7 @@ import { NavigatorComponent } from './components/navigator/navigator.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MethodChunkListComponent } from './components/method-chunk/method-chunk-list/method-chunk-list.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +56,8 @@ import { MethodChunkListComponent } from './components/method-chunk/method-chunk
     MatButtonModule,
     MatTabsModule,
     MatDividerModule,
-    MatIconModule
+    MatIconModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

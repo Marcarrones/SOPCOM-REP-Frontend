@@ -6,28 +6,40 @@
         </ng-container>
     </mat-tab>
     <mat-tab label="Tools">
-        <ng-container *ngFor="let t of navigatorService.toolList">
-            {{t.name}} <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
-            <mat-divider></mat-divider>
-        </ng-container>
+        <div cdkDropList id="toolList" [cdkDropListData]="this.navigatorService.toolList" [cdkDropListConnectedTo]="['structList']">
+            <ng-container *ngFor="let t of navigatorService.toolList">
+                <div cdkDrag> {{t.name}} </div> <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </div>
     </mat-tab>
     <mat-tab label="Artefacts">
-        <ng-container *ngFor="let ar of navigatorService.artefactList">
-            {{ar.name}} <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
-            <mat-divider></mat-divider>
-        </ng-container>
+        <div cdkDropList #artefactList="cdkDropList" [cdkDropListData]="this.navigatorService.artefactList">
+            <ng-container *ngFor="let ar of navigatorService.artefactList">
+                <div [id]="ar.id" cdkDrag> {{ar.name}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                <mat-divider></mat-divider>
+            </ng-container>
+            </div>
     </mat-tab>
     <mat-tab label="Activities">
-        <ng-container *ngFor="let ac of navigatorService.activityList">
-            {{ac.name}} <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
-            <mat-divider></mat-divider>
-        </ng-container>
+        <div cdkDropList 
+        #activityList="cdkDropList" 
+        [cdkDropListData]="this.navigatorService.activityList" 
+        [cdkDropListConnectedTo]="['structList']"
+        (cdkDropListDropped)="droppedNav($event)">
+            <ng-container *ngFor="let ac of navigatorService.activityList">
+                <div cdkDrag [cdkDragData]="ac"> {{ac.name}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </div>
     </mat-tab>
     <mat-tab label="Roles">
-        <ng-container *ngFor="let r of navigatorService.roleList">
-            {{r.name}} <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
-            <mat-divider></mat-divider>
-        </ng-container>
+        <div cdkDropList #roleList="cdkDropList" [cdkDropListData]="this.navigatorService.roleList">
+            <ng-container *ngFor="let r of navigatorService.roleList">
+                <div cdkDrag> {{r.name}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                <mat-divider></mat-divider>
+            </ng-container>
+        </div>
     </mat-tab>
     <mat-tab label="Criterions"></mat-tab>
 </mat-tab-group>

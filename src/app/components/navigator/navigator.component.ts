@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { NavigatorService } from 'src/app/services/navigator.service';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-navigator',
@@ -44,4 +45,7 @@ export class NavigatorComponent implements OnInit {
     if(event.index == 4) this.router.navigate(['/roles'])
   }
 
+  public droppedNav(event){
+    console.log(event)
+  }
 }
