@@ -6,12 +6,20 @@ import { EndpointService } from './endpoint.service';
 })
 export class NavigatorService {
 
+  public allowChange = true;
+  
   public methodChunkList: any[] = []
+  public methodChunkFilteredList: any[] = []
   public toolList: any[] = []
+  public toolFilteredList: any[] = []
   public artefactList: any[] = []
+  public artefactFilteredList: any[] = []
   public activityList: any[] = []
+  public activityFilteredList: any[] = []
   public roleList: any[] = []
+  public roleFilteredList: any[] = []
   public criterionList: any[] = []
+  public criterionFilteredList: any[] = []
 
   constructor(
     private endpointService: EndpointService
@@ -25,10 +33,22 @@ export class NavigatorService {
 
   public refreshMethodElementList(type) {
     this.endpointService.getAllMethodElementsByType(type).subscribe(me => {
-      if(type == 1) this.roleList = me
-      if(type == 2) this.artefactList = me
-      if(type == 3) this.activityList = me
-      if(type == 4) this.roleList = me
+      if(type == 1) {
+        this.toolList = me
+        this.toolFilteredList = me
+      }
+      if(type == 2) {
+        this.artefactList = me
+        this.artefactFilteredList = me
+      }
+      if(type == 3){ 
+        this.activityList = me
+        this.activityFilteredList = me
+      }
+      if(type == 4){ 
+        this.roleList = me
+        this.roleFilteredList = me
+      }
     })
   }
 }

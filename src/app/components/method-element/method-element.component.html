@@ -1,6 +1,4 @@
 <h1 style="text-transform: capitalize;">{{this.typeStr}}</h1>
-<ng-container *ngIf="this.edit == true; else temp"> <button mat-button (click)="changeEditStatus()"> <mat-icon> reply </mat-icon> </button> </ng-container>
-<ng-template #temp> <button mat-button (click)="changeEditStatus()"> <mat-icon> edit </mat-icon> </button> </ng-template>
 <ng-container *ngIf="this.loaded; else loading">
     <form [formGroup]="this.methodElementFormGroup">
         <mat-form-field id="meID" style="width: 100%;" type="text">

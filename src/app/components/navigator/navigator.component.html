@@ -6,39 +6,84 @@
         </ng-container>
     </mat-tab>
     <mat-tab label="Tools">
-        <div cdkDropList id="toolList" [cdkDropListData]="this.navigatorService.toolList" [cdkDropListConnectedTo]="['structList']">
-            <ng-container *ngFor="let t of navigatorService.toolList">
-                <div cdkDrag> {{t.name}} </div> <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
-                <mat-divider></mat-divider>
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlTool" style="display: table-cell;" [placeholder]="this.filterTool"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterTool"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+        </div>
+        <mat-divider></mat-divider>
+        <div cdkDropList id="toolList" [cdkDropListData]="this.navigatorService.toolFilteredList" [cdkDropListConnectedTo]="['structList']">
+            <ng-container *ngIf="navigatorService.toolFilteredList.length > 0; else noTools">
+                <ng-container *ngFor="let t of navigatorService.toolFilteredList">
+                    <ng-container *ngIf="this.filterTool == 'id'">
+                        <div cdkDrag> {{t.id}} </div> <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <ng-container *ngIf="this.filterTool == 'name'">
+                        <div cdkDrag> {{t.name}} </div> <a [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <mat-divider></mat-divider>
+                </ng-container>
             </ng-container>
+            <ng-template #noTools>
+                No tools found for {{ filterTool }} {{ filterControlTool.value }}
+            </ng-template>
         </div>
     </mat-tab>
     <mat-tab label="Artefacts">
-        <div cdkDropList #artefactList="cdkDropList" [cdkDropListData]="this.navigatorService.artefactList">
-            <ng-container *ngFor="let ar of navigatorService.artefactList">
-                <div [id]="ar.id" cdkDrag> {{ar.name}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
-                <mat-divider></mat-divider>
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlArtefact" style="display: table-cell;" [placeholder]="this.filterArtefact"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterArtefact"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+        </div>
+        <mat-divider></mat-divider>
+        <div cdkDropList #artefactList="cdkDropList" [cdkDropListData]="this.navigatorService.artefactFilteredList">
+            <ng-container *ngIf="navigatorService.artefactFilteredList.length > 0; else noArtefacts">
+                <ng-container *ngFor="let ar of navigatorService.artefactFilteredList">
+                    <ng-container *ngIf="this.filterTool == 'id'">
+                        <div [id]="ar.id" cdkDrag> {{ar.id}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <ng-container *ngIf="this.filterTool == 'name'">
+                        <div [id]="ar.id" cdkDrag> {{ar.name}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <mat-divider></mat-divider>
+                </ng-container>
             </ng-container>
-            </div>
+            <ng-template #noArtefacts>
+                No artefact found for {{ filterArtefact }} {{ filterControlArtefact.value }}
+            </ng-template>
+        </div>
     </mat-tab>
     <mat-tab label="Activities">
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlActivity" style="display: table-cell;" [placeholder]="this.filterActivity"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterActivity"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+        </div>
+        <mat-divider></mat-divider>
         <div cdkDropList 
         #activityList="cdkDropList" 
-        [cdkDropListData]="this.navigatorService.activityList" 
-        [cdkDropListConnectedTo]="['structList']"
-        (cdkDropListDropped)="droppedNav($event)">
-            <ng-container *ngFor="let ac of navigatorService.activityList">
-                <div cdkDrag [cdkDragData]="ac"> {{ac.name}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
-                <mat-divider></mat-divider>
+        [cdkDropListData]="this.navigatorService.activityFilteredList" 
+        [cdkDropListConnectedTo]="['structList']">
+            <ng-container *ngIf="navigatorService.activityFilteredList.length > 0; else noActivities">
+                <ng-container *ngFor="let ac of navigatorService.activityFilteredList">
+                    <div cdkDrag [cdkDragData]="ac"> {{ac.name}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                    <mat-divider></mat-divider>
+                </ng-container>
             </ng-container>
+            <ng-template #noActivities>
+                No activity found for {{ filterActivity }} {{ filterControlActivity.value }}
+            </ng-template>
         </div>
     </mat-tab>
     <mat-tab label="Roles">
-        <div cdkDropList #roleList="cdkDropList" [cdkDropListData]="this.navigatorService.roleList">
-            <ng-container *ngFor="let r of navigatorService.roleList">
-                <div cdkDrag> {{r.name}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
-                <mat-divider></mat-divider>
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlRole" style="display: table-cell;" [placeholder]="this.filterRole"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterRole"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+        </div>
+        <mat-divider></mat-divider>
+        <div cdkDropList #roleList="cdkDropList" [cdkDropListData]="this.navigatorService.roleFilteredList">
+            <ng-container *ngIf="navigatorService.roleFilteredList.length > 0; else noRoles">
+                <ng-container *ngFor="let r of navigatorService.roleFilteredList">
+                    <div cdkDrag> {{r.name}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                    <mat-divider></mat-divider>
+                </ng-container>
             </ng-container>
+            <ng-template #noRoles>
+                No role found for {{ filterRole }} {{ filterControlRole.value }}
+            </ng-template>
         </div>
     </mat-tab>
     <mat-tab label="Criterions"></mat-tab>
