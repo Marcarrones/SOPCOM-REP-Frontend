@@ -1,7 +1,7 @@
 <mat-grid-list cols="3" rowHeight="2:1">
-    <ng-container *ngFor="let me of this.navigatorService.criterionList">
+    <ng-container *ngFor="let c of this.navigatorService.criterionList">
         <mat-grid-tile>
-            <a [routerLink]="['/criterion', me.id]">{{me.criterionName}}</a>
+            <a [routerLink]="['/criterion', c.criterionId]">{{c.criterionName}}</a>
         </mat-grid-tile>
     </ng-container>
 </mat-grid-list>

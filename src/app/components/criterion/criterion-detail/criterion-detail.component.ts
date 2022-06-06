@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CriterionComponent } from '../criterion.component';
 
 @Component({
   selector: 'app-criterion-detail',
@@ -6,10 +8,32 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./criterion-detail.component.css']
 })
 export class CriterionDetailComponent implements OnInit {
+  
+  public id;
 
-  constructor() { }
+  @ViewChild(CriterionComponent) criterionComponent: CriterionComponent;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id')!;
+  }
+
+  public saveCriterion() {
+    this.criterionComponent.saveCriterion();
+  }
+
+  public deleteCriterion() {
+    this.criterionComponent.deleteCriterion();
+  }
+
+  public goBack() {
+    if((this.criterionComponent.edit && confirm("Are you sure you want to stop editing? Unsaved changes will be lost!")) || !this.criterionComponent.edit) {
+      this.router.navigate(['/criterions'])
+    }
   }
 
 }

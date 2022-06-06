@@ -32,6 +32,7 @@ import { CriterionComponent } from './components/criterion/criterion.component';
 import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
 import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
 import { CriterionDialogComponent } from './components/criterion/criterion-dialog/criterion-dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { CriterionDialogComponent } from './components/criterion/criterion-dialo
     MatDividerModule,
     MatIconModule,
     DragDropModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

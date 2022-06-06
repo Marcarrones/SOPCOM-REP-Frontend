@@ -15,6 +15,7 @@ export class MethodChunkListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.navigatorService.allowChange = true;
   }
 
 }

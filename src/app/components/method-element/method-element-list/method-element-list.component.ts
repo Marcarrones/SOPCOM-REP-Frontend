@@ -30,6 +30,7 @@ export class MethodElementListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.navigatorService.allowChange = true;
     if(this.type == 1) this.methodElementList = this.navigatorService.toolList;
     if(this.type == 2) this.methodElementList = this.navigatorService.artefactList;
     if(this.type == 3) this.methodElementList = this.navigatorService.activityList;

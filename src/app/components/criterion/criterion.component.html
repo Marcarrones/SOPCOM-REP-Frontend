@@ -1,1 +1,22 @@
-<p>criterion works!</p>
+<ng-container *ngIf="this.loaded; else loading">
+    <mat-form-field>
+        <mat-label> Name </mat-label>
+        <input matInput [formControl]="this.nameFormControl">
+    </mat-form-field>
+    <div *ngFor="let v of criterion.values; let i = index">
+        {{v.name}} 
+        <ng-container *ngIf="this.edit">
+            <button mat-icon-button (click)="removeValue(i)"> <mat-icon> delete </mat-icon> </button>
+        </ng-container>
+    </div>
+    <ng-container *ngIf="this.edit">
+        <mat-form-field>
+            <mat-label> Values </mat-label>
+            <input #value matInput placeholder="Add the values here">
+        </mat-form-field>
+        <a mat-button (click)="addValue(value.value)"> <mat-icon> add </mat-icon> </a>
+    </ng-container>
+</ng-container>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

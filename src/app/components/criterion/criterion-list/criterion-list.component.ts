@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import { Criterion } from 'src/app/models/criterion';
 import { NavigatorService } from 'src/app/services/navigator.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class CriterionListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.navigatorService.allowChange = true;
   }
 
 }
