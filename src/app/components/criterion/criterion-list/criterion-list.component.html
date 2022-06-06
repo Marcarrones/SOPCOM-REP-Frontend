@@ -1,0 +1,8 @@
+<mat-grid-list cols="3" rowHeight="2:1">
+    <ng-container *ngFor="let me of this.criterionList">
+        <mat-grid-tile>
+            <a [routerLink]="['/criterion', me.id]">{{me.criterionName}}</a>
+            <button (click)="openDialog(me.id)">Dialog</button>
+        </mat-grid-tile>
+    </ng-container>
+</mat-grid-list>

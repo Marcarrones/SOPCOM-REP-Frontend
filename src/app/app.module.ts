@@ -28,6 +28,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MethodChunkListComponent } from './components/method-chunk/method-chunk-list/method-chunk-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSelectModule } from '@angular/material/select';
+import { CriterionComponent } from './components/criterion/criterion.component';
+import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
+import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
+import { CriterionDialogComponent } from './components/criterion/criterion-dialog/criterion-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +44,10 @@ import { MatSelectModule } from '@angular/material/select';
     MethodElementDetailComponent,
     NavigatorComponent,
     MethodChunkListComponent,
+    CriterionComponent,
+    CriterionListComponent,
+    CriterionDetailComponent,
+    CriterionDialogComponent,
   ],
   imports: [
     BrowserModule,
