@@ -1,1 +1,8 @@
-<p>method-chunk-list works!</p>
+<mat-grid-list cols="3" rowHeight="2:1">
+    <ng-container *ngFor="let mc of this.navigatorService.methodChunkList">
+        <mat-grid-tile>
+            <a [routerLink]="['/method-chunk', mc.id]">{{mc.id}}</a>
+            {{mc.name}}
+        </mat-grid-tile>
+    </ng-container>
+</mat-grid-list>

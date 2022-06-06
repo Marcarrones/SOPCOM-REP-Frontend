@@ -4,10 +4,11 @@ import { MethodElement } from 'src/app/models/method-element';
 import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
-import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-method-chunk',
@@ -15,13 +16,13 @@ import { MethodElementDialogComponent } from '../method-element/method-element-d
   styleUrls: ['./method-chunk.component.css']
 })
 export class MethodChunkComponent implements OnInit {
-
-  @Input() id: string;
   
   public mode: ProgressSpinnerMode = 'indeterminate';
   public loaded = false;
 
   public methodChunk;
+  public params;
+  public id;
 
   idFormControl = new FormControl('');
   nameFormControl = new FormControl('');
@@ -31,17 +32,16 @@ export class MethodChunkComponent implements OnInit {
 
   constructor(
     private endpointService: EndpointService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.id = "Chu-ReqEli-01";
-    console.log(this.id)
+    this.id = this.route.snapshot.paramMap.get('id')!;
     if(this.id !== undefined) {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {
         this.methodChunk = this.parseMethodChunk(data)
         setTimeout(() => {this.loaded = true;}, 2000)
-        
       })
     } else {
       this.methodChunk = new MethodChunk("", "", "", false, new Goal(0, ""), new MethodElement("", "", false, "", "", 3, [], [], []), [], [], [], [], []);
@@ -51,7 +51,7 @@ export class MethodChunkComponent implements OnInit {
 
   private parseMethodChunk(data) {
     console.log(data)
-    const goal = new Goal(data['Intention'][0]['id'], data['Intention'][0]['name']);
+    const goal = new Goal(data['Intention']['id'], data['Intention']['name']);
     console.log(goal);
     let tools: MethodElement[] = [];
     let productPart: MethodElement[] = [];
@@ -59,24 +59,24 @@ export class MethodChunkComponent implements OnInit {
     let situation: MethodElement[] = [];
     let contextCriteria: Criterion[] = [];
     for(let t in data['Tools']){
-      tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data["Process part"][0]["abstract"], data['Tools'][t]['description'], "", 1, [], [], []))
+      tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data["Process part"]["abstract"], data['Tools'][t]['description'], "", 1, [], [], []))
     }
     for(let t in data['Situation']){
-      situation.push(new MethodElement(data['Situation'][t]['id'], data['Situation'][t]['name'], data["Process part"][0]["abstract"], data['Situation'][t]['description'], "", 2, [], [], []))
+      situation.push(new MethodElement(data['Situation'][t]['id'], data['Situation'][t]['name'], data["Process part"]["abstract"], data['Situation'][t]['description'], "", 2, [], [], []))
     }
     for(let t in data['Product part']){
-      productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data["Process part"][0]["abstract"], data['Product part'][t]['description'], "", 2, [], [], []))
+      productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data["Process part"]["abstract"], data['Product part'][t]['description'], "", 2, [], [], []))
     }
     for(let t in data['Roles']){
-      roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"][0]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []))
+      roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []))
     }
-    let activity: MethodElement = new MethodElement(data["Process part"][0]["id"], data["Process part"][0]["name"], data["Process part"][0]["abstract"], data["Process part"][0]["description"], "", 3, [], [], []);
+    let activity: MethodElement = new MethodElement(data["Process part"]["id"], data["Process part"]["name"], data["Process part"]["abstract"], data["Process part"]["description"], "", 3, [], [], []);
     console.log(tools);
     console.log(productPart);
     console.log(roles);
     console.log(situation);
     console.log(activity);
-    return new MethodChunk(data['0']['id'], data['0']['name'], data['0']['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, []);
+    return new MethodChunk(data['id'], data['name'], data['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, []);
   }
 
   openMethodElementDialog(id, type, typeStr) {

@@ -28,6 +28,7 @@ export class NavigatorService {
   public refreshMethodChunkList() {
     this.endpointService.getAllMethodChunk().subscribe(chunks => {
       this.methodChunkList = chunks;
+      this.methodChunkFilteredList = chunks;
     })
   }
 

@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { MethodElementDialogComponent } from 'src/app/components/method-element/method-element-dialog/method-element-dialog.component';
+import { NavigatorService } from 'src/app/services/navigator.service';
+import { TransitionCheckState } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-method-element-list',
@@ -17,9 +19,9 @@ export class MethodElementListComponent implements OnInit {
   public methodElementList: any[] = [];
 
   constructor(
-    private endpointService: EndpointService,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private navigatorService: NavigatorService
   ) {
     this.route.data.subscribe(params => {
       this.type = params['type'];
@@ -28,11 +30,10 @@ export class MethodElementListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.endpointService.getAllMethodElementsByType(this.type).subscribe(data => {
-      console.log(data)
-      this.methodElementList = data;
-    })
+    if(this.type == 1) this.methodElementList = this.navigatorService.toolList;
+    if(this.type == 2) this.methodElementList = this.navigatorService.artefactList;
+    if(this.type == 3) this.methodElementList = this.navigatorService.activityList;
+    if(this.type == 4) this.methodElementList = this.navigatorService.roleList;
   }
 
   openDialog(id) {

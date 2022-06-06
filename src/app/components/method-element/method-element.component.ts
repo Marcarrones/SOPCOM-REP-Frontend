@@ -67,7 +67,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   private parseMethodElement(data) {
-    return new MethodElement(data['0']['id'], data['0']['name'], data['0']['abstract'], data['0']['description'], data['0']['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
+    return new MethodElement(data['id'], data['name'], data['abstract'], data['description'], data['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
   }
 
   private stringifyMethodElement() {

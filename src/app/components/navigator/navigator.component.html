@@ -1,9 +1,22 @@
 <mat-tab-group style="min-width: 50px;" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Chunks" >
-        <ng-container *ngFor="let mc of navigatorService.methodChunkList">
-            {{mc.name}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
-            <mat-divider></mat-divider>
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlChunk" style="display: table-cell;" [placeholder]="this.filterChunk"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterChunk"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+        </div>
+        <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noTools">
+            <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList">
+                <ng-container *ngIf="this.filterChunk == 'id'">
+                    {{mc.id}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                </ng-container>
+                <ng-container *ngIf="this.filterChunk == 'name'">
+                    {{mc.name}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                </ng-container>
+                <mat-divider></mat-divider>
+            </ng-container>
         </ng-container>
+        <ng-template #noChunks>
+            No chunks found for {{ filterChunk }} {{ filterControlChunk.value }}
+        </ng-template>
     </mat-tab>
     <mat-tab label="Tools">
         <div style="display: table;">

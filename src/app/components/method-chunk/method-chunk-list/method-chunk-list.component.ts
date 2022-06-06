@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NavigatorService } from 'src/app/services/navigator.service';
 
 @Component({
   selector: 'app-method-chunk-list',
@@ -7,7 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MethodChunkListComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public navigatorService: NavigatorService,
+    public route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
   }

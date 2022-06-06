@@ -11,6 +11,8 @@ import { FormControl } from '@angular/forms';
 })
 export class NavigatorComponent implements OnInit {
 
+  public filterChunk = 'id';
+  public filterControlChunk: FormControl;
   public filterTool = "id";
   public filterControlTool: FormControl;
   public filterArtefact = "id";
@@ -31,6 +33,7 @@ export class NavigatorComponent implements OnInit {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.endpointService.getAllMethodChunk().subscribe(chunks => {
       this.navigatorService.methodChunkList = chunks;
+      this.navigatorService.methodChunkFilteredList = chunks;
     })
 
     this.endpointService.getAllMethodElementsByType(1).subscribe(tools => {
@@ -62,6 +65,14 @@ export class NavigatorComponent implements OnInit {
   }
 
   public initializeFilters() {
+    this.filterControlChunk = new FormControl("");
+    this.filterControlChunk.valueChanges.subscribe(value => {
+      if(this.filterChunk == 'id') {
+        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.id.includes(value))
+      } else if(this.filterChunk == 'name') {
+        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.name.includes(value))
+      }
+    })
     this.filterControlTool = new FormControl("");
     this.filterControlTool.valueChanges.subscribe(value => {
       if(this.filterTool == 'id') {
