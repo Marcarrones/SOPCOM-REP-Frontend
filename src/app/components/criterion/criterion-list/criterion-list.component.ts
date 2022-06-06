@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EndpointService } from 'src/app/services/endpoint.service';
-import { CriterionDialogComponent } from '../criterion-dialog/criterion-dialog.component';
+import { NavigatorService } from 'src/app/services/navigator.service';
 
 @Component({
   selector: 'app-criterion-list',
@@ -10,25 +9,12 @@ import { CriterionDialogComponent } from '../criterion-dialog/criterion-dialog.c
 })
 export class CriterionListComponent implements OnInit {
 
-  public criterionList;
-
   constructor(
-    private endpointService: EndpointService,
+    public navigatorService: NavigatorService,
     public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.endpointService.getAllCriterions().subscribe(data => {
-      console.log(data)
-      this.criterionList = data;
-    })
-  }
-
-  openDialog(id) {
-    const dialogRef = this.dialog.open(CriterionDialogComponent, {
-      width: '250px',
-      data: {id: id},
-    });
   }
 
 }

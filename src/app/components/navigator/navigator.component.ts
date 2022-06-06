@@ -11,7 +11,7 @@ import { FormControl } from '@angular/forms';
 })
 export class NavigatorComponent implements OnInit {
 
-  public filterChunk = 'id';
+  public filterChunk = "id";
   public filterControlChunk: FormControl;
   public filterTool = "id";
   public filterControlTool: FormControl;
@@ -21,6 +21,8 @@ export class NavigatorComponent implements OnInit {
   public filterControlActivity: FormControl;
   public filterRole = "id";
   public filterControlRole: FormControl;
+  public filterCriterion = "name";
+  public filterControlCriterion: FormControl;
 
   constructor(
     private endpointService: EndpointService,
@@ -31,27 +33,15 @@ export class NavigatorComponent implements OnInit {
   ngOnInit(): void {
     this.initializeFilters();
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.endpointService.getAllMethodChunk().subscribe(chunks => {
-      this.navigatorService.methodChunkList = chunks;
-      this.navigatorService.methodChunkFilteredList = chunks;
-    })
 
-    this.endpointService.getAllMethodElementsByType(1).subscribe(tools => {
-      this.navigatorService.toolList = tools;
-      this.navigatorService.toolFilteredList = tools;
-    })
-    this.endpointService.getAllMethodElementsByType(2).subscribe(artefacts => {
-      this.navigatorService.artefactList = artefacts;
-      this.navigatorService.artefactFilteredList = artefacts;
-    })
-    this.endpointService.getAllMethodElementsByType(3).subscribe(activities => {
-      this.navigatorService.activityList = activities;
-      this.navigatorService.activityFilteredList = activities;
-    })
-    this.endpointService.getAllMethodElementsByType(4).subscribe(roles => {
-      this.navigatorService.roleList = roles
-      this.navigatorService.roleFilteredList = roles
-    })
+    this.navigatorService.refreshMethodChunkList();
+
+    this.navigatorService.refreshMethodElementList(1);
+    this.navigatorService.refreshMethodElementList(2);
+    this.navigatorService.refreshMethodElementList(3);
+    this.navigatorService.refreshMethodElementList(4);
+
+    this.navigatorService.refreshCriterionList();
   }
 
   public tabChanged(event) {
@@ -61,6 +51,7 @@ export class NavigatorComponent implements OnInit {
       if(event.index == 2) this.router.navigate(['/artefacts'])
       if(event.index == 3) this.router.navigate(['/activities'])
       if(event.index == 4) this.router.navigate(['/roles'])
+      if(event.index == 5) this.router.navigate(['/criterions'])
     }
   }
 
@@ -68,42 +59,46 @@ export class NavigatorComponent implements OnInit {
     this.filterControlChunk = new FormControl("");
     this.filterControlChunk.valueChanges.subscribe(value => {
       if(this.filterChunk == 'id') {
-        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.id.includes(value))
+        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterChunk == 'name') {
-        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.name.includes(value))
+        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlTool = new FormControl("");
     this.filterControlTool.valueChanges.subscribe(value => {
       if(this.filterTool == 'id') {
-        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.id.includes(value))
+        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterTool == 'name') {
-        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.name.includes(value))
+        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlArtefact = new FormControl("");
     this.filterControlArtefact.valueChanges.subscribe(value => {
       if(this.filterArtefact == 'id') {
-        this.navigatorService.artefactFilteredList = this.navigatorService.artefactList.filter(t => t.id.includes(value))
+        this.navigatorService.artefactFilteredList = this.navigatorService.artefactList.filter(ar => ar.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterArtefact == 'name') {
-        this.navigatorService.artefactFilteredList = this.navigatorService.artefactList.filter(t => t.name.includes(value))
+        this.navigatorService.artefactFilteredList = this.navigatorService.artefactList.filter(ar => ar.name.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlActivity = new FormControl("");
     this.filterControlActivity.valueChanges.subscribe(value => {
       if(this.filterActivity == 'id') {
-        this.navigatorService.activityFilteredList = this.navigatorService.activityList.filter(t => t.id.includes(value))
+        this.navigatorService.activityFilteredList = this.navigatorService.activityList.filter(ac => ac.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterActivity == 'name') {
-        this.navigatorService.activityFilteredList = this.navigatorService.activityList.filter(t => t.name.includes(value))
+        this.navigatorService.activityFilteredList = this.navigatorService.activityList.filter(ac => ac.name.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlRole = new FormControl("");
     this.filterControlRole.valueChanges.subscribe(value => {
       if(this.filterRole == 'id') {
-        this.navigatorService.roleFilteredList = this.navigatorService.roleList.filter(t => t.id.includes(value))
+        this.navigatorService.roleFilteredList = this.navigatorService.roleList.filter(r => r.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterRole == 'name') {
-        this.navigatorService.roleFilteredList = this.navigatorService.roleList.filter(t => t.name.includes(value))
+        this.navigatorService.roleFilteredList = this.navigatorService.roleList.filter(r => r.name.toLowerCase().includes(value.toLowerCase()))
       }
+    })
+    this.filterControlCriterion = new FormControl("");
+    this.filterControlCriterion.valueChanges.subscribe(value => {
+      this.navigatorService.criterionFilteredList = this.navigatorService.criterionList.filter(c => c.criterionName.toLowerCase().includes(value.toLowerCase()))
     })
   }
 }

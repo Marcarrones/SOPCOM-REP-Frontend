@@ -47,7 +47,7 @@ import { CriterionDialogComponent } from './components/criterion/criterion-dialo
     CriterionComponent,
     CriterionListComponent,
     CriterionDetailComponent,
-    CriterionDialogComponent,
+    CriterionDialogComponent
   ],
   imports: [
     BrowserModule,

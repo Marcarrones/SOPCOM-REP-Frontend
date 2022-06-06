@@ -1,9 +1,14 @@
 <mat-tab-group style="min-width: 50px;" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Chunks" >
         <div style="display: table;">
-            <input matInput [formControl]="filterControlChunk" style="display: table-cell;" [placeholder]="this.filterChunk"> <mat-label style="display: table-cell;"> Filter by: </mat-label> <mat-select style="display: table-cell; width: 10%;" [(value)]="filterChunk"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+            <mat-form-field style="display: table-cell;">
+                <input matInput [formControl]="filterControlChunk" [placeholder]="this.filterChunk">
+            </mat-form-field>
+            <mat-form-field style="display: table-cell;">
+                <mat-label> Filter by: </mat-label> <mat-select [(value)]="filterChunk"> <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
+            </mat-form-field>
         </div>
-        <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noTools">
+        <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noChunks">
             <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList">
                 <ng-container *ngIf="this.filterChunk == 'id'">
                     {{mc.id}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
@@ -15,7 +20,7 @@
             </ng-container>
         </ng-container>
         <ng-template #noChunks>
-            No chunks found for {{ filterChunk }} {{ filterControlChunk.value }}
+            No chunks found with {{ filterChunk }}: {{ filterControlChunk.value }}
         </ng-template>
     </mat-tab>
     <mat-tab label="Tools">
@@ -36,7 +41,7 @@
                 </ng-container>
             </ng-container>
             <ng-template #noTools>
-                No tools found for {{ filterTool }} {{ filterControlTool.value }}
+                No tools found with {{ filterTool }}: {{ filterControlTool.value }}
             </ng-template>
         </div>
     </mat-tab>
@@ -48,17 +53,17 @@
         <div cdkDropList #artefactList="cdkDropList" [cdkDropListData]="this.navigatorService.artefactFilteredList">
             <ng-container *ngIf="navigatorService.artefactFilteredList.length > 0; else noArtefacts">
                 <ng-container *ngFor="let ar of navigatorService.artefactFilteredList">
-                    <ng-container *ngIf="this.filterTool == 'id'">
+                    <ng-container *ngIf="this.filterArtefact == 'id'">
                         <div [id]="ar.id" cdkDrag> {{ar.id}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
-                    <ng-container *ngIf="this.filterTool == 'name'">
+                    <ng-container *ngIf="this.filterArtefact == 'name'">
                         <div [id]="ar.id" cdkDrag> {{ar.name}} </div> <a [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>
             <ng-template #noArtefacts>
-                No artefact found for {{ filterArtefact }} {{ filterControlArtefact.value }}
+                No artefact found with {{ filterArtefact }}: {{ filterControlArtefact.value }}
             </ng-template>
         </div>
     </mat-tab>
@@ -73,12 +78,17 @@
         [cdkDropListConnectedTo]="['structList']">
             <ng-container *ngIf="navigatorService.activityFilteredList.length > 0; else noActivities">
                 <ng-container *ngFor="let ac of navigatorService.activityFilteredList">
-                    <div cdkDrag [cdkDragData]="ac"> {{ac.name}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                    <ng-container *ngIf="this.filterActivity == 'id'">
+                        <div cdkDrag [cdkDragData]="ac"> {{ac.id}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <ng-container *ngIf="this.filterActivity == 'name'">
+                        <div cdkDrag [cdkDragData]="ac"> {{ac.name}} </div> <a [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>
             <ng-template #noActivities>
-                No activity found for {{ filterActivity }} {{ filterControlActivity.value }}
+                No activity found with {{ filterActivity }}: {{ filterControlActivity.value }}
             </ng-template>
         </div>
     </mat-tab>
@@ -90,14 +100,35 @@
         <div cdkDropList #roleList="cdkDropList" [cdkDropListData]="this.navigatorService.roleFilteredList">
             <ng-container *ngIf="navigatorService.roleFilteredList.length > 0; else noRoles">
                 <ng-container *ngFor="let r of navigatorService.roleFilteredList">
-                    <div cdkDrag> {{r.name}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                    <ng-container *ngIf="this.filterRole == 'id'">
+                        <div cdkDrag> {{r.id}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
+                    <ng-container *ngIf="this.filterRole == 'name'">
+                        <div cdkDrag> {{r.name}} </div> <a [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                    </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>
             <ng-template #noRoles>
-                No role found for {{ filterRole }} {{ filterControlRole.value }}
+                No role found with {{ filterRole }}: {{ filterControlRole.value }}
             </ng-template>
         </div>
     </mat-tab>
-    <mat-tab label="Criterions"></mat-tab>
+    <mat-tab label="Criterions">
+        <div style="display: table;">
+            <input matInput [formControl]="filterControlCriterion" style="display: table-cell;" [placeholder]="this.filterCriterion">
+        </div>
+        <mat-divider></mat-divider>
+        <div cdkDropList #criterionList="cdkDropList" [cdkDropListData]="this.navigatorService.criterionFilteredList">
+            <ng-container *ngIf="navigatorService.criterionFilteredList.length > 0; else noCriterions">
+                <ng-container *ngFor="let r of navigatorService.criterionFilteredList">
+                    <div cdkDrag> {{r.criterionName}} </div> <a [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
+                    <mat-divider></mat-divider>
+                </ng-container>
+            </ng-container>
+            <ng-template #noCriterions>
+                No criterion found with {{ filterCriterion }}: {{ filterControlCriterion.value }}
+            </ng-template>
+        </div>
+    </mat-tab>
 </mat-tab-group>

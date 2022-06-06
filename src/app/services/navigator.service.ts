@@ -52,4 +52,11 @@ export class NavigatorService {
       }
     })
   }
+
+  refreshCriterionList() {
+    this.endpointService.getAllCriterions().subscribe(c => {
+      this.criterionList = c;
+      this.criterionFilteredList = c;
+    })
+  }
 }
