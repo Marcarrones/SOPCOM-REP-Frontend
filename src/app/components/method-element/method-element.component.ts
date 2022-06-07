@@ -3,6 +3,9 @@ import { MethodElement } from 'src/app/models/method-element';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavigatorService } from 'src/app/services/navigator.service';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 @Component({
   selector: 'app-method-element',
   templateUrl: './method-element.component.html',
@@ -24,7 +27,9 @@ export class MethodElementComponent implements OnInit {
 
   constructor(
     private endpointService: EndpointService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar,
+    public navigatorService: NavigatorService
   ) {
   }
 
@@ -36,14 +41,17 @@ export class MethodElementComponent implements OnInit {
           this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
         } else {
           this.methodElement = this.parseMethodElement(data) 
+          console.log(this.methodElement)
         }
         this.buildFormControl();
         console.log(this.methodElement)
         console.log(JSON.stringify(this.methodElement))
-        setTimeout(() => {this.loaded = true;}, 2000)
+        this.loaded = true;
       })
     } else {
       this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
+      this.edit = true;
+      this.navigatorService.allowChange = false;
       this.buildFormControl();
       this.loaded = true;
     }
@@ -77,21 +85,33 @@ export class MethodElementComponent implements OnInit {
       abstract: this.methodElement.abstract,
       description: this.methodElement.description,
       figure: this.methodElement.figure,
-      type: this.methodElement.type
+      type: this.methodElement.type,
+      me_struct_rel: this.methodElement.me_struct_rel_from,
+      activity_rel: this.methodElement.activity_rel_from,
+      artefact_rel: this.methodElement.artefact_rel_from
     };
+    return JSON.stringify(aux);
   }
 
   public saveMethodElement() {
-    let data = JSON.stringify(this.methodElement);
+    let data = this.stringifyMethodElement();
+    //let data = JSON.stringify(this.methodElement);
+    console.log(data)
     if(this.id !== undefined && this.id !== null) {
       console.log("Update method element", this.methodElement, this.methodElementFormGroup.controls['description'])
       this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
         console.log("UPDATE", data)
+        this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+        this.navigatorService.refreshMethodElementList(this.type);
+        this.router.navigate(['/home'])
       })
     } else {
       console.log("Post method element", this.methodElement)
       this.endpointService.addMethodElement(data).subscribe( data => {
         console.log("POST", data)
+        this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+        this.navigatorService.refreshMethodElementList(this.type);
+        this.router.navigate(['/home'])
       })
     }
   }
@@ -100,7 +120,16 @@ export class MethodElementComponent implements OnInit {
     console.log("Delete method element", this.methodElement)
     this.endpointService.deleteMethodElement(this.id).subscribe( data => {
       console.log("DELETE", data)
+      this.navigateToList();
     })
+  }
+
+  public navigateToList() {
+    this.navigatorService.refreshMethodElementList(this.type);
+    if(this.type == 1) this.router.navigate(['/tools'])
+    if(this.type == 2) this.router.navigate(['/artefacts'])
+    if(this.type == 3) this.router.navigate(['/activities'])
+    if(this.type == 4) this.router.navigate(['/roles'])
   }
 
   public changeEditStatus() {
@@ -116,7 +145,59 @@ export class MethodElementComponent implements OnInit {
     console.log(this.methodElementFormGroup)
   }
 
-  public dropped(event) {
-    console.log(event)
+  public droppedStructRel(event) {
+    if(event.item.data.id === this.id) {
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return;
+    }
+    if(this.methodElement.me_struct_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
+    this.methodElement.activity_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
+    this.methodElement.artefact_rel_from.findIndex((element) => element.id == event.item.data.id) == -1) {
+      let relation = {id: event.item.data.id, rel: null}
+      console.log(relation)
+      this.methodElement.me_struct_rel_from.push(relation);
+    } else {      
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
+  }
+
+  public droppedActivityEvent(event) {
+    if(event.item.data.id === this.id) {
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return;
+    }
+    if(this.methodElement.activity_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
+    this.methodElement.me_struct_rel_from.findIndex((element) => element.id == event.item.data.id) == -1) {
+      let relation = {id: event.item.data.id, rel: null}
+      this.methodElement.activity_rel_from.push(relation);
+    } else {      
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
+  }
+
+  public droppedArtefactRel(event) {
+    if(event.item.data.id === this.id) {
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return;
+    }
+    if(this.methodElement.artefact_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
+    this.methodElement.me_struct_rel_from.findIndex((element) => element.id == event.item.data.id) == -1) {
+      let relation = {id: event.item.data.id, rel: null}
+      this.methodElement.artefact_rel_from.push(relation);
+    } else {      
+      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
+  }
+
+  public selectedStructRel(i, value) {
+    this.methodElement.me_struct_rel_from[i]['rel'] = value
+  }
+
+  public selectedActRel(i, value) {
+    this.methodElement.activity_rel_from[i]['rel'] = value
+  }
+
+  public selectedArtRel(i, value) {
+    this.methodElement.artefact_rel_from[i]['rel'] = value
   }
 }

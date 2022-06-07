@@ -4,7 +4,7 @@ import { Criterion } from 'src/app/models/criterion';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-criterion',
@@ -43,7 +43,7 @@ export class CriterionComponent implements OnInit {
       this.edit = true;
       this.loaded = true;
       this.navigatorService.allowChange = false;
-      this.nameFormControl = new FormControl({value: "", disabled: !this.edit});
+      this.nameFormControl = new FormControl({value: "", disabled: !this.edit}, Validators.required);
       this.nameFormControl.valueChanges.subscribe(value => this.criterion.name = value)
     }
   }

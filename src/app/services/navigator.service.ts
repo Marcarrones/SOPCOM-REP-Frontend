@@ -21,6 +21,10 @@ export class NavigatorService {
   public criterionList: any[] = []
   public criterionFilteredList: any[] = []
 
+  public structRelTypes = []
+  public activityRelTypes = []
+  public artefactRelTypes = []
+
   constructor(
     private endpointService: EndpointService
   ) { }
@@ -57,6 +61,14 @@ export class NavigatorService {
     this.endpointService.getAllCriterions().subscribe(c => {
       this.criterionList = c;
       this.criterionFilteredList = c;
+    })
+  }
+
+  getAllMethodElementRelationTypes() {    
+    this.endpointService.getAllMethodElementRelationTypes().subscribe(data => {
+      this.structRelTypes = data['me_struct_rel'];
+      this.activityRelTypes = data['activity_rel'];
+      this.artefactRelTypes = data['artefact_rel'];
     })
   }
 }

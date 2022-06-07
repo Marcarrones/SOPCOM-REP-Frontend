@@ -42,22 +42,19 @@ export class EndpointService {
   public updateMethodElement(id, data) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
     console.log(request, data)
-    return new Observable;
-    //return this.http.put<any[]>(request, data).pipe(map(response => response));
+    return this.http.put<any[]>(request, data).pipe(map(response => response));
   }
 
   public addMethodElement(data) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT;
     console.log(request, data)
-    return new Observable;
-    //return this.http.post<any[]>(request, data).pipe(map(response => response));
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
   }
 
   public deleteMethodElement(id) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
     console.log(request)
-    return new Observable;
-    //return this.http.delete<any[]>(request).pipe(map(response => response));
+    return this.http.delete<any[]>(request).pipe(map(response => response));
   }
 
   public getAllMethodElementRelationTypes() {

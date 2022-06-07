@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EndpointService } from 'src/app/services/endpoint.service';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { FormControl } from '@angular/forms';
 
@@ -25,7 +24,6 @@ export class NavigatorComponent implements OnInit {
   public filterControlCriterion: FormControl;
 
   constructor(
-    private endpointService: EndpointService,
     private router: Router,
     public navigatorService: NavigatorService
   ) { }
@@ -42,6 +40,8 @@ export class NavigatorComponent implements OnInit {
     this.navigatorService.refreshMethodElementList(4);
 
     this.navigatorService.refreshCriterionList();
+
+    this.navigatorService.getAllMethodElementRelationTypes();
   }
 
   public tabChanged(event) {
