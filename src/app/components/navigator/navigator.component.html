@@ -33,7 +33,7 @@
         <div cdkDropList 
         #toolList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.toolFilteredList" 
-        [cdkDropListConnectedTo]="['structList']"
+        [cdkDropListConnectedTo]="['structList', 'tools']"
         [cdkDropListSortingDisabled]="true">
             <ng-container *ngIf="navigatorService.toolFilteredList.length > 0; else noTools">
                 <ng-container *ngFor="let t of navigatorService.toolFilteredList">
@@ -60,7 +60,7 @@
         <div cdkDropList 
         #artefactList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.artefactFilteredList"
-        [cdkDropListConnectedTo]="['structList', 'artefactList']">
+        [cdkDropListConnectedTo]="['structList', 'artefactList', 'situation', 'productPart']">
             <ng-container *ngIf="navigatorService.artefactFilteredList.length > 0; else noArtefacts">
                 <ng-container *ngFor="let ar of navigatorService.artefactFilteredList">
                     <ng-container *ngIf="this.filterArtefact == 'id'">
@@ -86,7 +86,7 @@
         <div cdkDropList 
         #activityList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.activityFilteredList" 
-        [cdkDropListConnectedTo]="['structList', 'activityList']">
+        [cdkDropListConnectedTo]="['structList', 'activityList', 'activity']">
             <ng-container *ngIf="navigatorService.activityFilteredList.length > 0; else noActivities">
                 <ng-container *ngFor="let ac of navigatorService.activityFilteredList">
                     <ng-container *ngIf="this.filterActivity == 'id'">
@@ -112,7 +112,7 @@
         <div cdkDropList 
         #roleList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.roleFilteredList"
-        [cdkDropListConnectedTo]="['structList']">
+        [cdkDropListConnectedTo]="['structList', 'roles']">
             <ng-container *ngIf="navigatorService.roleFilteredList.length > 0; else noRoles">
                 <ng-container *ngFor="let r of navigatorService.roleFilteredList">
                     <ng-container *ngIf="this.filterRole == 'id'">
@@ -129,13 +129,14 @@
             </ng-template>
         </div>
     </mat-tab>
-    <mat-tab label="Criterions">
+    <mat-tab label="Criteria">
         <div style="display: table;">
             <input matInput [formControl]="filterControlCriterion" style="display: table-cell;" [placeholder]="this.filterCriterion">
             <a mat-icon-button [routerLink]="['/criterion']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
         <mat-divider></mat-divider>
-        <div cdkDropList #criterionList="cdkDropList" [cdkDropListData]="this.navigatorService.criterionFilteredList">
+        <div cdkDropList #criterionList="cdkDropList" [cdkDropListData]="this.navigatorService.criterionFilteredList"
+        [cdkDropListConnectedTo]="['criteria']">
             <ng-container *ngIf="navigatorService.criterionFilteredList.length > 0; else noCriterions">
                 <ng-container *ngFor="let r of navigatorService.criterionFilteredList">
                     <div cdkDrag> {{r.criterionName}} </div> <a [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>

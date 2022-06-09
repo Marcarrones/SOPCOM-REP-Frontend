@@ -9,11 +9,11 @@ export class MethodChunk {
     private abstract: boolean | null;
     private intention: Goal | null;
     private processPart: MethodElement | null;
-    private tools: MethodElement[];
-    private situation: MethodElement[];
-    private productPart: MethodElement[];
-    private roles: MethodElement[];
-    private contextCriteria: Criterion[];
+    private tools: any[];
+    private situation: any[];
+    private productPart: any[];
+    private roles: any[];
+    private contextCriteria: any[];
 
 
     constructor(

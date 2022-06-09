@@ -59,6 +59,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   private buildFormControl() {
+    console.log(this.id)
     this.methodElementFormGroup = new FormGroup({
       id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}),
       name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
@@ -103,7 +104,7 @@ export class MethodElementComponent implements OnInit {
         console.log("UPDATE", data)
         this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMethodElementList(this.type);
-        this.router.navigate(['/home'])
+        if(this.relations) this.router.navigate(['/home'])
       })
     } else {
       console.log("Post method element", this.methodElement)
@@ -111,7 +112,7 @@ export class MethodElementComponent implements OnInit {
         console.log("POST", data)
         this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMethodElementList(this.type);
-        this.router.navigate(['/home'])
+        if(this.relations) this.router.navigate(['/home'])
       })
     }
   }
@@ -200,4 +201,18 @@ export class MethodElementComponent implements OnInit {
   public selectedArtRel(i, value) {
     this.methodElement.artefact_rel_from[i]['rel'] = value
   }
+
+  public removeStructRel(index) {
+    this.methodElement.me_struct_rel_from.splice(index, 1)
+  }
+
+  public removeActRel(index) {
+    this.methodElement.activity_rel_from.splice(index, 1)
+  }
+
+  public removeArtRel(index) {
+    this.methodElement.artefact_rel_from.splice(index, 1)
+  }
+
+  
 }

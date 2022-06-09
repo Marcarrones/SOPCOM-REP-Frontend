@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { throwIfEmpty } from 'rxjs';
 import { EndpointService } from './endpoint.service';
 
 @Injectable({
@@ -20,6 +21,7 @@ export class NavigatorService {
   public roleFilteredList: any[] = []
   public criterionList: any[] = []
   public criterionFilteredList: any[] = []
+  public goalList: any[] = []
 
   public structRelTypes = []
   public activityRelTypes = []
@@ -57,18 +59,24 @@ export class NavigatorService {
     })
   }
 
-  refreshCriterionList() {
+  public refreshCriterionList() {
     this.endpointService.getAllCriterions().subscribe(c => {
       this.criterionList = c;
       this.criterionFilteredList = c;
     })
   }
 
-  getAllMethodElementRelationTypes() {    
+  public getAllMethodElementRelationTypes() {    
     this.endpointService.getAllMethodElementRelationTypes().subscribe(data => {
       this.structRelTypes = data['me_struct_rel'];
       this.activityRelTypes = data['activity_rel'];
       this.artefactRelTypes = data['artefact_rel'];
+    })
+  }
+
+  public refreshGoalList() {
+    this.endpointService.getAllGoals().subscribe(data => {
+      this.goalList = data;
     })
   }
 }

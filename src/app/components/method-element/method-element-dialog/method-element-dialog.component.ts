@@ -23,9 +23,10 @@ export class MethodElementDialogComponent implements OnInit {
 
   public saveMethodElement() {
     this.meComponent.saveMethodElement();
+    this.closeDialog(this.meComponent.methodElement.id)
   }
 
-  public closeDialog() {
-    this.dialogRef.close();
+  public closeDialog(id?) {
+    this.dialogRef.close(id);
   }
 }

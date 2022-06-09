@@ -38,6 +38,7 @@
                                 <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.structRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <a mat-icon-button (click)="removeStructRel(i)"> <mat-icon> delete </mat-icon> </a>
                     </div>
                 </ng-container>
             </div>
@@ -59,6 +60,7 @@
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.activityRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <a mat-icon-button (click)="removeActRel(j)"> <mat-icon> delete </mat-icon> </a>
                             </div>
                         </ng-container>
                 </div>
@@ -81,6 +83,7 @@
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.artefactRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <a mat-icon-button (click)="removeArtRel(k)"> <mat-icon> delete </mat-icon> </a>
                             </div>
                         </ng-container>
                 </div>

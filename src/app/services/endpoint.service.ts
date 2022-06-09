@@ -87,5 +87,15 @@ export class EndpointService {
     const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
     return this.http.delete<any[]>(request).pipe(map(response => response));
   }
+
+  public getAllGoals() {
+    const request = this.URL + Values.RESOURCES.GOAL;
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public addNewGoal(data) {
+    const request = this.URL + Values.RESOURCES.GOAL;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
   
 }

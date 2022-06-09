@@ -33,6 +33,8 @@ import { CriterionListComponent } from './components/criterion/criterion-list/cr
 import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
 import { CriterionDialogComponent } from './components/criterion/criterion-dialog/criterion-dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { GoalComponent } from './components/goal/goal.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CriterionComponent,
     CriterionListComponent,
     CriterionDetailComponent,
-    CriterionDialogComponent
+    CriterionDialogComponent,
+    GoalComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +73,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     DragDropModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]
