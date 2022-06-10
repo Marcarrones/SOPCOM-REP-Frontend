@@ -17,7 +17,7 @@ export class MethodElementComponent implements OnInit {
   @Input() typeStr: string;
   @Input() type: number;
   @Input() edit = false;
-  @Input() relations = true;
+  @Input() reduced = true;
 
   public loaded
   
@@ -104,7 +104,7 @@ export class MethodElementComponent implements OnInit {
         console.log("UPDATE", data)
         this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMethodElementList(this.type);
-        if(this.relations) this.router.navigate(['/home'])
+        if(this.reduced) this.router.navigate(['/home'])
       })
     } else {
       console.log("Post method element", this.methodElement)
@@ -112,7 +112,7 @@ export class MethodElementComponent implements OnInit {
         console.log("POST", data)
         this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMethodElementList(this.type);
-        if(this.relations) this.router.navigate(['/home'])
+        if(this.reduced) this.router.navigate(['/home'])
       })
     }
   }

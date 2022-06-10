@@ -14,6 +14,7 @@ import { GoalComponent } from '../goal/goal.component';
 import { MethodElementComponent } from '../method-element/method-element.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Values } from 'src/utils/values';
+import { JSDocTagName } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-method-chunk',
@@ -63,7 +64,7 @@ export class MethodChunkComponent implements OnInit {
     const goal = new Goal(data['Intention']['id'], data['Intention']['name']);
     let tools: MethodElement[] = [];
     let productPart: MethodElement[] = [];
-    let roles: MethodElement[] = [];
+    let roles: any[] = [];
     let situation: MethodElement[] = [];
     let contextCriteria: any[] = [];
     for(let t in data['Tools']){
@@ -76,7 +77,8 @@ export class MethodChunkComponent implements OnInit {
       productPart.push(new MethodElement(data['Product part'][t]['id'], data['Product part'][t]['name'], data["Process part"]["abstract"], data['Product part'][t]['description'], "", 2, [], [], []))
     }
     for(let t in data['Roles']){
-      roles.push(new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []))
+      roles.push({me: new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []), isSet: data['Roles'][t]['isSet']})
+      console.log(roles)
     }
     contextCriteria = data['Context Criteria']
     for(let cc in contextCriteria) {
@@ -94,6 +96,54 @@ export class MethodChunkComponent implements OnInit {
     console.log(activity);
     console.log(contextCriteria);
     return new MethodChunk(data['id'], data['name'], data['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, contextCriteria);
+  }
+
+  public saveMethodChunk() {
+    let body = this.stringifyMethodChunk();
+    if(this.id !== undefined && this.id !== null && this.id !== "") {
+      this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
+        console.log("After update", response)
+        this.ngOnInit()
+      })
+    } else {
+      this.endpointService.addNewMethodChunk(body).subscribe(response => {
+        console.log("After insert", response);
+        this.ngOnInit()
+      })
+    }
+  }
+
+  public deleteMethodChunk() {
+    this.endpointService.deleteMethodChunk(this.id).subscribe(response => {
+      console.log("After delete", response)
+    })
+  }
+
+  public stringifyMethodChunk() {
+    let body = {
+      id: this.methodChunk.id,
+      name: this.methodChunk.name,
+      description: this.methodChunk.description,
+      activity: this.methodChunk.processPart.id,
+      intention: this.methodChunk.intention.id
+    }
+    let tools = this.methodChunk.tools.map(t => t.id);
+    body['tools'] = tools;
+    let consumedArtefacts = this.methodChunk.situation.map(ca => ca.id);
+    body['consumedArtefacts'] = consumedArtefacts;
+    let producedArtefacts = this.methodChunk.productPart.map(pa => pa.id);
+    body['producedArtefacts'] = producedArtefacts;
+    let roles: any[] = [];
+    for(let r of this.methodChunk.roles){
+      roles.push({id: r.me.id, isSet: r.isSet})
+    }
+    body['roles'] = roles;
+    let contextCriteria: any[] = [];
+    for(let cc of this.methodChunk.contextCriteria) {
+      contextCriteria.push({criterionId: cc.id, values: cc.values});
+    }
+    body['contextCriteria'] = contextCriteria;
+    return JSON.stringify(body);
   }
 
   public openMethodElementDialogEdit(id, type, typeStr) {
@@ -158,7 +208,7 @@ export class MethodChunkComponent implements OnInit {
     if(this.methodChunk.roles.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
-      this.methodChunk.roles.push(event.item.data)
+      this.methodChunk.roles.push({me: event.item.data, isSet: false})
     }
   }
 

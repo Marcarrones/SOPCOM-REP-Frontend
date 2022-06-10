@@ -26,7 +26,7 @@ export class MethodChunk {
         tools: MethodElement[], 
         situation: MethodElement[], 
         productPart: MethodElement[], 
-        roles: MethodElement[], 
+        roles: any[], 
         contextCriteria: Criterion[]
     ) {
         this.id = id

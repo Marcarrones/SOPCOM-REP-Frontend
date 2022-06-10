@@ -27,6 +27,22 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
+  public addNewMethodChunk(data) {
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public updateMethodChunk(id, data) {
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
+    return this.http.put<any[]>(request, data).pipe(map(response => response));
+  }
+  
+  public deleteMethodChunk(id) {
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
+    console.log(request)
+    return this.http.delete<any[]>(request).pipe(map(response => response));
+  }
+
   public getAllMethodElementsByType(type) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '?type=' + type;
     console.log(request)

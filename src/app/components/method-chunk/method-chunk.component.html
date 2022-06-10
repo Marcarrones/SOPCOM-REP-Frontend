@@ -1,4 +1,6 @@
 <b style="font-size: 40;"> Method Chunk</b>
+<button mat-raised-button (click)="saveMethodChunk()"> Save </button>
+<button mat-raised-button (click)="deleteMethodChunk()"> Delete </button>
 <ng-container *ngIf="this.loaded; else loading">
     <div style="display: flex; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
         <div style="margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
@@ -48,7 +50,7 @@
             <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
                 <div class="method-element-div">
                     <button mat-icon-button (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
-                    <app-method-element [id]="this.methodChunk.processPart.id" [relations]="false"></app-method-element>
+                    <app-method-element [id]="this.methodChunk.processPart.id" [reduced]="false"></app-method-element>
                     <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
                 </div>
             </ng-container>
@@ -66,7 +68,7 @@
             <ng-container *ngFor="let t of this.methodChunk.tools; let i = index" style="width: 100px;">
             <button mat-icon-button (click)="removeTool(i)"> <mat-icon> delete </mat-icon> </button>
                 <div class="method-element-div">
-                    <app-method-element [id]="t.id" [relations]="false"></app-method-element>
+                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
                     <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> Edit </button>
                 </div>
             </ng-container>
@@ -79,8 +81,8 @@
             <ng-container *ngFor="let t of this.methodChunk.situation; let j = index">
                 <button mat-icon-button (click)="removeConsumedArtefact(j)"> <mat-icon> delete </mat-icon> </button>
                 <div class="method-element-div">
-                    <app-method-element [id]="t.id" [relations]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(this.methodChunk.situation.id, 2, 'Artefact')"> Edit </button>
+                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
+                    <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
                 </div>
             </ng-container>
         </div>
@@ -92,8 +94,8 @@
             <ng-container *ngFor="let t of this.methodChunk.productPart; let k = index">
                 <button mat-icon-button (click)="removeProducedArtefact(k)"> <mat-icon> delete </mat-icon> </button>
                 <div class="method-element-div">
-                    <app-method-element [id]="t.id" [relations]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(this.methodChunk.productPart.id, 2, 'Artefact')"> Edit </button>
+                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
+                    <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
                 </div>
             </ng-container>
         </div>
@@ -105,9 +107,10 @@
             <ng-container *ngFor="let t of this.methodChunk.roles; let h = index">
                 <button mat-icon-button (click)="removeRole(h)"> <mat-icon> delete </mat-icon> </button>
                 <div class="method-element-div">
-                    <app-method-element [id]="t.id" [relations]="false"></app-method-element>
+                    <app-method-element [id]="t.me.id" [reduced]="false"></app-method-element>
                 </div>
-                <button (click)="openMethodElementDialogEdit(this.methodChunk.roles.id, 4, 'Role')"> Edit </button>
+                <button (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> Edit </button>
+                <mat-checkbox [(ngModel)]="t.isSet"> Is set </mat-checkbox>
             </ng-container>
         </div>
     </div>
