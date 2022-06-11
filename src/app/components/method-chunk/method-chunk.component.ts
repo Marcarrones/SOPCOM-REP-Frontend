@@ -13,8 +13,8 @@ import { NavigatorService } from 'src/app/services/navigator.service';
 import { GoalComponent } from '../goal/goal.component';
 import { MethodElementComponent } from '../method-element/method-element.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Values } from 'src/utils/values';
-import { JSDocTagName } from '@angular/compiler/src/output/output_ast';
+import {map, startWith} from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-method-chunk',
@@ -29,12 +29,13 @@ export class MethodChunkComponent implements OnInit {
   public methodChunk;
   public params;
   public id;
+  public goalsFilter: Observable<string[]>;
 
-  idFormControl = new FormControl('');
-  nameFormControl = new FormControl('');
-  descriptionFormControl = new FormControl('');
-  intentionFormControl = new FormControl('');
-  processPartFormControl = new FormControl('');
+  public idFormControl = new FormControl('');
+  public nameFormControl = new FormControl('');
+  public descriptionFormControl = new FormControl('');
+  public intentionFormControl = new FormControl('');
+  public processPartFormControl = new FormControl('');
 
   @ViewChild(MethodElementComponent) activity: MethodElementComponent;
 
@@ -52,12 +53,26 @@ export class MethodChunkComponent implements OnInit {
     if(this.id !== undefined && this.id !== null && this.id !== "") {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {
         this.methodChunk = this.parseMethodChunk(data)
+        this.initializeFormControls()
         this.loaded = true
       })
     } else {
       this.methodChunk = new MethodChunk("", "", "", false, null, null, [], [], [], [], []);
+      this.initializeFormControls()
       this.loaded = true;
     }
+  }
+
+  private initializeFormControls() {
+    this.goalsFilter = this.intentionFormControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+    console.log(this.goalsFilter)
+  }
+
+  private _filter(value) {
+    return this.navigatorService.goalList.filter(goal => goal.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   private parseMethodChunk(data) {
@@ -100,16 +115,17 @@ export class MethodChunkComponent implements OnInit {
 
   public saveMethodChunk() {
     let body = this.stringifyMethodChunk();
+    console.log(body)
     if(this.id !== undefined && this.id !== null && this.id !== "") {
-      this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
-        console.log("After update", response)
-        this.ngOnInit()
-      })
+      //this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
+      //  console.log("After update", response)
+      //  this.ngOnInit()
+      //})
     } else {
-      this.endpointService.addNewMethodChunk(body).subscribe(response => {
-        console.log("After insert", response);
-        this.ngOnInit()
-      })
+      //this.endpointService.addNewMethodChunk(body).subscribe(response => {
+      //  console.log("After insert", response);
+      //  this.ngOnInit()
+      //})
     }
   }
 
@@ -120,6 +136,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public stringifyMethodChunk() {
+    console.log(this.intentionFormControl)
     let body = {
       id: this.methodChunk.id,
       name: this.methodChunk.name,
@@ -140,7 +157,7 @@ export class MethodChunkComponent implements OnInit {
     body['roles'] = roles;
     let contextCriteria: any[] = [];
     for(let cc of this.methodChunk.contextCriteria) {
-      contextCriteria.push({criterionId: cc.id, values: cc.values});
+      contextCriteria.push({criterionId: cc.criterionId, values: cc.values});
     }
     body['contextCriteria'] = contextCriteria;
     return JSON.stringify(body);
@@ -213,10 +230,16 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addCriterion(event) {
-    if(this.methodChunk.contextCriteria.findIndex(element => element.id == event.item.data.id) !== -1) {
+    if(this.methodChunk.contextCriteria.findIndex(element => element.criterionId == event.item.data.criterionId) !== -1) {
       this._snackBar.open("Invalid criterion", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
-      this.methodChunk.contextCriteria.push(event.item.data)
+      let criterion = JSON.parse(JSON.stringify(event.item.data));
+      let index = this.navigatorService.criterionList.findIndex(element => element.criterionId == criterion['criterionId'])
+      if(index !== -1) {
+        criterion['allValues'] = this.navigatorService.criterionList[index]['values']
+      }
+      criterion['valuesNamesArray'] = []
+      this.methodChunk.contextCriteria.push(criterion)
     }
   }
 
@@ -241,7 +264,12 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public criterionValueChanges(criterion, event) {
-    console.log(criterion, event, this.methodChunk.contextCriteria)
+    let values: any[] = [];
+    for(let v of event) {
+      let index = criterion.allValues.findIndex(av => av.name == v)
+      if(index != -1) values.push(criterion.allValues[index])
+    }
+    criterion.values = values;
   }
 
 }

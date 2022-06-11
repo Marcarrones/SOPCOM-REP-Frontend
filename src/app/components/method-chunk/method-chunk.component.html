@@ -33,10 +33,10 @@
                     <form>
                         <mat-form-field style="width: 100%;">
                             <mat-label>Goal</mat-label>
-                            <input matInput aria-label="intention" [disabled]="this.id !== undefined" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.id : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
+                            <input matInput type="text" aria-label="intention" [disabled]="this.id !== undefined" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.id : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of this.navigatorService.goalList" [value]="option.name">
-                                  {{option.name}}
+                                <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
+                                  {{option['name']}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>

@@ -16,8 +16,9 @@
         <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
         <div></div>
         <mat-label>Figure</mat-label>
-        <input formControlName="figure" type="file">
+        <input type="file" accept="image/png, image/jpeg" (change)="fileChanged($event)">
     </form>
+    <img *ngIf="this.reduced && this.figureUrl !== ''" [src]="this.figureUrl">
     <ng-container *ngIf="this.reduced">
         Relates to:
         <div>

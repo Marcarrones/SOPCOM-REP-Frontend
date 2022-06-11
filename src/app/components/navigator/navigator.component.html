@@ -139,7 +139,7 @@
         [cdkDropListConnectedTo]="['criteria']">
             <ng-container *ngIf="navigatorService.criterionFilteredList.length > 0; else noCriterions">
                 <ng-container *ngFor="let r of navigatorService.criterionFilteredList">
-                    <div cdkDrag> {{r.criterionName}} </div> <a [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
+                    <div cdkDrag [cdkDragData]="r"> {{r.criterionName}} </div> <a [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>

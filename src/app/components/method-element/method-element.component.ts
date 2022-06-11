@@ -5,7 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigatorService } from 'src/app/services/navigator.service';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { Values } from 'src/utils/values';
 @Component({
   selector: 'app-method-element',
   templateUrl: './method-element.component.html',
@@ -22,6 +22,9 @@ export class MethodElementComponent implements OnInit {
   public loaded
   
   public methodElement;
+  public figureUrl = '';
+  public figure;
+  public figureChanged = false;
 
   public methodElementFormGroup: FormGroup = new FormGroup({});
 
@@ -64,8 +67,7 @@ export class MethodElementComponent implements OnInit {
       id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}),
       name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
       description: new FormControl({value:this.methodElement.description, disabled: !this.edit}),
-      abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit}),
-      figure: new FormControl({value:this.methodElement.figure, disabled: !this.edit}) 
+      abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit})
     })
     this.methodElementFormGroup.valueChanges.subscribe(values => {
       if(this.id === undefined || this.id === null) this.methodElement.id = values['id'];
@@ -76,6 +78,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   private parseMethodElement(data) {
+    if(data['figure'] !== null && data['figure'] !== '') this.figureUrl = Values.SERVER_URL + Values.SERVER_PORT + data['figure']
     return new MethodElement(data['id'], data['name'], data['abstract'], data['description'], data['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
   }
 
@@ -94,7 +97,7 @@ export class MethodElementComponent implements OnInit {
     return JSON.stringify(aux);
   }
 
-  public saveMethodElement() {
+  public async saveMethodElement() {
     let data = this.stringifyMethodElement();
     //let data = JSON.stringify(this.methodElement);
     console.log(data)
@@ -102,19 +105,34 @@ export class MethodElementComponent implements OnInit {
       console.log("Update method element", this.methodElement, this.methodElementFormGroup.controls['description'])
       this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
         console.log("UPDATE", data)
+        this.uploadFigure()
         this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
-        this.navigatorService.refreshMethodElementList(this.type);
-        if(this.reduced) this.router.navigate(['/home'])
+        this.refreshAndRoute()
       })
     } else {
       console.log("Post method element", this.methodElement)
       this.endpointService.addMethodElement(data).subscribe( data => {
         console.log("POST", data)
+        this.uploadFigure();
         this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
-        this.navigatorService.refreshMethodElementList(this.type);
-        if(this.reduced) this.router.navigate(['/home'])
+        this.refreshAndRoute()
       })
     }
+  }
+
+  private uploadFigure() {
+    if(this.figureChanged) { 
+      let figureFormData = new FormData()
+      figureFormData.append('figure', this.figure)
+      this.endpointService.addMethodElementFigure(this.id, figureFormData).subscribe(data => {
+        this._snackBar.open("Figure updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+      })
+    }
+  }
+
+  private refreshAndRoute() {
+    this.navigatorService.refreshMethodElementList(this.type);
+    if(this.reduced) this.router.navigate(['/home'])
   }
 
   public deleteMethodElement() {
@@ -214,5 +232,9 @@ export class MethodElementComponent implements OnInit {
     this.methodElement.artefact_rel_from.splice(index, 1)
   }
 
+  public fileChanged(event) {
+    this.figureChanged = true;
+    this.figure = event.target.files[0];
+  }
   
 }

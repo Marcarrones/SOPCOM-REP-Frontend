@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { throwIfEmpty } from 'rxjs';
 import { EndpointService } from './endpoint.service';
 
 @Injectable({

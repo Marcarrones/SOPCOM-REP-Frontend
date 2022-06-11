@@ -113,5 +113,10 @@ export class EndpointService {
     const request = this.URL + Values.RESOURCES.GOAL;
     return this.http.post<any[]>(request, data).pipe(map(response => response));
   }
+
+  public addMethodElementFigure(id, figure) {
+    const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id + '/image';
+    return this.http.post<any[]>(request, figure).pipe(map(response => response));
+  }
   
 }
