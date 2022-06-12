@@ -10,15 +10,15 @@ import { FormControl } from '@angular/forms';
 })
 export class NavigatorComponent implements OnInit {
 
-  public filterChunk = "id";
+  public filterChunk = "name";
   public filterControlChunk: FormControl;
-  public filterTool = "id";
+  public filterTool = "name";
   public filterControlTool: FormControl;
-  public filterArtefact = "id";
+  public filterArtefact = "name";
   public filterControlArtefact: FormControl;
-  public filterActivity = "id";
+  public filterActivity = "name";
   public filterControlActivity: FormControl;
-  public filterRole = "id";
+  public filterRole = "name";
   public filterControlRole: FormControl;
   public filterCriterion = "name";
   public filterControlCriterion: FormControl;

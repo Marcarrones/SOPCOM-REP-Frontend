@@ -1,4 +1,19 @@
-::ng-deep .mat-tab-label
-{
-  min-width: 16.6%!important;
+:host /deep/ .mat-tab-group {
+  flex-direction: row;
+}
+:host /deep/ .mat-tab-header {
+  border-bottom: none;
+}
+:host /deep/ .mat-tab-header-pagination {
+  display: none !important;
+}
+:host /deep/ .mat-tab-labels {
+  min-width: 100px;
+  flex-direction: column;
+}
+:host /deep/ .mat-ink-bar {
+  display: none;
+}
+:host /deep/ .mat-tab-body-wrapper {
+  flex: 1 1 auto;
 }

@@ -1,18 +1,18 @@
-<mat-toolbar style="height: 60px;">
+<mat-toolbar style="height: 60px; position: fixed; z-index: 100;" color="primary">
   <a style="height: inherit;" href="https://dogo4ml.upc.edu/en" target="_blank">
     <img style="height: inherit;" src="../assets/DOGO4ML.png" alt="DOGO4ML">
   </a>
-  <a style="height: inherit;" href="https://gessi.upc.edu/en" target="_blank">
+  <h1 style="margin-left: 10px; font-size: 35px;">SOPCOM</h1>
+  <a style="height: inherit; right: 0; position: absolute;" href="https://gessi.upc.edu/en" target="_blank">
     <img style="height: inherit;" src="../assets/GESSI.jpg" alt="Software and Services Engineering Group">
   </a>
-  <span>SOPCOM</span>
 </mat-toolbar>
-<div style="display: flex;">
-  <div style="width: 35%; border: 2px solid #99cccc; height: fit-content; border-radius: 25px; padding: 1em; position: fixed;">
+<div style="padding-top: 60px;">
+  <div style="width: 35%; height: fit-content; position: fixed;">
     <app-navigator></app-navigator>
   </div>
-  <div style="width: 37%; border: 2px; padding: 1em"></div>
-  <div style="width: 65%;">
+  <mat-divider styñe="margin-left: 35%;" [vertical]="true"></mat-divider>
+  <div style="width: 65%; padding: 2em; margin-left: 35%;">
     <router-outlet></router-outlet>
   </div>
 </div>
