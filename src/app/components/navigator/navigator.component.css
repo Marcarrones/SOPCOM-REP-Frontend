@@ -17,3 +17,7 @@
 :host /deep/ .mat-tab-body-wrapper {
   flex: 1 1 auto;
 }
+
+.mat-tab-label.mat-tab-label-active {
+  background-color: aqua;
+}

@@ -5,3 +5,9 @@
     border: 1px solid #99cccc;
     padding: 1em;
 }
+
+.table-elements {
+    border:1px solid black;
+    text-align: left;
+    padding: 1em;
+}

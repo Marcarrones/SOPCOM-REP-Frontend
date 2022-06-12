@@ -1,148 +1,244 @@
 <b style="font-size: 40;"> Method Chunk</b>
-<button mat-raised-button (click)="saveMethodChunk()"> Save </button>
-<button mat-raised-button (click)="deleteMethodChunk()"> Delete </button>
 <ng-container *ngIf="this.loaded; else loading">
-    <div style="display: flex; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
-        <div style="margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
-            <p>General information</p>
-            <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
-                <form>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>ID</mat-label>
-                        <input matInput [disabled]="this.methodChunk.id !== undefined" [value]="this.id">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Name</mat-label>
-                        <input matInput [value]="this.methodChunk.name">
-                    </mat-form-field>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>Description</mat-label>
-                        <input matInput [value]="this.methodChunk.description">
-                    </mat-form-field>
-                    <!--
-                    <mat-form-field style="width: 100%;">
-                        <mat-checkbox>
-                        Abstract 
-                        </mat-checkbox>
-                    </mat-form-field>-->
-                </form>
-            </div>
-            <div>
-                <p>Intention</p>
-                <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em;">
+    <button mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.table = !this.table"> Table View </button>
+    <ng-container *ngIf="!this.table; else tableBlock">
+        <button mat-raised-button (click)="saveMethodChunk()"> Save </button>
+        <button mat-raised-button (click)="deleteMethodChunk()"> Delete </button>
+        <div style="display: flex; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
+            <div style="margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
+                <p>General information</p>
+                <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
                     <form>
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Goal</mat-label>
-                            <input matInput type="text" aria-label="intention" [disabled]="this.id !== undefined" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.id : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
-                                  {{option['name']}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <mat-label>ID</mat-label>
+                            <input matInput [disabled]="this.methodChunk.id !== undefined" [value]="this.id">
                         </mat-form-field>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Name</mat-label>
+                            <input matInput [value]="this.methodChunk.name">
+                        </mat-form-field>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Description</mat-label>
+                            <input matInput [value]="this.methodChunk.description">
+                        </mat-form-field>
+                        <!--
+                        <mat-form-field style="width: 100%;">
+                            <mat-checkbox>
+                            Abstract 
+                            </mat-checkbox>
+                        </mat-form-field>-->
                     </form>
-                    <a mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
                 </div>
+                <div>
+                    <p>Intention</p>
+                    <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em;">
+                        <form>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Goal</mat-label>
+                                <input matInput type="text" aria-label="intention" [disabled]="this.id !== undefined" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.id : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
+                                    {{option['name']}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </form>
+                        <a mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <p>Process part</p>
+                <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
+                    <div class="method-element-div">
+                        <button mat-icon-button (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
+                        <app-method-element [id]="this.methodChunk.processPart.id" [reduced]="false"></app-method-element>
+                        <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
+                    </div>
+                </ng-container>
+                <ng-template #noActivity>
+                    <div class="method-element-div"  cdkDropList id="activity" [cdkDropListConnectedTo]="['activityList']" (cdkDropListDropped)="addActivity($event)">
+                        <button mat-icon-button (click)="openMethodElementDialogNew(null, 3, 'Activity')"> <mat-icon> add </mat-icon> </button>
+                    </div>
+                </ng-template>
             </div>
         </div>
         <div>
-            <p>Process part</p>
-            <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
-                <div class="method-element-div">
-                    <button mat-icon-button (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
-                    <app-method-element [id]="this.methodChunk.processPart.id" [reduced]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> Edit </button>
-                </div>
-            </ng-container>
-            <ng-template #noActivity>
-                <div class="method-element-div"  cdkDropList id="activity" [cdkDropListConnectedTo]="['activityList']" (cdkDropListDropped)="addActivity($event)">
-                    <button mat-icon-button (click)="openMethodElementDialogNew(null, 3, 'Activity')"> <mat-icon> add </mat-icon> </button>
-                </div>
-            </ng-template>
+            <p>Tools</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
+            cdkDropList id="tools" [cdkDropListConnectedTo]="['toolList']" (cdkDropListDropped)="addTool($event)">
+                <ng-container *ngFor="let t of this.methodChunk.tools; let i = index" style="width: 100px;">
+                <button mat-icon-button (click)="removeTool(i)"> <mat-icon> delete </mat-icon> </button>
+                    <div class="method-element-div">
+                        <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
+                        <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> Edit </button>
+                    </div>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Tools</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
-        cdkDropList id="tools" [cdkDropListConnectedTo]="['toolList']" (cdkDropListDropped)="addTool($event)">
-            <ng-container *ngFor="let t of this.methodChunk.tools; let i = index" style="width: 100px;">
-            <button mat-icon-button (click)="removeTool(i)"> <mat-icon> delete </mat-icon> </button>
-                <div class="method-element-div">
-                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> Edit </button>
-                </div>
-            </ng-container>
+        <div>
+            <p>Situation</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
+            cdkDropList id="situation" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addConsumedArtefact($event)">
+                <ng-container *ngFor="let t of this.methodChunk.situation; let j = index">
+                    <button mat-icon-button (click)="removeConsumedArtefact(j)"> <mat-icon> delete </mat-icon> </button>
+                    <div class="method-element-div">
+                        <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
+                        <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
+                    </div>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Situation</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
-        cdkDropList id="situation" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addConsumedArtefact($event)">
-            <ng-container *ngFor="let t of this.methodChunk.situation; let j = index">
-                <button mat-icon-button (click)="removeConsumedArtefact(j)"> <mat-icon> delete </mat-icon> </button>
-                <div class="method-element-div">
-                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
-                </div>
-            </ng-container>
+        <div>
+            <p>Product part</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
+            cdkDropList id="productPart" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addProducedArtefact($event)">
+                <ng-container *ngFor="let t of this.methodChunk.productPart; let k = index">
+                    <button mat-icon-button (click)="removeProducedArtefact(k)"> <mat-icon> delete </mat-icon> </button>
+                    <div class="method-element-div">
+                        <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
+                        <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
+                    </div>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Product part</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
-        cdkDropList id="productPart" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addProducedArtefact($event)">
-            <ng-container *ngFor="let t of this.methodChunk.productPart; let k = index">
-                <button mat-icon-button (click)="removeProducedArtefact(k)"> <mat-icon> delete </mat-icon> </button>
-                <div class="method-element-div">
-                    <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> Edit </button>
-                </div>
-            </ng-container>
+        <div>
+            <p>Roles</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
+            cdkDropList id="roles" [cdkDropListConnectedTo]="['roleList']" (cdkDropListDropped)="addRole($event)">
+                <ng-container *ngFor="let t of this.methodChunk.roles; let h = index">
+                    <button mat-icon-button (click)="removeRole(h)"> <mat-icon> delete </mat-icon> </button>
+                    <div class="method-element-div">
+                        <app-method-element [id]="t.me.id" [reduced]="false"></app-method-element>
+                    </div>
+                    <button (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> Edit </button>
+                    <mat-checkbox [(ngModel)]="t.isSet"> Is set </mat-checkbox>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Roles</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
-        cdkDropList id="roles" [cdkDropListConnectedTo]="['roleList']" (cdkDropListDropped)="addRole($event)">
-            <ng-container *ngFor="let t of this.methodChunk.roles; let h = index">
-                <button mat-icon-button (click)="removeRole(h)"> <mat-icon> delete </mat-icon> </button>
-                <div class="method-element-div">
-                    <app-method-element [id]="t.me.id" [reduced]="false"></app-method-element>
-                </div>
-                <button (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> Edit </button>
-                <mat-checkbox [(ngModel)]="t.isSet"> Is set </mat-checkbox>
-            </ng-container>
+        <div>
+            <p>Context criteria</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
+            cdkDropList id="criteria" [cdkDropListConnectedTo]="['criterionList']" (cdkDropListDropped)="addCriterion($event)">
+                <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
+                    <button mat-icon-button (click)="removeCriterion(l)"> <mat-icon> delete </mat-icon> </button>
+                    <div class="method-element-div">
+                        <p> {{t.criterionName}} </p>
+                        <mat-form-field>
+                            <mat-label> Values </mat-label>
+                            <mat-select multiple [(value)]="t.valuesNamesArray" (valueChange)="criterionValueChanges(t, $event)">
+                                <mat-option *ngFor="let v of t.allValues" [value]="v.name"> {{v.name}} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Context criteria</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;"
-        cdkDropList id="criteria" [cdkDropListConnectedTo]="['criterionList']" (cdkDropListDropped)="addCriterion($event)">
-            <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
-                <button mat-icon-button (click)="removeCriterion(l)"> <mat-icon> delete </mat-icon> </button>
-                <div class="method-element-div">
-                    <p> {{t.criterionName}} </p>
-                    <mat-form-field>
-                        <mat-label> Values </mat-label>
-                        <mat-select multiple [(value)]="t.valuesNamesArray" (valueChange)="criterionValueChanges(t, $event)">
-                            <mat-option *ngFor="let v of t.allValues" [value]="v.name"> {{v.name}} </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </ng-container>
+        <div>
+            <p>Related chunks</p>
+            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;">
+                <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
+                    <div class="method-element-div">
+                        <p> {{t.criterionName}} </p>
+                    </div>
+                </ng-container>
+            </div>
         </div>
-    </div>
-    <div>
-        <p>Related chunks</p>
-        <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;">
-            <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
-                <div class="method-element-div">
-                    <p> {{t.criterionName}} </p>
-                </div>
-            </ng-container>
-        </div>
-    </div>
+    </ng-container>
+    <ng-template #tableBlock>
+        <table style="border-collapse: collapse;">
+            <tr class="table-elements">
+                <th class="table-elements"> id </th>
+                <th class="table-elements"> {{this.methodChunk.id}} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Related chunks </th>
+                <th class="table-elements"> </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Abstract </th>
+                <th class="table-elements"> {{ this.methodChunk.abstract == 0 ? false : true }} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> name </th>
+                <th class="table-elements"> {{ this.methodChunk.name }} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Description </th>
+                <th class="table-elements"> {{ this.methodChunk.description }} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Context criteria </th>
+                <th class="table-elements">
+                    <ng-container *ngIf="this.methodChunk.contextCriteria.length > 0; else noData">
+                        <ng-container *ngFor="let cc of this.methodChunk.contextCriteria; let i = index">
+                            {{cc.criterionName}} = &#123; 
+                            <ng-container *ngFor="let v of cc.valuesNamesArray; let j = index">
+                                 {{v}} 
+                                 <ng-container *ngIf="j != cc.valuesNamesArray.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container> 
+                            &#125;
+                            <ng-container *ngIf="i != this.methodChunk.contextCriteria.length - 1"> ,&nbsp; </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Intention </th>
+                <th class="table-elements"> {{ this.methodChunk.name }} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Situation </th>
+                <th class="table-elements">
+                    <ng-container *ngIf="this.methodChunk.situation.length > 0; else noData">
+                        <ng-container *ngFor="let ar of this.methodChunk.situation; let i = index">
+                            {{ ar.id }} - {{ ar.name }}
+                            <ng-container *ngIf="i != this.methodChunk.situationlength - 1"> ,&nbsp; </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Process part </th>
+                <th class="table-elements"> {{ this.methodChunk.processPart.id }} - {{ this.methodChunk.processPart.name }} </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Product part </th>
+                <th class="table-elements">
+                    <ng-container *ngIf="this.methodChunk.productPart.length > 0; else noData">
+                        <ng-container *ngFor="let ar of this.methodChunk.productPart; let i = index">
+                            {{ ar.id }} - {{ ar.name }}
+                            <ng-container *ngIf="i != this.methodChunk.productPartlength - 1"> ,&nbsp; </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Roles </th>
+                <th class="table-elements">
+                    <ng-container *ngIf="this.methodChunk.roles.length > 0; else noData">
+                        <ng-container *ngFor="let r of this.methodChunk.roles; let i = index">
+                            {{ r.me.id }} - {{ r.me.name }}
+                            <ng-container *ngIf="i != this.methodChunk.roles.length - 1"> ,&nbsp; </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </th>
+            </tr>
+            <tr class="table-elements">
+                <th class="table-elements"> Tools </th>
+                <th class="table-elements">
+                    <ng-container *ngIf="this.methodChunk.tools.length > 0; else noData">
+                        <ng-container *ngFor="let t of this.methodChunk.tools; let i = index">
+                            {{ t.id }} - {{ t.name }}
+                            <ng-container *ngIf="i != this.methodChunk.tools.length - 1"> ,&nbsp; </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </th>
+            </tr>
+        </table>
+    </ng-template>
 </ng-container>
 <ng-template #loading>
     <mat-spinner></mat-spinner>
 </ng-template>
+<ng-template #noData> - </ng-template>

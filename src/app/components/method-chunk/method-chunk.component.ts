@@ -25,6 +25,7 @@ export class MethodChunkComponent implements OnInit {
   
   public mode: ProgressSpinnerMode = 'indeterminate';
   public loaded = false;
+  public table = false;
 
   public methodChunk;
   public params;
@@ -117,15 +118,15 @@ export class MethodChunkComponent implements OnInit {
     let body = this.stringifyMethodChunk();
     console.log(body)
     if(this.id !== undefined && this.id !== null && this.id !== "") {
-      //this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
-      //  console.log("After update", response)
-      //  this.ngOnInit()
-      //})
+      this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
+        console.log("After update", response)
+        this.ngOnInit()
+      })
     } else {
-      //this.endpointService.addNewMethodChunk(body).subscribe(response => {
-      //  console.log("After insert", response);
-      //  this.ngOnInit()
-      //})
+      this.endpointService.addNewMethodChunk(body).subscribe(response => {
+        console.log("After insert", response);
+        this.ngOnInit()
+      })
     }
   }
 
@@ -157,7 +158,7 @@ export class MethodChunkComponent implements OnInit {
     body['roles'] = roles;
     let contextCriteria: any[] = [];
     for(let cc of this.methodChunk.contextCriteria) {
-      contextCriteria.push({criterionId: cc.criterionId, values: cc.values});
+      contextCriteria.push({criterionId: cc.criterionId, value: cc.values.map(v => v.id)});
     }
     body['contextCriteria'] = contextCriteria;
     return JSON.stringify(body);
