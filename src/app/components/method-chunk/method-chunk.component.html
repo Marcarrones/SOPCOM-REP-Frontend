@@ -146,96 +146,99 @@
         </div>
     </ng-container>
     <ng-template #tableBlock>
-        <table style="border-collapse: collapse;">
-            <tr class="table-elements">
-                <th class="table-elements"> id </th>
-                <th class="table-elements"> {{this.methodChunk.id}} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Related chunks </th>
-                <th class="table-elements"> </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Abstract </th>
-                <th class="table-elements"> {{ this.methodChunk.abstract == 0 ? false : true }} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> name </th>
-                <th class="table-elements"> {{ this.methodChunk.name }} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Description </th>
-                <th class="table-elements"> {{ this.methodChunk.description }} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Context criteria </th>
-                <th class="table-elements">
-                    <ng-container *ngIf="this.methodChunk.contextCriteria.length > 0; else noData">
-                        <ng-container *ngFor="let cc of this.methodChunk.contextCriteria; let i = index">
-                            {{cc.criterionName}} = &#123; 
-                            <ng-container *ngFor="let v of cc.valuesNamesArray; let j = index">
-                                 {{v}} 
-                                 <ng-container *ngIf="j != cc.valuesNamesArray.length - 1"> ,&nbsp; </ng-container>
-                            </ng-container> 
-                            &#125;
-                            <ng-container *ngIf="i != this.methodChunk.contextCriteria.length - 1"> ,&nbsp; </ng-container>
+        <div>
+            <table id="table" style="border-collapse: collapse;">
+                <tr class="table-elements">
+                    <th class="table-elements"> id </th>
+                    <th class="table-elements"> {{this.methodChunk.id}} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Related chunks </th>
+                    <th class="table-elements"> </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Abstract </th>
+                    <th class="table-elements"> {{ this.methodChunk.abstract == 0 ? false : true }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Name </th>
+                    <th class="table-elements"> {{ this.methodChunk.name }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Description </th>
+                    <th class="table-elements"> {{ this.methodChunk.description }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Context criteria </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.contextCriteria.length > 0; else noData">
+                            <ng-container *ngFor="let cc of this.methodChunk.contextCriteria; let i = index">
+                                {{cc.criterionName}} = &#123; 
+                                <ng-container *ngFor="let v of cc.valuesNamesArray; let j = index">
+                                    {{v}} 
+                                    <ng-container *ngIf="j != cc.valuesNamesArray.length - 1"> ,&nbsp; </ng-container>
+                                </ng-container> 
+                                &#125;
+                                <ng-container *ngIf="i != this.methodChunk.contextCriteria.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Intention </th>
-                <th class="table-elements"> {{ this.methodChunk.name }} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Situation </th>
-                <th class="table-elements">
-                    <ng-container *ngIf="this.methodChunk.situation.length > 0; else noData">
-                        <ng-container *ngFor="let ar of this.methodChunk.situation; let i = index">
-                            {{ ar.id }} - {{ ar.name }}
-                            <ng-container *ngIf="i != this.methodChunk.situationlength - 1"> ,&nbsp; </ng-container>
+                    </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Intention </th>
+                    <th class="table-elements"> {{ this.methodChunk.name }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Situation </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.situation.length > 0; else noData">
+                            <ng-container *ngFor="let ar of this.methodChunk.situation; let i = index">
+                                {{ ar.id }} - {{ ar.name }}
+                                <ng-container *ngIf="i != this.methodChunk.situationlength - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Process part </th>
-                <th class="table-elements"> {{ this.methodChunk.processPart.id }} - {{ this.methodChunk.processPart.name }} </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Product part </th>
-                <th class="table-elements">
-                    <ng-container *ngIf="this.methodChunk.productPart.length > 0; else noData">
-                        <ng-container *ngFor="let ar of this.methodChunk.productPart; let i = index">
-                            {{ ar.id }} - {{ ar.name }}
-                            <ng-container *ngIf="i != this.methodChunk.productPartlength - 1"> ,&nbsp; </ng-container>
+                    </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Process part </th>
+                    <th class="table-elements"> {{ this.methodChunk.processPart.id }} - {{ this.methodChunk.processPart.name }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Product part </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.productPart.length > 0; else noData">
+                            <ng-container *ngFor="let ar of this.methodChunk.productPart; let i = index">
+                                {{ ar.id }} - {{ ar.name }}
+                                <ng-container *ngIf="i != this.methodChunk.productPart.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Roles </th>
-                <th class="table-elements">
-                    <ng-container *ngIf="this.methodChunk.roles.length > 0; else noData">
-                        <ng-container *ngFor="let r of this.methodChunk.roles; let i = index">
-                            {{ r.me.id }} - {{ r.me.name }}
-                            <ng-container *ngIf="i != this.methodChunk.roles.length - 1"> ,&nbsp; </ng-container>
+                    </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Roles </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.roles.length > 0; else noData">
+                            <ng-container *ngFor="let r of this.methodChunk.roles; let i = index">
+                                {{ r.me.id }} - {{ r.me.name }}
+                                <ng-container *ngIf="i != this.methodChunk.roles.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </th>
-            </tr>
-            <tr class="table-elements">
-                <th class="table-elements"> Tools </th>
-                <th class="table-elements">
-                    <ng-container *ngIf="this.methodChunk.tools.length > 0; else noData">
-                        <ng-container *ngFor="let t of this.methodChunk.tools; let i = index">
-                            {{ t.id }} - {{ t.name }}
-                            <ng-container *ngIf="i != this.methodChunk.tools.length - 1"> ,&nbsp; </ng-container>
+                    </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Tools </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.tools.length > 0; else noData">
+                            <ng-container *ngFor="let t of this.methodChunk.tools; let i = index">
+                                {{ t.id }} - {{ t.name }}
+                                <ng-container *ngIf="i != this.methodChunk.tools.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
-                </th>
-            </tr>
-        </table>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <button mat-raised-button (click)="exportPDF()"> Export to pdf </button>
     </ng-template>
 </ng-container>
 <ng-template #loading>

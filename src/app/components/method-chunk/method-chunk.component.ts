@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { MethodElement } from 'src/app/models/method-element';
 import { MethodChunk } from 'src/app/models/method-chunk';
@@ -15,6 +15,8 @@ import { MethodElementComponent } from '../method-element/method-element.compone
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {map, startWith} from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-method-chunk',
@@ -271,6 +273,13 @@ export class MethodChunkComponent implements OnInit {
       if(index != -1) values.push(criterion.allValues[index])
     }
     criterion.values = values;
+  }
+
+  public exportPDF() {
+    //let table = document.getElementById('table')!;
+    let jspdf = new jsPDF('p','pt', 'a4');
+    autoTable(jspdf, {html: '#table'})
+    jspdf.save(this.methodChunk.id + '.pdf');
   }
 
 }
