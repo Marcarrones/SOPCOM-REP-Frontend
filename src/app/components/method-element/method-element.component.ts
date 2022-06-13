@@ -43,12 +43,9 @@ export class MethodElementComponent implements OnInit {
           this.id = null;
           this.methodElement = new MethodElement("", "", false, "", "", this.type, [], [], []);
         } else {
-          this.methodElement = this.parseMethodElement(data) 
-          console.log(this.methodElement)
+          this.methodElement = this.parseMethodElement(data)
         }
         this.buildFormControl();
-        console.log(this.methodElement)
-        console.log(JSON.stringify(this.methodElement))
         this.loaded = true;
       })
     } else {
@@ -58,11 +55,9 @@ export class MethodElementComponent implements OnInit {
       this.buildFormControl();
       this.loaded = true;
     }
-    console.log(this.edit)
   }
 
   private buildFormControl() {
-    console.log(this.id)
     this.methodElementFormGroup = new FormGroup({
       id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}),
       name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
@@ -99,8 +94,6 @@ export class MethodElementComponent implements OnInit {
 
   public async saveMethodElement() {
     let data = this.stringifyMethodElement();
-    //let data = JSON.stringify(this.methodElement);
-    console.log(data)
     if(this.id !== undefined && this.id !== null) {
       console.log("Update method element", this.methodElement, this.methodElementFormGroup.controls['description'])
       this.endpointService.updateMethodElement(this.id, data).subscribe( data => {

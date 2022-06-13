@@ -18,6 +18,11 @@
   flex: 1 1 auto;
 }
 
-.mat-tab-label.mat-tab-label-active {
-  background-color: aqua;
+.filter-selection {
+  width: 10%;
+  margin-right: 5px;
+}
+
+.filter-input {
+  width: 85%;
 }

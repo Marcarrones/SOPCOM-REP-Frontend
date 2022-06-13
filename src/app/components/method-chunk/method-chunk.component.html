@@ -1,47 +1,43 @@
 <b style="font-size: 40;"> Method Chunk</b>
 <ng-container *ngIf="this.loaded; else loading">
-    <button mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.table = !this.table"> Table View </button>
+    <button mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.table = !this.table"> {{ this.table ? 'Edit view' : 'Table view'}} </button>
     <ng-container *ngIf="!this.table; else tableBlock">
         <button mat-raised-button (click)="saveMethodChunk()"> Save </button>
-        <button mat-raised-button (click)="deleteMethodChunk()"> Delete </button>
+        <button mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
         <div style="display: flex; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
             <div style="margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
                 <p>General information</p>
                 <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em 1rem;">
-                    <form>
-                        <mat-form-field style="width: 100%;">
+                    <form [formGroup]="methodChunkFormGroup">
+                        <mat-form-field style="width: 100%;" appearance="outline">
                             <mat-label>ID</mat-label>
-                            <input matInput [disabled]="this.methodChunk.id !== undefined" [value]="this.id">
+                            <input matInput formControlName="id" type="text">
                         </mat-form-field>
                         <mat-form-field style="width: 100%;">
                             <mat-label>Name</mat-label>
-                            <input matInput [value]="this.methodChunk.name">
+                            <input matInput formControlName="name" type="text" autocomplete="off">
                         </mat-form-field>
                         <mat-form-field style="width: 100%;">
                             <mat-label>Description</mat-label>
-                            <input matInput [value]="this.methodChunk.description">
+                            <input matInput formControlName="description" type="text">
                         </mat-form-field>
-                        <!--
-                        <mat-form-field style="width: 100%;">
-                            <mat-checkbox>
-                            Abstract 
-                            </mat-checkbox>
-                        </mat-form-field>-->
                     </form>
                 </div>
                 <div>
                     <p>Intention</p>
                     <div style="width: 700px; margin: 10px; border: 1px solid #99cccc; padding: 1em;">
                         <form>
-                            <mat-form-field style="width: 100%;">
-                                <mat-label>Goal</mat-label>
-                                <input matInput type="text" aria-label="intention" [disabled]="this.id !== undefined" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.id : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
-                                    {{option['name']}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
+                            <ng-container *ngIf="this.navigatorService.goalList.length > 0">
+                                <mat-form-field style="width: 100%;">
+                                    <mat-label>Goal</mat-label>
+                                        <input matInput type="text" aria-label="intention" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.name : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="intentionSelected($event)" >
+                                            <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
+                                            {{option['name']}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                </mat-form-field>
+                            </ng-container>
                         </form>
                         <a mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
                     </div>
@@ -134,16 +130,6 @@
                 </ng-container>
             </div>
         </div>
-        <div>
-            <p>Related chunks</p>
-            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;">
-                <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
-                    <div class="method-element-div">
-                        <p> {{t.criterionName}} </p>
-                    </div>
-                </ng-container>
-            </div>
-        </div>
     </ng-container>
     <ng-template #tableBlock>
         <div>
@@ -154,7 +140,32 @@
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Related chunks </th>
-                    <th class="table-elements"> </th>
+                    <th class="table-elements">
+                        <ng-container *ngIf="this.methodChunk.me_struct_rel_to.length > 0">
+                            <ng-container *ngFor="let sr of this.methodChunk.me_struct_rel_to; let i = index">
+                                {{ sr.fromMC }} {{ sr.rel == 1 ? 'specializes' : sr.rel == 2 ? 'aggregates' : sr.name }} {{ sr.toMC }}
+                                <ng-container *ngIf="i != this.methodChunk.me_struct_rel_to.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="this.methodChunk.me_struct_rel_from.length > 0">
+                            <ng-container *ngFor="let sr of this.methodChunk.me_struct_rel_from; let i = index">
+                                {{ sr.fromMC }} {{ sr.rel == 1 ? 'specializes' : sr.rel == 2 ? 'aggregates' : sr.name }} {{ sr.toMC }}
+                                <ng-container *ngIf="i != this.methodChunk.me_struct_rel_from.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="this.methodChunk.activity_rel_from.length > 0">
+                            <ng-container *ngFor="let sr of this.methodChunk.activity_rel_from; let i = index">
+                                {{ sr.fromMC }} {{ sr.name }} {{ sr.toMC }}
+                                <ng-container *ngIf="i != this.methodChunk.activity_rel_from.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="this.methodChunk.activity_rel_to.length > 0">
+                            <ng-container *ngFor="let sr of this.methodChunk.activity_rel_to; let i = index">
+                                {{ sr.fromMC }} {{ sr.name }} {{ sr.toMC }}
+                                <ng-container *ngIf="i != this.methodChunk.activity_rel_to.length - 1"> ,&nbsp; </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </th>
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Abstract </th>

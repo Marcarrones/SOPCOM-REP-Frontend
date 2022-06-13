@@ -14,6 +14,10 @@ export class MethodChunk {
     private productPart: any[];
     private roles: any[];
     private contextCriteria: any[];
+    private me_struct_rel_to: any[];
+    private me_struct_rel_from: any[];
+    private activity_rel_to: any[];
+    private activity_rel_from: any[];
 
 
     constructor(
@@ -27,7 +31,11 @@ export class MethodChunk {
         situation: MethodElement[], 
         productPart: MethodElement[], 
         roles: any[], 
-        contextCriteria: Criterion[]
+        contextCriteria: Criterion[],
+        me_struct_rel_to: any[],
+        me_struct_rel_from: any[],
+        activity_rel_to: any[],
+        activity_rel_from: any[]
     ) {
         this.id = id
         this.name = name
@@ -40,6 +48,10 @@ export class MethodChunk {
         this.productPart = productPart
         this.roles = roles
         this.contextCriteria = contextCriteria
+        this.me_struct_rel_to = me_struct_rel_to
+        this.me_struct_rel_from = me_struct_rel_from
+        this.activity_rel_to = activity_rel_to
+        this.activity_rel_from = activity_rel_from
     }
 
 }

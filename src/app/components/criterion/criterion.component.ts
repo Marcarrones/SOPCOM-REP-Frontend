@@ -32,24 +32,31 @@ export class CriterionComponent implements OnInit {
       this.endpointService.getCriterionById(this.id).subscribe(data => {
         if(data['error'] === undefined) this.criterion = this.parseCriterion(data);
         else {
+          this.edit = true;
           this.criterion = new Criterion(null, "", []);
           this.navigatorService.allowChange = false;
         }
-        console.log(this.criterion)
+        this.loadFormControls();
         this.loaded = true;
       })
     } else {
       this.criterion = new Criterion(null, "", []);
       this.edit = true;
+      this.loadFormControls();
       this.loaded = true;
       this.navigatorService.allowChange = false;
-      this.nameFormControl = new FormControl({value: "", disabled: !this.edit}, Validators.required);
-      this.nameFormControl.valueChanges.subscribe(value => this.criterion.name = value)
     }
   }
 
   private parseCriterion(data) {
+    this.edit = false;
     return new Criterion(data['id'], data['name'], data['values']);
+  }
+
+  private loadFormControls() {
+    console.log(this.edit)
+    this.nameFormControl = new FormControl({value: this.criterion.name, disabled: !this.edit}, Validators.required);
+    this.nameFormControl.valueChanges.subscribe(value => this.criterion.name = value)
   }
 
   public stringifyCriterion() {
@@ -76,12 +83,12 @@ export class CriterionComponent implements OnInit {
   }
 
   public saveCriterion() {
-    console.log(this.criterion)
     if(this.criterion.values.length < 2) {
+      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    } else if(!this.nameFormControl.valid) {
       this._snackBar.open("The criterion must have at least 2 values", 'X', {duration: 2000, panelClass: ['red-snackbar']});
     } else {
       let body = this.stringifyCriterion();
-      console.log(body)
       this.endpointService.addCriterion(body).subscribe(data => {
         this._snackBar.open("Criterion added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshCriterionList();

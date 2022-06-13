@@ -5,7 +5,7 @@ import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogClose } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
 import { ActivatedRoute } from '@angular/router';
@@ -34,11 +34,8 @@ export class MethodChunkComponent implements OnInit {
   public id;
   public goalsFilter: Observable<string[]>;
 
-  public idFormControl = new FormControl('');
-  public nameFormControl = new FormControl('');
-  public descriptionFormControl = new FormControl('');
-  public intentionFormControl = new FormControl('');
-  public processPartFormControl = new FormControl('');
+  public methodChunkFormGroup: FormGroup;
+  public intentionFormControl: FormControl;
 
   @ViewChild(MethodElementComponent) activity: MethodElementComponent;
 
@@ -60,18 +57,36 @@ export class MethodChunkComponent implements OnInit {
         this.loaded = true
       })
     } else {
-      this.methodChunk = new MethodChunk("", "", "", false, null, null, [], [], [], [], []);
+      this.methodChunk = new MethodChunk("", "", "", false, null, null, [], [], [], [], [], [], [], [], []);
       this.initializeFormControls()
       this.loaded = true;
     }
   }
 
   private initializeFormControls() {
+    this.methodChunkFormGroup = new FormGroup({
+      id: new FormControl({value: this.methodChunk.id, disabled: (this.id !== null && this.id !== undefined && this.id !== '')}, Validators.required),
+      name: new FormControl({value: this.methodChunk.name, disabled: false}, Validators.required),
+      description: new FormControl({value: this.methodChunk.description, disabled: false})
+    })
+    this.methodChunkFormGroup.valueChanges.subscribe(values => {
+      if(this.id === null || this.id === undefined || this.id === '') this.methodChunk.id = values['id'];
+      this.methodChunk.name = values['name'];
+      this.methodChunk.description = values['description']
+    })
+    if(this.methodChunk.intention !== undefined && this.methodChunk.intention !== null)
+      this.intentionFormControl = new FormControl(this.methodChunk.intention.name, Validators.required)
+    else this.intentionFormControl = new FormControl('', Validators.required)
     this.goalsFilter = this.intentionFormControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
     );
-    console.log(this.goalsFilter)
+  }
+
+  public intentionSelected(event) {
+    let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
+    console.log(this.methodChunk)
+    if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
   }
 
   private _filter(value) {
@@ -85,6 +100,10 @@ export class MethodChunkComponent implements OnInit {
     let roles: any[] = [];
     let situation: MethodElement[] = [];
     let contextCriteria: any[] = [];
+    let me_struct_rel_to: any[];
+    let me_struct_rel_from: any[];
+    let activity_rel_to: any[];
+    let activity_rel_from: any[];
     for(let t in data['Tools']){
       tools.push(new MethodElement(data['Tools'][t]['id'], data['Tools'][t]['name'], data["Process part"]["abstract"], data['Tools'][t]['description'], "", 1, [], [], []))
     }
@@ -107,28 +126,44 @@ export class MethodChunkComponent implements OnInit {
       contextCriteria[cc]['valuesNamesArray'] = contextCriteria[cc]['values'].map(v => v.name)
     }
     let activity: MethodElement = new MethodElement(data["Process part"]["id"], data["Process part"]["name"], data["Process part"]["abstract"], data["Process part"]["description"], "", 3, [], [], []);
-    console.log(tools);
-    console.log(productPart);
-    console.log(roles);
-    console.log(situation);
-    console.log(activity);
-    console.log(contextCriteria);
-    return new MethodChunk(data['id'], data['name'], data['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, contextCriteria);
+    me_struct_rel_to = data['Related chunks']['to']['me_struct_rel'] !== undefined ? data['Related chunks']['to']['me_struct_rel'] : [];
+    me_struct_rel_from = data['Related chunks']['from']['me_struct_rel'] !== undefined ? data['Related chunks']['from']['me_struct_rel'] : [];
+    activity_rel_to = data['Related chunks']['to']['activity_rel'] !== undefined ? data['Related chunks']['to']['activity_rel'] : [];
+    activity_rel_from = data['Related chunks']['from']['activity_rel'] !== undefined ? data['Related chunks']['from']['activity_rel'] : [];
+    return new MethodChunk(data['id'], data['name'], data['description'], data['abstract'], goal, activity, tools, situation, productPart, roles, contextCriteria, me_struct_rel_to, me_struct_rel_from, activity_rel_to, activity_rel_from);
+  }
+
+  private isMethodChunkValid() {
+    if(!this.methodChunkFormGroup.valid) {
+      this._snackBar.open("Missing ID or name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    }
+    if(!this.methodChunk.intention === null || this.methodChunk.intention === undefined) {
+      this._snackBar.open("An intention is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    }
+    if(this.methodChunk.processPart === null || this.methodChunk.processPart === undefined) {
+      this._snackBar.open("An activity is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    }
+    return true;
   }
 
   public saveMethodChunk() {
-    let body = this.stringifyMethodChunk();
-    console.log(body)
-    if(this.id !== undefined && this.id !== null && this.id !== "") {
-      this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
-        console.log("After update", response)
-        this.ngOnInit()
-      })
-    } else {
-      this.endpointService.addNewMethodChunk(body).subscribe(response => {
-        console.log("After insert", response);
-        this.ngOnInit()
-      })
+    if(this.isMethodChunkValid()) {
+      let body = this.stringifyMethodChunk();
+      console.log(body)
+      if(this.id !== undefined && this.id !== null && this.id !== "") {
+        this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
+          console.log("After update", response)
+          this.ngOnInit()
+        })
+      } else {
+        this.endpointService.addNewMethodChunk(body).subscribe(response => {
+          console.log("After insert", response);
+          this.ngOnInit()
+        })
+      }
     }
   }
 
