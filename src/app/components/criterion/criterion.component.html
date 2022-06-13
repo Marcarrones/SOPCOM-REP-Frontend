@@ -1,8 +1,10 @@
+<h1 style="text-transform: capitalize;"> Criterion </h1>
 <ng-container *ngIf="this.loaded; else loading">
     <mat-form-field>
         <mat-label> Name </mat-label>
-        <input matInput [formControl]="this.nameFormControl">
+        <input matInput [formControl]="this.nameFormControl" style="width: 100%;">
     </mat-form-field>
+    <h3> Values </h3>
     <div *ngFor="let v of criterion.values; let i = index">
         {{v.name}} 
         <ng-container *ngIf="this.edit">

@@ -1,5 +1,5 @@
-<p> Criterion </p>
-<button mat-button (click)="goBack()">&lt;Go back</button>
 <app-criterion [id]="this.id"></app-criterion>
-<button *ngIf="this.id === undefined || this.id === null || this.id === ''" mat-raised-button color="primary" (click)="saveCriterion()"> Save </button>
-<button *ngIf="this.id !== undefined && this.id !== null && this.id !== ''" mat-raised-button color="primary" (click)="deleteCriterion()"> Delete </button>
+<div style="margin-top: 10px;">
+    <button *ngIf="this.id === undefined || this.id === null || this.id === ''" mat-raised-button color="primary" (click)="saveCriterion()"> Save </button>
+    <button *ngIf="this.id !== undefined && this.id !== null && this.id !== ''" mat-raised-button color="primary" (click)="deleteCriterion()"> Delete </button>
+</div>
