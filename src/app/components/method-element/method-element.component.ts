@@ -106,6 +106,7 @@ export class MethodElementComponent implements OnInit {
       console.log("Post method element", this.methodElement)
       this.endpointService.addMethodElement(data).subscribe( data => {
         console.log("POST", data)
+        this.id = this.methodElement.id
         this.uploadFigure();
         this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.refreshAndRoute()

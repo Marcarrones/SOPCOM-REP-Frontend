@@ -1,0 +1,14 @@
+.relations-div {
+    display: table;
+    border: 1px dashed grey;
+    min-height: 100px; 
+    min-width: 100px; 
+    padding: 2em;
+    border-radius: 10px;
+}
+
+.figure {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}

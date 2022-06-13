@@ -1,4 +1,6 @@
 <h1 style="text-transform: capitalize;">{{this.typeStr}}</h1>
+<mat-divider style="margin-top: 10px;"></mat-divider>
+<h2> General information </h2>
 <ng-container *ngIf="this.loaded; else loading">
     <form [formGroup]="this.methodElementFormGroup">
         <mat-form-field id="meID" style="width: 100%;" type="text">
@@ -14,38 +16,42 @@
             <input matInput formControlName="description">
         </mat-form-field>
         <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
-        <div></div>
-        <mat-label>Figure</mat-label>
+        <mat-divider style="margin-top: 10px;"></mat-divider>
+        <h2> Figure </h2>
+        <a href="{{this.figureUrl}}" target="_blank"><img *ngIf="this.reduced && this.figureUrl !== ''" class="figure" [src]="this.figureUrl"></a>
         <input type="file" accept="image/png, image/jpeg" (change)="fileChanged($event)" [disabled]="!this.edit">
     </form>
-    <img *ngIf="this.reduced && this.figureUrl !== ''" [src]="this.figureUrl">
     <ng-container *ngIf="this.reduced">
-        Relates to:
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+        <h2> Relations </h2>
         <div>
-            Structural relations:
-            <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;" 
+            <h3> Structural relations: </h3>
+            <div class="relations-div"
             cdkDropList 
             id="structList"
             [cdkDropListData]="this.methodElement.me_struct_rel_to" 
             [cdkDropListConnectedTo]="['toolList', 'artefactList', 'activityList', 'roleList']"
             (cdkDropListDropped)="droppedStructRel($event)"
             [cdkDropListDisabled]="this.edit">
-                <ng-container *ngFor="let srelfrom of this.methodElement.me_struct_rel_from; let i = index">
-                    <div>
-                        <a [routerLink]="['/', this.typeStr, srelfrom.fromME]"> {{ srelfrom.id }} </a>
-                        <mat-label>Relation type</mat-label>
-                        <mat-form-field>
-                            <mat-select [disabled]="!this.edit" [value]="srelfrom.rel" [required]="true" placeholder="Relation type" style="text-transform: Capitalize;" (valueChange)="selectedStructRel(i, $event)">
-                                <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.structRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <a mat-icon-button (click)="removeStructRel(i)"> <mat-icon> delete </mat-icon> </a>
-                    </div>
+                <ng-container *ngIf="this.methodElement.me_struct_rel_from.length > 0">
+                    <ng-container *ngFor="let srelfrom of this.methodElement.me_struct_rel_from; let i = index">
+                        <div>
+                            {{ srelfrom.id }}
+                            <mat-form-field>
+                            <mat-label>Relation type</mat-label>
+                                <mat-select [disabled]="!this.edit" [value]="srelfrom.rel" [required]="true" style="text-transform: Capitalize;" (valueChange)="selectedStructRel(i, $event)">
+                                    <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.structRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <a mat-icon-button (click)="removeStructRel(i)"> <mat-icon> delete </mat-icon> </a>
+                        </div>
+                    </ng-container>
                 </ng-container>
+                <div style="text-align: center;">Drag here the elements to relate</div>
             </div>
             <ng-container *ngIf="this.type == 3">
-                Activity relations:
-                <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;" 
+                <h3>Activity relations:</h3>
+                <div class="relations-div"
                 cdkDropList 
                 id="activityList"
                 [cdkDropListData]="this.methodElement.activity_rel_from" 
@@ -54,21 +60,22 @@
                 [cdkDropListDisabled]="this.edit">
                         <ng-container *ngFor="let actrelfrom of this.methodElement.activity_rel_from; let j = index">
                             <div>
-                                <a [routerLink]="['/activity', actrelfrom.fromME]"> {{ actrelfrom.id }} </a>
-                                <mat-label>Relation type</mat-label>
+                                {{ actrelfrom.id }}
                                 <mat-form-field>
-                                    <mat-select [disabled]="!this.edit" [value]="actrelfrom.rel" [required]="true" placeholder="Relation type" style="text-transform: Capitalize;"  (valueChange)="selectedActRel(j, $event)">
+                                <mat-label>Relation type</mat-label>
+                                    <mat-select [disabled]="!this.edit" [value]="actrelfrom.rel" [required]="true" style="text-transform: Capitalize;"  (valueChange)="selectedActRel(j, $event)">
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.activityRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                                 <a mat-icon-button (click)="removeActRel(j)"> <mat-icon> delete </mat-icon> </a>
                             </div>
                         </ng-container>
+                        <div style="text-align: center;">Drag here the activities to relate</div>
                 </div>
             </ng-container>
             <ng-container *ngIf="this.type == 2">
-                Artefact relations:
-                <div style="display: table; border: 1px solid black; min-height: 50px; min-width: 50px;" 
+                <h3>Artefact relations:</h3>
+                <div class="relations-div" 
                 cdkDropList 
                 id="artefactList"
                 [cdkDropListData]="this.methodElement.artefact_rel_from" 
@@ -77,9 +84,9 @@
                 [cdkDropListDisabled]="this.edit">
                         <ng-container *ngFor="let artrelfrom of this.methodElement.artefact_rel_from; let k = index">
                             <div>
-                                <a [routerLink]="['/artefact' + this.typeStr, artrelfrom.fromME]"> {{ artrelfrom.id }} </a>
-                                <mat-label>Relation type</mat-label>
+                                {{ artrelfrom.id }}
                                 <mat-form-field>
+                                <mat-label>Relation type</mat-label>
                                     <mat-select [disabled]="!this.edit" [value]="artrelfrom.rel" [required]="true" placeholder="Relation type" style="text-transform: Capitalize;" (valueChange)="selectedArtRel(k, $event)">
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.artefactRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
@@ -87,32 +94,8 @@
                                 <a mat-icon-button (click)="removeArtRel(k)"> <mat-icon> delete </mat-icon> </a>
                             </div>
                         </ng-container>
+                        <div style="text-align: center;">Drag here the artefacts to relate</div>
                 </div>
-            </ng-container>
-        </div>
-        Is related by:
-        <div>
-            Structural relations:
-            <ng-container *ngFor="let srelto of this.methodElement.me_struct_rel_to">
-                <div>
-                    <a [routerLink]="['/' + this.typeStr, srelto.id]"> {{srelto.id}} </a>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="this.type == 3">
-            Activity relations:
-                <ng-container *ngFor="let actrelto of this.methodElement.activity_rel_to">
-                    <div>
-                        <a [routerLink]="['/activity', actrelto.id]"> {{ actrelto.id }}</a>
-                    </div>
-                </ng-container>
-            </ng-container>
-            <ng-container *ngIf="this.type == 2">
-                Artefact relations:
-                <ng-container *ngFor="let artrelto of this.methodElement.artefact_rel_to">
-                    <div>
-                        <a [routerLink]="['/artefact', artrelto.id]"> {{ artrelto.id }} </a>
-                    </div>
-                </ng-container>
             </ng-container>
         </div>
     </ng-container>

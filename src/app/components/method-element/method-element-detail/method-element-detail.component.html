@@ -1,9 +1,5 @@
-<p>Method Element Detail type: {{params.type}} </p>
-<a mat-button routerLink="/tools">&lt;Go back</a>
-<ng-container *ngIf="this.id !== null && this.id !== undefined">
-    <ng-container *ngIf="this.edit == true; else temp"> <button mat-button (click)="changeEditStatus()"> <mat-icon> reply </mat-icon> </button> </ng-container>
-    <ng-template #temp> <button mat-button (click)="changeEditStatus()"> <mat-icon> edit </mat-icon> </button> </ng-template>
-</ng-container>
-<app-method-element [id]="this.id" [type]="this.params.type" [typeStr]="this.params.typeStr" [edit]="false"></app-method-element>
-<button mat-raised-button color="primary" (click)="saveMethodElement()"> Save </button>
-<button mat-raised-button color="primary" (click)="deleteMethodElement()"> Delete </button>
+<app-method-element [id]="this.id" [type]="this.params.type" [typeStr]="this.params.typeStr" [edit]="true"></app-method-element>
+<div style="margin-top: 10px;">
+    <button mat-raised-button color="primary" (click)="saveMethodElement()"> Save </button>
+    <button style="margin-left: 5px;" mat-raised-button color="primary" (click)="deleteMethodElement()"> Delete </button>
+</div>
