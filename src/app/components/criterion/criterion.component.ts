@@ -91,7 +91,7 @@ export class CriterionComponent implements OnInit {
       this.endpointService.addCriterion(body).subscribe(data => {
         this._snackBar.open("Criterion added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshCriterionList();
-        this.router.navigate(['/criterions'])
+        this.router.navigate(['/criterion', data['id']])
       })
     }
   }
@@ -99,7 +99,7 @@ export class CriterionComponent implements OnInit {
   public deleteCriterion() {
     this.endpointService.deleteCriterion(this.id).subscribe( data => {
       this.navigatorService.refreshCriterionList();
-      this.router.navigate(['/criterions'])
+      this.router.navigate(['/criterion'])
     })
   }
 

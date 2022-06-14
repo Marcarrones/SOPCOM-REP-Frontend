@@ -141,21 +141,14 @@ export class MethodElementComponent implements OnInit {
 
   private refreshAndRoute() {
     this.navigatorService.refreshMethodElementList(this.type);
-    if(this.reduced) this.router.navigate(['/method-element', this.id])
+    if(this.reduced) this.router.navigate(['/', this.typeStr, this.methodElement.id])
   }
 
   public deleteMethodElement() {
     this.endpointService.deleteMethodElement(this.id).subscribe( data => {
-      this.navigateToList();
+      this.navigatorService.refreshMethodElementList(this.type);
+      this.router.navigate(['/', this.typeStr])
     })
-  }
-
-  public navigateToList() {
-    this.navigatorService.refreshMethodElementList(this.type);
-    if(this.type == 1) this.router.navigate(['/tools'])
-    if(this.type == 2) this.router.navigate(['/artefacts'])
-    if(this.type == 3) this.router.navigate(['/activities'])
-    if(this.type == 4) this.router.navigate(['/roles'])
   }
 
   public changeEditStatus() {

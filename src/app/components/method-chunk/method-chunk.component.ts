@@ -178,6 +178,7 @@ export class MethodChunkComponent implements OnInit {
 
   public deleteMethodChunk() {
     this.endpointService.deleteMethodChunk(this.id).subscribe(response => {
+      this.navigatorService.refreshMethodChunkList()
       this.router.navigate(['/method-chunk'])
     })
   }
