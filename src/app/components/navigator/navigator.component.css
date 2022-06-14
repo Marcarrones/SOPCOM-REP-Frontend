@@ -18,6 +18,13 @@
   flex: 1 1 auto;
 }
 
+:host /deep/ .mat-tab-label.mat-tab-label-active {
+  background-color: transparent;
+  color: black;
+  border-right: 2px solid #ffcc00;
+  text-transform: uppercase;
+}
+
 .filter-selection {
   width: 10%;
   margin-right: 5px;

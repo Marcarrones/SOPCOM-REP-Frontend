@@ -8,7 +8,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogClose } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { GoalComponent } from '../goal/goal.component';
 import { MethodElementComponent } from '../method-element/method-element.component';
@@ -45,6 +45,7 @@ export class MethodChunkComponent implements OnInit {
     public route: ActivatedRoute,
     public navigatorService: NavigatorService,
     private _snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -52,9 +53,14 @@ export class MethodChunkComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id')!;
     if(this.id !== undefined && this.id !== null && this.id !== "") {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {
-        this.methodChunk = this.parseMethodChunk(data)
-        this.initializeFormControls()
-        this.loaded = true
+        if(data['error']  === undefined) {
+          this.methodChunk = this.parseMethodChunk(data)
+          this.initializeFormControls()
+          this.loaded = true
+        } else {
+          this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+          this.router.navigate(['/method-chunk'])
+        }
       })
     } else {
       this.methodChunk = new MethodChunk("", "", "", false, null, null, [], [], [], [], [], [], [], [], []);
@@ -85,7 +91,6 @@ export class MethodChunkComponent implements OnInit {
 
   public intentionSelected(event) {
     let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
-    console.log(this.methodChunk)
     if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
   }
 
@@ -115,7 +120,6 @@ export class MethodChunkComponent implements OnInit {
     }
     for(let t in data['Roles']){
       roles.push({me: new MethodElement(data['Roles'][t]['id'], data['Roles'][t]['name'], data["Process part"]["abstract"], data['Roles'][t]['description'], "", 4, [], [], []), isSet: data['Roles'][t]['isSet']})
-      console.log(roles)
     }
     contextCriteria = data['Context Criteria']
     for(let cc in contextCriteria) {
@@ -152,16 +156,21 @@ export class MethodChunkComponent implements OnInit {
   public saveMethodChunk() {
     if(this.isMethodChunkValid()) {
       let body = this.stringifyMethodChunk();
-      console.log(body)
       if(this.id !== undefined && this.id !== null && this.id !== "") {
         this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
-          console.log("After update", response)
-          this.ngOnInit()
+          if(response === null) {
+            this.navigatorService.refreshMethodChunkList();
+            this._snackBar.open("Chunk updated successfully", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.router.navigate(['/method-chunk', this.id])
+          }
         })
       } else {
         this.endpointService.addNewMethodChunk(body).subscribe(response => {
-          console.log("After insert", response);
-          this.ngOnInit()
+          if(response['error'] === undefined) {
+            this.navigatorService.refreshMethodChunkList();
+            this._snackBar.open("Chunk added successfully", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.router.navigate(['/method-chunk', response['id']])
+          }
         })
       }
     }
@@ -169,12 +178,11 @@ export class MethodChunkComponent implements OnInit {
 
   public deleteMethodChunk() {
     this.endpointService.deleteMethodChunk(this.id).subscribe(response => {
-      console.log("After delete", response)
+      this.router.navigate(['/method-chunk'])
     })
   }
 
   public stringifyMethodChunk() {
-    console.log(this.intentionFormControl)
     let body = {
       id: this.methodChunk.id,
       name: this.methodChunk.name,
@@ -211,10 +219,16 @@ export class MethodChunkComponent implements OnInit {
   public openMethodElementDialogNew(id, type, typeStr) {
     const dialogRef = this.dialog.open(MethodElementDialogComponent, {
       width: '1000px',
-      data: {id: id, type: type, typeStr: typeStr},
+      data: {id: id, type: type != 5 ? type : 2, typeStr: typeStr},
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== null && result !== undefined) this.methodChunk.processPart = new MethodElement(result, "", false, "", "", 3);
+      if(result !== null && result !== undefined) {
+        if(type == 1) this.methodChunk.tools.push(new MethodElement(result, "", false, "", "", 1));
+        if(type == 2) this.methodChunk.situation.push(new MethodElement(result, "", false, "", "", 2));
+        if(type == 3) this.methodChunk.processPart = new MethodElement(result, "", false, "", "", 3);
+        if(type == 4) this.methodChunk.roles.push({me: new MethodElement(result, "", false, "", "", 1), isSet: false});
+        if(type == 5) this.methodChunk.productPart.push(new MethodElement(result, "", false, "", "", 2));
+      }
     })
   }
 

@@ -17,13 +17,13 @@ export class MethodElementDialogComponent implements OnInit {
   @ViewChild(MethodElementComponent) meComponent: MethodElementComponent;
 
   ngOnInit(): void {
-    console.log("HOLA")
-    console.log(this.data)
   }
 
-  public saveMethodElement() {
-    this.meComponent.saveMethodElement();
-    this.closeDialog(this.meComponent.methodElement.id)
+  public async saveMethodElement() {
+    let correct = await this.meComponent.saveMethodElement()
+    if(correct) {
+      this.closeDialog(this.meComponent.methodElement.id)
+    }
   }
 
   public closeDialog(id?) {

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MethodElement } from 'src/app/models/method-element';
 import { EndpointService } from 'src/app/services/endpoint.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigatorService } from 'src/app/services/navigator.service';
@@ -59,8 +59,8 @@ export class MethodElementComponent implements OnInit {
 
   private buildFormControl() {
     this.methodElementFormGroup = new FormGroup({
-      id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}),
-      name: new FormControl({value:this.methodElement.name, disabled: !this.edit}),
+      id: new FormControl({value:this.methodElement.id, disabled: (this.id !== undefined && this.id !== null) || !this.edit}, Validators.required),
+      name: new FormControl({value:this.methodElement.name, disabled: !this.edit}, Validators.required),
       description: new FormControl({value:this.methodElement.description, disabled: !this.edit}),
       abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit})
     })
@@ -93,24 +93,39 @@ export class MethodElementComponent implements OnInit {
   }
 
   public async saveMethodElement() {
-    let data = this.stringifyMethodElement();
-    if(this.id !== undefined && this.id !== null) {
-      console.log("Update method element", this.methodElement, this.methodElementFormGroup.controls['description'])
-      this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
-        console.log("UPDATE", data)
-        this.uploadFigure()
-        this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
-        this.refreshAndRoute()
-      })
+    if(this.methodElementFormGroup.valid) {
+      let data = this.stringifyMethodElement();
+      if(this.id !== undefined && this.id !== null) {
+        this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
+          if(data === null) {
+            this.uploadFigure()
+            this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this.id = this.methodElement.id
+            this.refreshAndRoute()
+            return true;
+          } else {
+            this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            return false;
+          }
+        })
+      } else {
+        this.endpointService.addMethodElement(data).subscribe( data => {
+          if(data['error'] === undefined) {
+            this.id = this.methodElement.id
+            this.uploadFigure();
+            this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this.refreshAndRoute()
+            return true;
+          } else {
+            this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            return false
+          }
+        })
+      }
+      return true;
     } else {
-      console.log("Post method element", this.methodElement)
-      this.endpointService.addMethodElement(data).subscribe( data => {
-        console.log("POST", data)
-        this.id = this.methodElement.id
-        this.uploadFigure();
-        this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
-        this.refreshAndRoute()
-      })
+      this._snackBar.open("Missing required data", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+      return false
     }
   }
 
@@ -126,13 +141,11 @@ export class MethodElementComponent implements OnInit {
 
   private refreshAndRoute() {
     this.navigatorService.refreshMethodElementList(this.type);
-    if(this.reduced) this.router.navigate(['/home'])
+    if(this.reduced) this.router.navigate(['/method-element', this.id])
   }
 
   public deleteMethodElement() {
-    console.log("Delete method element", this.methodElement)
     this.endpointService.deleteMethodElement(this.id).subscribe( data => {
-      console.log("DELETE", data)
       this.navigateToList();
     })
   }
@@ -155,7 +168,6 @@ export class MethodElementComponent implements OnInit {
     else this.methodElementFormGroup.controls['description'].disable();
     if(this.methodElementFormGroup.controls['figure'].disabled) this.methodElementFormGroup.controls['figure'].enable();
     else this.methodElementFormGroup.controls['figure'].disable();
-    console.log(this.methodElementFormGroup)
   }
 
   public droppedStructRel(event) {
@@ -167,7 +179,6 @@ export class MethodElementComponent implements OnInit {
     this.methodElement.activity_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
     this.methodElement.artefact_rel_from.findIndex((element) => element.id == event.item.data.id) == -1) {
       let relation = {id: event.item.data.id, rel: null}
-      console.log(relation)
       this.methodElement.me_struct_rel_from.push(relation);
     } else {      
       this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});

@@ -1,6 +1,8 @@
 <h1 style="text-transform: capitalize;">{{this.typeStr}}</h1>
-<mat-divider style="margin-top: 10px;"></mat-divider>
-<h2> General information </h2>
+<ng-container *ngIf="this.reduced">
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+    <h2> General information </h2>
+</ng-container>
 <ng-container *ngIf="this.loaded; else loading">
     <form [formGroup]="this.methodElementFormGroup">
         <mat-form-field id="meID" style="width: 100%;" type="text">
@@ -16,10 +18,12 @@
             <input matInput formControlName="description">
         </mat-form-field>
         <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
-        <mat-divider style="margin-top: 10px;"></mat-divider>
-        <h2> Figure </h2>
-        <a href="{{this.figureUrl}}" target="_blank"><img *ngIf="this.reduced && this.figureUrl !== ''" class="figure" [src]="this.figureUrl"></a>
-        <input type="file" accept="image/png, image/jpeg" (change)="fileChanged($event)" [disabled]="!this.edit">
+        <ng-container *ngIf="this.reduced">
+            <mat-divider style="margin-top: 10px;"></mat-divider>
+            <h2> Figure </h2>
+            <a href="{{this.figureUrl}}" target="_blank"><img *ngIf="this.reduced && this.figureUrl !== ''" class="figure" [src]="this.figureUrl"></a>
+            <input type="file" accept="image/png, image/jpeg" (change)="fileChanged($event)" [disabled]="!this.edit">
+        </ng-container>
     </form>
     <ng-container *ngIf="this.reduced">
     <mat-divider style="margin-top: 10px;"></mat-divider>

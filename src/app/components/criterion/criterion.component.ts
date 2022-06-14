@@ -54,7 +54,6 @@ export class CriterionComponent implements OnInit {
   }
 
   private loadFormControls() {
-    console.log(this.edit)
     this.nameFormControl = new FormControl({value: this.criterion.name, disabled: !this.edit}, Validators.required);
     this.nameFormControl.valueChanges.subscribe(value => this.criterion.name = value)
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EndpointService } from 'src/app/services/endpoint.service';
 
 @Component({
@@ -13,7 +14,8 @@ export class GoalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<GoalComponent>,
-    public endpointService: EndpointService
+    public endpointService: EndpointService,
+    private _snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -24,10 +26,13 @@ export class GoalComponent implements OnInit {
   }
 
   public saveGoal() {
-    let data = {name: this.goal};
-    console.log(data)
-    this.endpointService.addNewGoal(JSON.stringify(data)).subscribe(data => {
-      this.closeDialog()
-    })
+    if(this.goal !== '') {
+      let data = {name: this.goal};
+      this.endpointService.addNewGoal(JSON.stringify(data)).subscribe(data => {
+        this.closeDialog()
+      })
+    } else {
+      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
   }
 }
