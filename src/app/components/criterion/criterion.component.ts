@@ -14,6 +14,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class CriterionComponent implements OnInit {
 
   @Input() id;
+  @Input() dialog = false;
   public criterion;
   public loaded = false;
   public edit = false;
@@ -55,7 +56,10 @@ export class CriterionComponent implements OnInit {
 
   private loadFormControls() {
     this.nameFormControl = new FormControl({value: this.criterion.name, disabled: !this.edit}, Validators.required);
-    this.nameFormControl.valueChanges.subscribe(value => this.criterion.name = value)
+    this.nameFormControl.valueChanges.subscribe(value => {
+      this.navigatorService.allowChange = true;
+      this.criterion.name = value
+    })
   }
 
   public stringifyCriterion() {
@@ -68,6 +72,7 @@ export class CriterionComponent implements OnInit {
   }
 
   public addValue(value) {
+    this.navigatorService.allowChange = true;
     for(let t in this.criterion.values) {
       if(this.criterion.values[t]['name'] == value) {
         this._snackBar.open("This criterion already has the value " + value, 'X', {duration: 2000, panelClass: ['blue-snackbar']});
@@ -78,25 +83,39 @@ export class CriterionComponent implements OnInit {
   }
 
   public removeValue(index) {
+    this.navigatorService.allowChange = true;
     this.criterion.values.splice(index, 1);
   }
 
-  public saveCriterion() {
+  public async saveCriterion() {
     if(this.criterion.values.length < 2) {
-      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['red-snackbar']});
-    } else if(!this.nameFormControl.valid) {
       this._snackBar.open("The criterion must have at least 2 values", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      return false;
+    } else if(!this.nameFormControl.valid) {
+      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      return false;
     } else {
-      let body = this.stringifyCriterion();
-      this.endpointService.addCriterion(body).subscribe(data => {
-        this._snackBar.open("Criterion added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
-        this.navigatorService.refreshCriterionList();
-        this.router.navigate(['/criterion', data['id']])
-      })
+      if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.criterion.name) !== -1) {
+        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        return false;
+      } else {
+        this.navigatorService.allowChange = false;
+        let body = this.stringifyCriterion();
+        await this.endpointService.addCriterion(body).subscribe(data => {
+          console.log("data", data)
+          this.criterion.id = data['id']
+          console.log(this.criterion)
+          this._snackBar.open("Criterion added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+          this.navigatorService.refreshCriterionList();
+          if(!this.dialog)this.router.navigate(['/criterion', data['id']])
+        })
+        return true;
+      }
     }
   }
 
   public deleteCriterion() {
+    this.navigatorService.allowChange = false;
     this.endpointService.deleteCriterion(this.id).subscribe( data => {
       this.navigatorService.refreshCriterionList();
       this.router.navigate(['/criterion'])

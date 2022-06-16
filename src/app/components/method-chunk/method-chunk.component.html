@@ -1,9 +1,9 @@
 <h1> Method Chunk</h1><div *ngIf="this.loaded" style="display: flex; justify-content: flex-end">
-        <button color="primary" mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.table = !this.table"> {{ this.table ? 'Edit view' : 'Table view'}} </button>
+        <button color="primary" mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.navigatorService.tableView = !this.navigatorService.tableView"> {{ this.navigatorService.tableView ? 'Edit view' : 'Table view'}} </button>
     </div>
 <mat-divider style="margin-top: 10px;"></mat-divider>
 <ng-container *ngIf="this.loaded; else loading">
-    <ng-container *ngIf="!this.table; else tableBlock">
+    <ng-container *ngIf="!this.navigatorService.tableView; else tableBlock">
         <h2>General information</h2>
         <form [formGroup]="methodChunkFormGroup">
             <mat-form-field style="width: 100%;">
@@ -142,6 +142,8 @@
             </ng-container>
             <div class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a criterion </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openCriterionDialog()"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
         <div style="margin-top: 10px;">
@@ -222,7 +224,7 @@
                     <th class="table-elements">
                         <ng-container *ngIf="this.methodChunk.situation.length > 0; else noData">
                             <ng-container *ngFor="let ar of this.methodChunk.situation; let i = index">
-                                {{ ar.id }} - {{ ar.name }}
+                                {{ ar.id }} - {{ ar.name }} <ng-container *ngIf="ar.description !== '' && ar.description !== null"> : {{ ar.description }}</ng-container>
                                 <ng-container *ngIf="i != this.methodChunk.situationlength - 1"> ,&nbsp; </ng-container>
                             </ng-container>
                         </ng-container>
@@ -230,14 +232,17 @@
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Process part </th>
-                    <th class="table-elements"> {{ this.methodChunk.processPart.id }} - {{ this.methodChunk.processPart.name }} </th>
+                    <th class="table-elements"> 
+                        {{ this.methodChunk.processPart.id }} - {{ this.methodChunk.processPart.name }} 
+                        <ng-container *ngIf="this.methodChunk.processPart.description !== '' && this.methodChunk.processPart.description !== null"> : {{ this.methodChunk.processPart.description }}</ng-container>
+                    </th>
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Product part </th>
                     <th class="table-elements">
                         <ng-container *ngIf="this.methodChunk.productPart.length > 0; else noData">
                             <ng-container *ngFor="let ar of this.methodChunk.productPart; let i = index">
-                                {{ ar.id }} - {{ ar.name }}
+                                {{ ar.id }} - {{ ar.name }}<ng-container *ngIf="ar.description !== '' && ar.description !== null"> : {{ ar.description }}</ng-container>
                                 <ng-container *ngIf="i != this.methodChunk.productPart.length - 1"> ,&nbsp; </ng-container>
                             </ng-container>
                         </ng-container>
@@ -248,7 +253,7 @@
                     <th class="table-elements">
                         <ng-container *ngIf="this.methodChunk.roles.length > 0; else noData">
                             <ng-container *ngFor="let r of this.methodChunk.roles; let i = index">
-                                {{ r.me.id }} - {{ r.me.name }}
+                                {{ r.me.id }} - <ng-container *ngIf="r.isSet"> Set of </ng-container> {{ r.me.name }} <ng-container *ngIf="r.me.description !== '' && r.me.description !== null"> : {{ r.me.description }}</ng-container>
                                 <ng-container *ngIf="i != this.methodChunk.roles.length - 1"> ,&nbsp; </ng-container>
                             </ng-container>
                         </ng-container>
@@ -259,7 +264,7 @@
                     <th class="table-elements">
                         <ng-container *ngIf="this.methodChunk.tools.length > 0; else noData">
                             <ng-container *ngFor="let t of this.methodChunk.tools; let i = index">
-                                {{ t.id }} - {{ t.name }}
+                                {{ t.id }} - {{ t.name }}<ng-container *ngIf="t.description !== '' && t.description !== null"> : {{ t.description }}</ng-container>
                                 <ng-container *ngIf="i != this.methodChunk.tools.length - 1"> ,&nbsp; </ng-container>
                             </ng-container>
                         </ng-container>

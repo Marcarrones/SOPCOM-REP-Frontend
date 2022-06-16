@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NavigatorService } from 'src/app/services/navigator.service';
 import { CriterionComponent } from '../criterion.component';
 
 @Component({
@@ -15,7 +16,8 @@ export class CriterionDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public navigatorService: NavigatorService
   ) { }
 
   ngOnInit(): void {

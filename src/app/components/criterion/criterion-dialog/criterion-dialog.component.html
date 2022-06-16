@@ -1,2 +1,5 @@
-<h1 mat-dialog-title> Criterion </h1>
-<app-criterion [id]="this.data.id"></app-criterion>
+<app-criterion [dialog]="true"></app-criterion>
+<mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="closeDialog()"> Cancel </button>
+    <button mat-raised-button color="primary" (click)="saveCriterion()"> Save </button>
+</mat-dialog-actions>

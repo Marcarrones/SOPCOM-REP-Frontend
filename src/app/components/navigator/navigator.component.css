@@ -16,10 +16,11 @@
 }
 :host /deep/ .mat-tab-body-wrapper {
   flex: 1 1 auto;
+  margin-left: 10px;
 }
 
 :host /deep/ .mat-tab-label.mat-tab-label-active {
-  background-color: transparent;
+  background-color: rgb(193, 191, 191);
   color: black;
   border-right: 2px solid #ffcc00;
   text-transform: uppercase;

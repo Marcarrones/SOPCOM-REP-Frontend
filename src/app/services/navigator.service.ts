@@ -7,6 +7,7 @@ import { EndpointService } from './endpoint.service';
 export class NavigatorService {
 
   public allowChange = true;
+  public tableView = false;
   
   public methodChunkList: any[] = []
   public methodChunkFilteredList: any[] = []
@@ -32,6 +33,7 @@ export class NavigatorService {
 
   public refreshMethodChunkList() {
     this.endpointService.getAllMethodChunk().subscribe(chunks => {
+      chunks.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
       this.methodChunkList = chunks;
       this.methodChunkFilteredList = chunks;
     })
@@ -39,6 +41,7 @@ export class NavigatorService {
 
   public refreshMethodElementList(type) {
     this.endpointService.getAllMethodElementsByType(type).subscribe(me => {
+      me.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
       if(type == 1) {
         this.toolList = me
         this.toolFilteredList = me
@@ -60,6 +63,7 @@ export class NavigatorService {
 
   public refreshCriterionList() {
     this.endpointService.getAllCriterions().subscribe(c => {
+      c.sort((a, b) => a.criterionName.toLowerCase() > b.criterionName.toLowerCase() ? 1 : a.criterionName.toLowerCase() < b.criterionName.toLowerCase() ? -1 : 0)
       this.criterionList = c;
       this.criterionFilteredList = c;
     })

@@ -17,6 +17,8 @@ import {map, startWith} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { CriterionComponent } from '../criterion/criterion.component';
+import { CriterionDialogComponent } from '../criterion/criterion-dialog/criterion-dialog.component';
 
 @Component({
   selector: 'app-method-chunk',
@@ -27,7 +29,7 @@ export class MethodChunkComponent implements OnInit {
   
   public mode: ProgressSpinnerMode = 'indeterminate';
   public loaded = false;
-  public table = false;
+  public hasChanges = false;
 
   public methodChunk;
   public params;
@@ -58,11 +60,13 @@ export class MethodChunkComponent implements OnInit {
           this.initializeFormControls()
           this.loaded = true
         } else {
+          this.navigatorService.tableView = false;
           this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['blue-snackbar']});
           this.router.navigate(['/method-chunk'])
         }
       })
     } else {
+      this.navigatorService.tableView = false;
       this.methodChunk = new MethodChunk("", "", "", false, null, null, [], [], [], [], [], [], [], [], []);
       this.initializeFormControls()
       this.loaded = true;
@@ -76,6 +80,7 @@ export class MethodChunkComponent implements OnInit {
       description: new FormControl({value: this.methodChunk.description, disabled: false})
     })
     this.methodChunkFormGroup.valueChanges.subscribe(values => {
+      this.hasChanges = true;
       if(this.id === null || this.id === undefined || this.id === '') this.methodChunk.id = values['id'];
       this.methodChunk.name = values['name'];
       this.methodChunk.description = values['description']
@@ -90,6 +95,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public intentionSelected(event) {
+    this.hasChanges = true;
     let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
     if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
   }
@@ -155,6 +161,7 @@ export class MethodChunkComponent implements OnInit {
 
   public saveMethodChunk() {
     if(this.isMethodChunkValid()) {
+      this.hasChanges = false;
       let body = this.stringifyMethodChunk();
       if(this.id !== undefined && this.id !== null && this.id !== "") {
         this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
@@ -177,6 +184,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public deleteMethodChunk() {
+    this.hasChanges = false;
     this.endpointService.deleteMethodChunk(this.id).subscribe(response => {
       this.navigatorService.refreshMethodChunkList()
       this.router.navigate(['/method-chunk'])
@@ -224,6 +232,7 @@ export class MethodChunkComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result !== null && result !== undefined) {
+        this.hasChanges = true;
         if(type == 1) this.methodChunk.tools.push(new MethodElement(result, "", false, "", "", 1));
         if(type == 2) this.methodChunk.situation.push(new MethodElement(result, "", false, "", "", 2));
         if(type == 3) this.methodChunk.processPart = new MethodElement(result, "", false, "", "", 3);
@@ -243,14 +252,17 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public removeActivity() {
+    this.hasChanges = true;
     this.methodChunk.processPart = null;
   }
 
   public addActivity(event) {
+    this.hasChanges = true;
     this.methodChunk.processPart = new MethodElement(event.item.data.id, event.item.data.name, false, "", "", 3)
   }
 
   public addTool(event) {
+    this.hasChanges = true;
     if(this.methodChunk.tools.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
@@ -259,6 +271,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addConsumedArtefact(event) {
+    this.hasChanges = true;
     if(this.methodChunk.situation.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
@@ -267,6 +280,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addProducedArtefact(event) {
+    this.hasChanges = true;
     if(this.methodChunk.productPart.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
@@ -275,6 +289,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addRole(event) {
+    this.hasChanges = true;
     if(this.methodChunk.roles.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
@@ -283,6 +298,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addCriterion(event) {
+    this.hasChanges = true;
     if(this.methodChunk.contextCriteria.findIndex(element => element.criterionId == event.item.data.criterionId) !== -1) {
       this._snackBar.open("Invalid criterion", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     } else {
@@ -297,26 +313,52 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public removeTool(index) {
+    this.hasChanges = true;
     this.methodChunk.tools.splice(index, 1)
   }
 
   public removeConsumedArtefact(index) {
+    this.hasChanges = true;
     this.methodChunk.situation.splice(index, 1)
   }
 
   public removeProducedArtefact(index) {
+    this.hasChanges = true;
     this.methodChunk.productPart.splice(index, 1)
   }
 
   public removeRole(index) {
+    this.hasChanges = true;
     this.methodChunk.roles.splice(index, 1)
   }
 
   public removeCriterion(index) {
+    this.hasChanges = true;
     this.methodChunk.contextCriteria.splice(index, 1)
   }
 
+  public openCriterionDialog() {
+    const dialogRef = this.dialog.open(CriterionDialogComponent, {
+      width: '500px',
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.hasChanges = true;
+      console.log(result)
+      if(result !== null && result !== undefined) {
+        console.log(result)
+        let index = this.navigatorService.criterionList.findIndex(element => element.criterionId == result)
+        let criterion = this.navigatorService.criterionList[index]
+        if(index !== -1) {
+          criterion['allValues'] = this.navigatorService.criterionList[index]['values']
+        }
+        criterion['valuesNamesArray'] = []
+        this.methodChunk.contextCriteria.push(criterion)
+      }
+    });
+  }
+
   public criterionValueChanges(criterion, event) {
+    this.hasChanges = true;
     let values: any[] = [];
     for(let v of event) {
       let index = criterion.allValues.findIndex(av => av.name == v)
@@ -326,7 +368,6 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public exportPDF() {
-    //let table = document.getElementById('table')!;
     let jspdf = new jsPDF('p','pt', 'a4');
     autoTable(jspdf, {html: '#table'})
     jspdf.save(this.methodChunk.id + '.pdf');

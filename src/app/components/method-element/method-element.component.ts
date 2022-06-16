@@ -65,6 +65,7 @@ export class MethodElementComponent implements OnInit {
       abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit})
     })
     this.methodElementFormGroup.valueChanges.subscribe(values => {
+      this.navigatorService.allowChange = true;
       if(this.id === undefined || this.id === null) this.methodElement.id = values['id'];
       this.methodElement.name = values['name'];
       this.methodElement.description = values['description'];
@@ -94,6 +95,7 @@ export class MethodElementComponent implements OnInit {
 
   public async saveMethodElement() {
     if(this.methodElementFormGroup.valid) {
+      this.navigatorService.allowChange = false;
       let data = this.stringifyMethodElement();
       if(this.id !== undefined && this.id !== null) {
         this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
@@ -145,6 +147,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   public deleteMethodElement() {
+    this.navigatorService.allowChange = false;
     this.endpointService.deleteMethodElement(this.id).subscribe( data => {
       this.navigatorService.refreshMethodElementList(this.type);
       this.router.navigate(['/', this.typeStr])
@@ -164,6 +167,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   public droppedStructRel(event) {
+    this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id) {
       this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return;
@@ -179,6 +183,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   public droppedActivityEvent(event) {
+    this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id) {
       this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return;
@@ -193,6 +198,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   public droppedArtefactRel(event) {
+    this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id) {
       this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return;
@@ -207,30 +213,37 @@ export class MethodElementComponent implements OnInit {
   }
 
   public selectedStructRel(i, value) {
+    this.navigatorService.allowChange = true;
     this.methodElement.me_struct_rel_from[i]['rel'] = value
   }
 
   public selectedActRel(i, value) {
+    this.navigatorService.allowChange = true;
     this.methodElement.activity_rel_from[i]['rel'] = value
   }
 
   public selectedArtRel(i, value) {
+    this.navigatorService.allowChange = true;
     this.methodElement.artefact_rel_from[i]['rel'] = value
   }
 
   public removeStructRel(index) {
+    this.navigatorService.allowChange = true;
     this.methodElement.me_struct_rel_from.splice(index, 1)
   }
 
   public removeActRel(index) {
+    this.navigatorService.allowChange = true;
     this.methodElement.activity_rel_from.splice(index, 1)
   }
 
   public removeArtRel(index) {
+    this.navigatorService.allowChange = true;
     this.methodElement.artefact_rel_from.splice(index, 1)
   }
 
   public fileChanged(event) {
+    this.navigatorService.allowChange = true;
     this.figureChanged = true;
     this.figure = event.target.files[0];
   }

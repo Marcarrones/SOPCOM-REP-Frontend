@@ -18,7 +18,7 @@ export class MethodElementDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private navigatorService: NavigatorService
+    public navigatorService: NavigatorService
   ) {
     this.route.data.subscribe(params => {
       this.params = params;
