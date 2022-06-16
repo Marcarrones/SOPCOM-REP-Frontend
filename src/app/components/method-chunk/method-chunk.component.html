@@ -8,7 +8,7 @@
         <form [formGroup]="methodChunkFormGroup">
             <mat-form-field style="width: 100%;">
                 <mat-label>ID</mat-label>
-                <input matInput formControlName="id" type="text">
+                <input matInput formControlName="id" type="text" autocomplete="off">
             </mat-form-field>
             <mat-form-field style="width: 100%;">
                 <mat-label>Name</mat-label>
@@ -16,7 +16,7 @@
             </mat-form-field>
             <mat-form-field style="width: 100%;">
                 <mat-label>Description</mat-label>
-                <input matInput formControlName="description" type="text">
+                <input matInput formControlName="description" type="text" autocomplete="off">
             </mat-form-field>
         </form>
         <mat-divider style="margin-top: 10px;"></mat-divider>
@@ -39,7 +39,7 @@
         <h2>Process part</h2>
         <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
             <div class="drop-div" style="justify-content: center;">
-                <div class="method-element-div">
+                <div class="activity-div">
                     <app-method-element [id]="this.methodChunk.processPart.id" [reduced]="false"></app-method-element>
                     <button mat-icon-button (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
                     <button mat-icon-button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> <mat-icon> edit </mat-icon> </button>
@@ -47,8 +47,9 @@
             </div>
         </ng-container>
         <ng-template #noActivity>
-            <div class="drop-div" cdkDropList id="activity" [cdkDropListConnectedTo]="['activityList']" (cdkDropListDropped)="addActivity($event)" style="justify-content: center;">
-                <div class="method-element-div">
+            <div class="drop-div" cdkDropList id="activity" [cdkDropListConnectedTo]="['activityList']" (cdkDropListDropped)="addActivity($event)" style="justify-content: center;"
+            (cdkDropListEntered)="this.showPlaceHolderActivity = false" (cdkDropListExited)="this.showPlaceHolderActivity = true">
+                <div *ngIf="this.showPlaceHolderActivity" class="method-element-div">
                     <h4 style="text-align: center;"> Drag here an activity or add </h4>
                     <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 3, 'Activity')"> <mat-icon> add </mat-icon> </button> </h4>
                     <h4 style="text-align: center;"> a new one </h4>
@@ -58,7 +59,8 @@
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Tools</h2>
         <div class="drop-div"
-        cdkDropList id="tools" [cdkDropListConnectedTo]="['toolList']" (cdkDropListDropped)="addTool($event)">
+        cdkDropList id="tools" [cdkDropListConnectedTo]="['toolList']" (cdkDropListDropped)="addTool($event)"
+        (cdkDropListEntered)="this.showPlaceHolderTool = false" (cdkDropListExited)="this.showPlaceHolderTool = true">
             <ng-container *ngFor="let t of this.methodChunk.tools; let i = index" style="width: 100px;">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
@@ -66,7 +68,7 @@
                     <button mat-icon-button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
-            <div class="method-element-div">
+            <div *ngIf="this.showPlaceHolderTool" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a tool or add </h4>
                 <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 1, 'Tool')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
@@ -75,7 +77,8 @@
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Situation</h2>
         <div class="drop-div"
-        cdkDropList id="situation" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addConsumedArtefact($event)">
+        cdkDropList id="situation" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addConsumedArtefact($event)"
+        (cdkDropListEntered)="this.showPlaceHolderSituation = false" (cdkDropListExited)="this.showPlaceHolderSituation = true">
             <ng-container *ngFor="let t of this.methodChunk.situation; let j = index">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
@@ -83,7 +86,7 @@
                     <button mat-icon-button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
-            <div class="method-element-div">
+            <div *ngIf="this.showPlaceHolderSituation" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here an artefact or add </h4>
                 <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 2, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
@@ -92,7 +95,8 @@
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Product part</h2>
         <div class="drop-div"
-        cdkDropList id="productPart" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addProducedArtefact($event)">
+        cdkDropList id="productPart" [cdkDropListConnectedTo]="['artefactList']" (cdkDropListDropped)="addProducedArtefact($event)"
+        (cdkDropListEntered)="this.showPlaceHolderProductPart = false" (cdkDropListExited)="this.showPlaceHolderProductPart = true">
             <ng-container *ngFor="let t of this.methodChunk.productPart; let k = index">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
@@ -100,7 +104,7 @@
                     <button mat-icon-button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
-            <div class="method-element-div">
+            <div *ngIf="this.showPlaceHolderProductPart" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here an artefact or add </h4>
                 <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 5, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
@@ -109,7 +113,8 @@
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Roles</h2>
         <div class="drop-div"
-        cdkDropList id="roles" [cdkDropListConnectedTo]="['roleList']" (cdkDropListDropped)="addRole($event)">
+        cdkDropList id="roles" [cdkDropListConnectedTo]="['roleList']" (cdkDropListDropped)="addRole($event)"
+        (cdkDropListEntered)="this.showPlaceHolderRole = false" (cdkDropListExited)="this.showPlaceHolderRole = true">
             <ng-container *ngFor="let t of this.methodChunk.roles; let h = index">
                 <div class="method-element-div">
                     <app-method-element [id]="t.me.id" [reduced]="false"></app-method-element>
@@ -118,7 +123,7 @@
                     <button mat-icon-button (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
-            <div class="method-element-div">
+            <div *ngIf="this.showPlaceHolderRole" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a role or add </h4>
                 <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 4, 'Role')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
@@ -127,7 +132,8 @@
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Context criteria</h2>
         <div class="drop-div"
-        cdkDropList id="criteria" [cdkDropListConnectedTo]="['criterionList']" (cdkDropListDropped)="addCriterion($event)">
+        cdkDropList id="criteria" [cdkDropListConnectedTo]="['criterionList']" (cdkDropListDropped)="addCriterion($event)"
+        (cdkDropListEntered)="this.showPlaceHolderCriterion = false" (cdkDropListExited)="this.showPlaceHolderCriterion = true">
             <ng-container *ngFor="let t of this.methodChunk.contextCriteria; let l = index">
                 <div class="method-element-div">
                     <h4> {{t.criterionName}} </h4>
@@ -140,7 +146,7 @@
                     <button mat-icon-button (click)="removeCriterion(l)"> <mat-icon> delete </mat-icon> </button>
                 </div>
             </ng-container>
-            <div class="method-element-div">
+            <div *ngIf="this.showPlaceHolderCriterion" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a criterion </h4>
                 <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openCriterionDialog()"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>

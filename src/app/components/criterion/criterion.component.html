@@ -2,7 +2,7 @@
 <ng-container *ngIf="this.loaded; else loading">
     <mat-form-field>
         <mat-label> Name </mat-label>
-        <input matInput [formControl]="this.nameFormControl" style="width: 100%;">
+        <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
     </mat-form-field>
     <h3> Values </h3>
     <div *ngFor="let v of criterion.values; let i = index">
@@ -14,7 +14,7 @@
     <ng-container *ngIf="this.edit">
         <mat-form-field>
             <mat-label> Values </mat-label>
-            <input #value matInput placeholder="Add the values here">
+            <input #value matInput placeholder="Add the values here" autocomplete="off">
         </mat-form-field>
         <a mat-button (click)="addValue(value.value)"> <mat-icon> add </mat-icon> </a>
     </ng-container>

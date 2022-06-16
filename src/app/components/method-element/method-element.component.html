@@ -7,15 +7,15 @@
     <form [formGroup]="this.methodElementFormGroup">
         <mat-form-field id="meID" style="width: 100%;" type="text">
             <mat-label>ID</mat-label>
-            <input matInput formControlName="id">
+            <input matInput formControlName="id" autocomplete="off">
         </mat-form-field>
         <mat-form-field style="width: 100%;">
             <mat-label>Name</mat-label>
-            <input matInput formControlName="name">
+            <input matInput formControlName="name" autocomplete="off">
         </mat-form-field>
         <mat-form-field style="width: 100%;">
             <mat-label>Description</mat-label>
-            <input matInput formControlName="description">
+            <input matInput formControlName="description" autocomplete="off">
         </mat-form-field>
         <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
         <ng-container *ngIf="this.reduced">

@@ -34,3 +34,18 @@
 .filter-input {
   width: 85%;
 }
+
+.dragable {
+  cursor: grab;
+  display: table-cell;
+}
+
+.method-element-div {
+  width: 20%;
+  display: inline-block;
+  margin: 10px;
+  padding: 1em;
+  border: 1px dotted #99cccc;
+  border-radius: 10px;
+  min-width: 20%;
+}

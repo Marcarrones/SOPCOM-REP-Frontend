@@ -36,6 +36,13 @@ export class MethodChunkComponent implements OnInit {
   public id;
   public goalsFilter: Observable<string[]>;
 
+  public showPlaceHolderActivity = true;
+  public showPlaceHolderTool = true;
+  public showPlaceHolderSituation = true;
+  public showPlaceHolderProductPart = true;
+  public showPlaceHolderRole = true;
+  public showPlaceHolderCriterion = true;
+
   public methodChunkFormGroup: FormGroup;
   public intentionFormControl: FormControl;
 

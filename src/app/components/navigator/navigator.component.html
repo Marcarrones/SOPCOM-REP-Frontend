@@ -10,7 +10,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input style="display: table-cell;" matInput [formControl]="filterControlChunk" [placeholder]="this.filterChunk">
+                <input style="display: table-cell;" matInput [formControl]="filterControlChunk" [placeholder]="this.filterChunk" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/method-chunk']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -40,7 +40,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input matInput [formControl]="filterControlTool" style="display: table-cell; width: max-content;" [placeholder]="this.filterTool">
+                <input matInput [formControl]="filterControlTool" style="display: table-cell; width: max-content;" [placeholder]="this.filterTool" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/tool']" style="display: table-cell; width: 10%;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -52,10 +52,10 @@
             <ng-container *ngIf="navigatorService.toolFilteredList.length > 0; else noTools">
                 <ng-container *ngFor="let t of navigatorService.toolFilteredList">
                     <ng-container *ngIf="this.filterTool == 'id'">
-                        <div cdkDrag [cdkDragData]="t" style="display: table-cell;"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterTool == 'name'">
-                        <div cdkDrag [cdkDragData]="t" style="display: table-cell;"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -76,7 +76,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input matInput [formControl]="filterControlArtefact" style="display: table-cell;" [placeholder]="this.filterArtefact">
+                <input matInput [formControl]="filterControlArtefact" style="display: table-cell;" [placeholder]="this.filterArtefact" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/artefact']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -87,10 +87,10 @@
             <ng-container *ngIf="navigatorService.artefactFilteredList.length > 0; else noArtefacts">
                 <ng-container *ngFor="let ar of navigatorService.artefactFilteredList">
                     <ng-container *ngIf="this.filterArtefact == 'id'">
-                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" style="display: table-cell;"> {{ar.id}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.id}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterArtefact == 'name'">
-                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar"style="display: table-cell;"> {{ar.name}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.name}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -111,7 +111,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input matInput [formControl]="filterControlActivity" style="display: table-cell;" [placeholder]="this.filterActivity">
+                <input matInput [formControl]="filterControlActivity" style="display: table-cell;" [placeholder]="this.filterActivity" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/activity']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -122,10 +122,10 @@
             <ng-container *ngIf="navigatorService.activityFilteredList.length > 0; else noActivities">
                 <ng-container *ngFor="let ac of navigatorService.activityFilteredList">
                     <ng-container *ngIf="this.filterActivity == 'id'">
-                        <div cdkDrag [cdkDragData]="ac" style="display: table-cell;"> {{ac.id}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.id}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterActivity == 'name'">
-                        <div cdkDrag [cdkDragData]="ac" style="display: table-cell;"> {{ac.name}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.name}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -145,7 +145,7 @@
                     <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input matInput [formControl]="filterControlRole" style="display: table-cell;" [placeholder]="this.filterRole"> 
+                <input matInput [formControl]="filterControlRole" style="display: table-cell;" [placeholder]="this.filterRole" autocomplete="off"> 
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/role']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -156,10 +156,10 @@
             <ng-container *ngIf="navigatorService.roleFilteredList.length > 0; else noRoles">
                 <ng-container *ngFor="let r of navigatorService.roleFilteredList">
                     <ng-container *ngIf="this.filterRole == 'id'">
-                        <div cdkDrag [cdkDragData]="r" style="display: table-cell;"> {{r.id}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.id}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterRole == 'name'">
-                        <div cdkDrag [cdkDragData]="r" style="display: table-cell;"> {{r.name}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.name}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -172,7 +172,7 @@
     <mat-tab label="Criteria">
         <div style="display: table; width: 100% !important;">
             <mat-form-field style="margin-top: 0.5em; width: 100% !important;">
-                <input matInput [formControl]="filterControlCriterion" style="display: table-cell;" [placeholder]="this.filterCriterion">
+                <input matInput [formControl]="filterControlCriterion" style="display: table-cell;" [placeholder]="this.filterCriterion" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/criterion']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
@@ -180,7 +180,7 @@
         [cdkDropListConnectedTo]="['criteria']">
             <ng-container *ngIf="navigatorService.criterionFilteredList.length > 0; else noCriterions">
                 <ng-container *ngFor="let r of navigatorService.criterionFilteredList">
-                    <div cdkDrag [cdkDragData]="r" style="display: table-cell;"> {{r.criterionName}} </div> <a style="display: table-cell;" [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
+                    <div cdkDrag [cdkDragData]="r"  class="dragable"> {{r.criterionName}} </div> <a style="display: table-cell;" [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>
