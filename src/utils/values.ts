@@ -15,5 +15,6 @@ export class Values {
         GOAL: 'goal',
         RELATIONS: 'relations',
         TYPES: 'types',
+        VALUES: 'values'
     }
 }

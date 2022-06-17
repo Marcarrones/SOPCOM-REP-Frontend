@@ -110,4 +110,18 @@ export class EndpointService {
     return this.http.post<any[]>(request, figure).pipe(map(response => response));
   }
   
+  public addValueCriterion(idC, data) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + idC + '/' + Values.RESOURCES.VALUES;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+  
+  public updateValueCriterion(idC, idV, data) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + idC + '/' + Values.RESOURCES.VALUES + '/' + idV;
+    return this.http.put<any[]>(request, data).pipe(map(response => response));
+  }
+  
+  public deleteValueCriterion(idC, idV) {
+    const request = this.URL + Values.RESOURCES.CRITERION + '/' + idC + '/' + Values.RESOURCES.VALUES + '/' + idV;
+    return this.http.delete<any[]>(request).pipe(map(response => response));
+  }
 }

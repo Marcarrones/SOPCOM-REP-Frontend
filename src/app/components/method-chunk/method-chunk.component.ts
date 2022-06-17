@@ -151,11 +151,12 @@ export class MethodChunkComponent implements OnInit {
   }
 
   private isMethodChunkValid() {
+    console.log(this.methodChunk)
     if(!this.methodChunkFormGroup.valid) {
       this._snackBar.open("Missing ID or name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return false;
     }
-    if(!this.methodChunk.intention === null || this.methodChunk.intention === undefined) {
+    if(this.methodChunk.intention === null || this.methodChunk.intention === undefined) {
       this._snackBar.open("An intention is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return false;
     }
@@ -269,6 +270,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addTool(event) {
+    this.showPlaceHolderTool = true;
     this.hasChanges = true;
     if(this.methodChunk.tools.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
@@ -278,6 +280,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addConsumedArtefact(event) {
+    this.showPlaceHolderSituation = true
     this.hasChanges = true;
     if(this.methodChunk.situation.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
@@ -287,6 +290,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addProducedArtefact(event) {
+    this.showPlaceHolderProductPart = true;
     this.hasChanges = true;
     if(this.methodChunk.productPart.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
@@ -296,6 +300,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addRole(event) {
+    this.showPlaceHolderRole = true
     this.hasChanges = true;
     if(this.methodChunk.roles.findIndex(element => element.id == event.item.data.id) !== -1) {
       this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
@@ -305,6 +310,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   public addCriterion(event) {
+    this.showPlaceHolderCriterion = true;
     this.hasChanges = true;
     if(this.methodChunk.contextCriteria.findIndex(element => element.criterionId == event.item.data.criterionId) !== -1) {
       this._snackBar.open("Invalid criterion", 'X', {duration: 2000, panelClass: ['blue-snackbar']});

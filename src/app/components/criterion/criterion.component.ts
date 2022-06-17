@@ -1,10 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Criterion } from 'src/app/models/criterion';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-criterion',
@@ -25,7 +29,8 @@ export class CriterionComponent implements OnInit {
     public navigatorService: NavigatorService,
     private router: Router,
     private endpointService: EndpointService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialogs: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -122,4 +127,205 @@ export class CriterionComponent implements OnInit {
     })
   }
 
+  public openEditCriterionDialog() {
+    const dialogRef = this.dialogs.open(UpdateCriterionDialog, {
+      width: '500px',
+      data: {id: this.criterion.id}
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == 1) this.navigatorService.refreshCriterionList();
+      this.ngOnInit();
+    })
+  }
+
+  public openAddNewValueCriterion() {
+    const dialogRef = this.dialogs.open(AddNewValueDialog, {
+      width: '500px',
+      data: {id: this.criterion.id, values: this.criterion.values
+      }
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    })
+  }
+
+  public openUpdateValueCriterion(value) {
+    const dialogRef = this.dialogs.open(UpdateValueDialog, {
+      width: '500px',
+      data: {idC: this.criterion.id, 
+        values: this.criterion.values,
+        name: value.name,
+        idV: value.id}
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    })
+  }
+
+  public openDeleteValueCriterion(value) {
+    const dialogRef = this.dialogs.open(RemoveValueDialog, {
+      width: '500px',
+      data: {idC: this.criterion.id,
+        idV: value.id,
+        values: this.criterion.values}
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      this.ngOnInit();
+    })
+  }
+
+}
+
+@Component({
+  selector: 'update-criterion-dialog',
+  templateUrl: 'dialogs/update-criterion-dialog.html',
+})
+export class UpdateCriterionDialog {
+  constructor(
+    public dialogRef: MatDialogRef<UpdateCriterionDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar
+  ) {}
+
+  public name: String = '';
+
+  public updateCriterion() {
+    if(this.name.length > 0) {
+      if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.name) !== -1) {
+        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      } else {
+        let body = {name: this.name}
+        this.endpointService.updateCriterion(this.data.id, body).subscribe(data => {
+          if(data === null) {
+            this.closeDialog(true)
+          } else {
+            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+          }
+        })
+      }
+    } else {
+      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    }
+  }
+
+  closeDialog(reload = false): void {
+    this.dialogRef.close(reload ? 1 : 2);
+  }
+}
+
+@Component({
+  selector: 'add-new-value-dialog',
+  templateUrl: 'dialogs/add-new-value-dialog.html',
+})
+export class AddNewValueDialog {
+  constructor(
+    public dialogRef: MatDialogRef<AddNewValueDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar
+  ) {}
+
+  public name: String = '';
+
+  public addNewValueCriterion() {
+    if(this.name.length > 0) {
+      if(this.data.values.findIndex(v => v.name == this.name) !== -1) {
+        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      } else {
+        let body = {name: this.name}
+        this.endpointService.addValueCriterion(this.data.id, body).subscribe(data => {
+          if(data['id']) {
+            this.closeDialog()
+          } else {
+            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+          }
+        })
+      }
+    } else {
+      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    }
+  }
+
+  public closeDialog(): void {
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'update-value-dialog',
+  templateUrl: 'dialogs/update-value-dialog.html',
+})
+export class UpdateValueDialog {
+  constructor(
+    public dialogRef: MatDialogRef<UpdateValueDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar
+  ) {
+    this.name = this.data.name
+  }
+
+  public name: String = '';
+
+  public updateValueCriterion() {
+    if(this.name.length > 0) {
+      if(this.data.values.findIndex(v => v.name == this.name) !== -1) {
+        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      } else {
+        let body = {name: this.name}
+        this.endpointService.updateValueCriterion(this.data.idC, this.data.idV, body).subscribe(data => {
+          if(data === null) {
+            this.closeDialog()
+          } else {
+            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+          }
+        })
+      }
+    } else {
+      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    }
+  }
+
+  public closeDialog(): void {
+    this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'remove-value-dialog',
+  templateUrl: 'dialogs/remove-value-dialog.html',
+})
+export class RemoveValueDialog {
+  constructor(
+    public dialogRef: MatDialogRef<RemoveValueDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar
+  ) {}
+
+  public confirmDelete() {
+    if(this.data.values.length > 2) {
+      this.endpointService.deleteValueCriterion(this.data.idC, this.data.idV).subscribe(data => {
+        console.log(data)
+        if(data === null) {
+          this.closeDialog()
+        } else {
+          this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        }
+      })
+    } else {
+      this._snackBar.open("A criterion must have at least 2 values", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    }
+  }
+
+    
+
+  public closeDialog(): void {
+    this.dialogRef.close();
+  }
 }

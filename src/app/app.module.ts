@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MethodChunkListComponent } from './components/method-chunk/method-chunk-list/method-chunk-list.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSelectModule } from '@angular/material/select';
-import { CriterionComponent } from './components/criterion/criterion.component';
+import { AddNewValueDialog, CriterionComponent, RemoveValueDialog, UpdateCriterionDialog, UpdateValueDialog } from './components/criterion/criterion.component';
 import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
 import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
 import { CriterionDialogComponent } from './components/criterion/criterion-dialog/criterion-dialog.component';
@@ -51,7 +51,11 @@ import { GoalComponent } from './components/goal/goal.component';
     CriterionListComponent,
     CriterionDetailComponent,
     CriterionDialogComponent,
-    GoalComponent
+    GoalComponent,
+    UpdateCriterionDialog,
+    AddNewValueDialog,
+    UpdateValueDialog,
+    RemoveValueDialog
   ],
   imports: [
     BrowserModule,
