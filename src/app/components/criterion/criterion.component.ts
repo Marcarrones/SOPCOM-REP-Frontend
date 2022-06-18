@@ -77,14 +77,20 @@ export class CriterionComponent implements OnInit {
   }
 
   public addValue(value) {
-    this.navigatorService.allowChange = true;
-    for(let t in this.criterion.values) {
-      if(this.criterion.values[t]['name'] == value) {
-        this._snackBar.open("This criterion already has the value " + value, 'X', {duration: 2000, panelClass: ['blue-snackbar']});
-        return;
+    if(value.value != "") {
+      this.navigatorService.allowChange = true;
+      for(let t in this.criterion.values) {
+        if(this.criterion.values[t]['name'] == value.value) {
+          this._snackBar.open("This criterion already has the value " + value.value, 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+          return;
+        }
       }
+      this.criterion.values.push({name: value.value})
+      value.value = ""
     }
-    this.criterion.values.push({name: value})
+    else {
+      this._snackBar.open("Please enter a name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
   }
 
   public removeValue(index) {

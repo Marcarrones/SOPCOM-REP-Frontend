@@ -9,7 +9,7 @@
         <h3 style="display: table-cell;"> Values </h3> 
         <ng-container *ngIf="!this.edit" style="display: table-cell;"> <button mat-icon-button (click)="openAddNewValueCriterion()"> <mat-icon> add </mat-icon> </button> </ng-container>
     </div>
-    <div *ngFor="let v of criterion.values; let i = index">
+    <div *ngFor="let v of criterion.values; let i = index" style="width: 100x;">
         {{v.name}} 
         <ng-container *ngIf="this.edit">
             <button mat-icon-button (click)="removeValue(i)"> <mat-icon> delete </mat-icon> </button>
@@ -22,7 +22,7 @@
             <mat-label> Values </mat-label>
             <input #value matInput placeholder="Add the values here" autocomplete="off">
         </mat-form-field>
-        <a mat-button (click)="addValue(value.value)"> <mat-icon> add </mat-icon> </a>
+        <a mat-button (click)="addValue(value)"> <mat-icon> add </mat-icon> </a>
     </ng-container>
 </ng-container>
 <ng-template #loading>

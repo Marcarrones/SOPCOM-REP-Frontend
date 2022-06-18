@@ -17,10 +17,10 @@
         <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noChunks">
             <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList">
                 <ng-container *ngIf="this.filterChunk == 'id'">
-                    {{mc.id}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
                 </ng-container>
                 <ng-container *ngIf="this.filterChunk == 'name'">
-                    {{mc.name}} <a [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.name}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
                 </ng-container>
                 <mat-divider></mat-divider>
             </ng-container>

@@ -30,7 +30,12 @@
               "src/custom-theme.scss",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "core-js",
+              "raf",
+              "jspdf-autotable"
+            ]
           },
           "configurations": {
             "production": {
