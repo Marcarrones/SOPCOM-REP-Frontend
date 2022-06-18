@@ -27,7 +27,9 @@
     </form>
     <ng-container *ngIf="this.reduced">
     <mat-divider style="margin-top: 10px;"></mat-divider>
-        <h2> Relations </h2>
+        <div style="display: table;">
+            <h2 style="display: table-cell;"> Relations </h2> 
+            <mat-icon style="display: table-cell; padding-left: 10px;" matTooltip="Invalid relations will not be added" matTooltipPosition="right"> info </mat-icon></div>
         <div>
             <h3> Structural relations: </h3>
             <div class="relations-div"

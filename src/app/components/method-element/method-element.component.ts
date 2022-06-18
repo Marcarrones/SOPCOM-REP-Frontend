@@ -99,6 +99,7 @@ export class MethodElementComponent implements OnInit {
       let data = this.stringifyMethodElement();
       if(this.id !== undefined && this.id !== null) {
         this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
+          console.log(data)
           if(data === null) {
             this.uploadFigure()
             this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
@@ -109,6 +110,10 @@ export class MethodElementComponent implements OnInit {
             this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
             return false;
           }
+        }, err => {
+          console.log(err)
+          this._snackBar.open(err['error']['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+          return false;
         })
       } else {
         this.endpointService.addMethodElement(data).subscribe( data => {
@@ -168,7 +173,7 @@ export class MethodElementComponent implements OnInit {
 
   public droppedStructRel(event) {
     this.navigatorService.allowChange = true;
-    if(event.item.data.id === this.id) {
+    if(event.item.data.id === this.id || this.type != event.previousContainer.id) {
       this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       return;
     }

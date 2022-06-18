@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Values } from 'src/utils/values';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
-import { Observable } from 'rxjs';
+import { catchError, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,7 @@ export class EndpointService {
 
   public updateMethodElement(id, data) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
-    return this.http.put<any[]>(request, data).pipe(map(response => response));
+    return this.http.put<any[]>(request, data).pipe(res => res);
   }
 
   public addMethodElement(data) {

@@ -45,6 +45,7 @@
             <a mat-icon-button [routerLink]="['/tool']" style="display: table-cell; width: 10%;"> <mat-icon> add </mat-icon> </a>
         </div>
         <div cdkDropList 
+        id="1"
         #toolList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.toolFilteredList" 
         [cdkDropListConnectedTo]="['structList', 'tools']"
@@ -81,6 +82,7 @@
             <a mat-icon-button [routerLink]="['/artefact']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
         <div cdkDropList 
+        id="2"
         #artefactList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.artefactFilteredList"
         [cdkDropListConnectedTo]="['structList', 'artefactList', 'situation', 'productPart']">
@@ -116,6 +118,7 @@
             <a mat-icon-button [routerLink]="['/activity']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
         <div cdkDropList 
+        id="3"
         #activityList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.activityFilteredList" 
         [cdkDropListConnectedTo]="['structList', 'activityList', 'activity']">
@@ -149,7 +152,8 @@
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/role']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
-        <div cdkDropList 
+        <div cdkDropList
+        id="4"
         #roleList="cdkDropList" 
         [cdkDropListData]="this.navigatorService.roleFilteredList"
         [cdkDropListConnectedTo]="['structList', 'roles']">

@@ -35,6 +35,7 @@ import { CriterionDialogComponent } from './components/criterion/criterion-dialo
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GoalComponent } from './components/goal/goal.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { GoalComponent } from './components/goal/goal.component';
     DragDropModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
