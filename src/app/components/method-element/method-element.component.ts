@@ -102,17 +102,17 @@ export class MethodElementComponent implements OnInit {
           console.log(data)
           if(data === null) {
             this.uploadFigure()
-            this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
             this.id = this.methodElement.id
             this.refreshAndRoute()
             return true;
           } else {
-            this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this._snackBar.open(data['error'], 'X', {duration: 3000, panelClass: ['green-snackbar']});
             return false;
           }
         }, err => {
           console.log(err)
-          this._snackBar.open(err['error']['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+          this._snackBar.open(err['error']['error'], 'X', {duration: 3000, panelClass: ['green-snackbar']});
           return false;
         })
       } else {
@@ -120,18 +120,18 @@ export class MethodElementComponent implements OnInit {
           if(data['error'] === undefined) {
             this.id = this.methodElement.id
             this.uploadFigure();
-            this._snackBar.open(this.typeStr + " added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this._snackBar.open(this.typeStr + " added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
             this.refreshAndRoute()
             return true;
           } else {
-            this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['green-snackbar']});
+            this._snackBar.open(data['error'], 'X', {duration: 3000, panelClass: ['green-snackbar']});
             return false
           }
         })
       }
       return true;
     } else {
-      this._snackBar.open("Missing required data", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+      this._snackBar.open("Missing required data", 'X', {duration: 3000, panelClass: ['green-snackbar']});
       return false
     }
   }
@@ -141,7 +141,7 @@ export class MethodElementComponent implements OnInit {
       let figureFormData = new FormData()
       figureFormData.append('figure', this.figure)
       this.endpointService.addMethodElementFigure(this.id, figureFormData).subscribe(data => {
-        this._snackBar.open("Figure updated!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+        this._snackBar.open("Figure updated!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
       })
     }
   }
@@ -174,7 +174,7 @@ export class MethodElementComponent implements OnInit {
   public droppedStructRel(event) {
     this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id || this.type != event.previousContainer.id) {
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return;
     }
     if(this.methodElement.me_struct_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
@@ -183,14 +183,14 @@ export class MethodElementComponent implements OnInit {
       let relation = {id: event.item.data.id, rel: null}
       this.methodElement.me_struct_rel_from.push(relation);
     } else {      
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
   }
 
   public droppedActivityEvent(event) {
     this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id) {
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return;
     }
     if(this.methodElement.activity_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
@@ -198,14 +198,14 @@ export class MethodElementComponent implements OnInit {
       let relation = {id: event.item.data.id, rel: null}
       this.methodElement.activity_rel_from.push(relation);
     } else {      
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
   }
 
   public droppedArtefactRel(event) {
     this.navigatorService.allowChange = true;
     if(event.item.data.id === this.id) {
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return;
     }
     if(this.methodElement.artefact_rel_from.findIndex((element) => element.id == event.item.data.id) == -1 && 
@@ -213,7 +213,7 @@ export class MethodElementComponent implements OnInit {
       let relation = {id: event.item.data.id, rel: null}
       this.methodElement.artefact_rel_from.push(relation);
     } else {      
-      this._snackBar.open("Invalid relation", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid relation", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
   }
 

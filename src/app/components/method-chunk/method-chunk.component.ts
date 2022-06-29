@@ -68,7 +68,7 @@ export class MethodChunkComponent implements OnInit {
           this.loaded = true
         } else {
           this.navigatorService.tableView = false;
-          this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+          this._snackBar.open(data['error'], 'X', {duration: 3000, panelClass: ['blue-snackbar']});
           this.router.navigate(['/method-chunk'])
         }
       })
@@ -153,15 +153,15 @@ export class MethodChunkComponent implements OnInit {
   private isMethodChunkValid() {
     console.log(this.methodChunk)
     if(!this.methodChunkFormGroup.valid) {
-      this._snackBar.open("Missing ID or name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Missing ID or name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
     }
     if(this.methodChunk.intention === null || this.methodChunk.intention === undefined) {
-      this._snackBar.open("An intention is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("An intention is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
     }
     if(this.methodChunk.processPart === null || this.methodChunk.processPart === undefined) {
-      this._snackBar.open("An activity is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("An activity is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
     }
     return true;
@@ -175,16 +175,20 @@ export class MethodChunkComponent implements OnInit {
         this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
           if(response === null) {
             this.navigatorService.refreshMethodChunkList();
-            this._snackBar.open("Chunk updated successfully", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this._snackBar.open("Chunk updated successfully", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
             this.router.navigate(['/method-chunk', this.id])
+          } else {
+            this._snackBar.open(response['error'], 'X', {duration: 3000, panelClass: ['blue-snackbar']});
           }
         })
       } else {
         this.endpointService.addNewMethodChunk(body).subscribe(response => {
           if(response['error'] === undefined) {
             this.navigatorService.refreshMethodChunkList();
-            this._snackBar.open("Chunk added successfully", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this._snackBar.open("Chunk added successfully", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
             this.router.navigate(['/method-chunk', response['id']])
+          } else {
+            this._snackBar.open(response['error'], 'X', {duration: 3000, panelClass: ['blue-snackbar']});
           }
         })
       }
@@ -273,7 +277,7 @@ export class MethodChunkComponent implements OnInit {
     this.showPlaceHolderTool = true;
     this.hasChanges = true;
     if(this.methodChunk.tools.findIndex(element => element.id == event.item.data.id) !== -1) {
-      this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid tool", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       this.methodChunk.tools.push(event.item.data)
     }
@@ -283,7 +287,7 @@ export class MethodChunkComponent implements OnInit {
     this.showPlaceHolderSituation = true
     this.hasChanges = true;
     if(this.methodChunk.situation.findIndex(element => element.id == event.item.data.id) !== -1) {
-      this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid tool", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       this.methodChunk.situation.push(event.item.data)
     }
@@ -293,7 +297,7 @@ export class MethodChunkComponent implements OnInit {
     this.showPlaceHolderProductPart = true;
     this.hasChanges = true;
     if(this.methodChunk.productPart.findIndex(element => element.id == event.item.data.id) !== -1) {
-      this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid tool", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       this.methodChunk.productPart.push(event.item.data)
     }
@@ -303,7 +307,7 @@ export class MethodChunkComponent implements OnInit {
     this.showPlaceHolderRole = true
     this.hasChanges = true;
     if(this.methodChunk.roles.findIndex(element => element.id == event.item.data.id) !== -1) {
-      this._snackBar.open("Invalid tool", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid tool", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       this.methodChunk.roles.push({me: event.item.data, isSet: false})
     }
@@ -313,7 +317,7 @@ export class MethodChunkComponent implements OnInit {
     this.showPlaceHolderCriterion = true;
     this.hasChanges = true;
     if(this.methodChunk.contextCriteria.findIndex(element => element.criterionId == event.item.data.criterionId) !== -1) {
-      this._snackBar.open("Invalid criterion", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Invalid criterion", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       let criterion = JSON.parse(JSON.stringify(event.item.data));
       let index = this.navigatorService.criterionList.findIndex(element => element.criterionId == criterion['criterionId'])

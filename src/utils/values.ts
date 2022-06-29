@@ -2,7 +2,7 @@ import { environment } from "src/environments/environment.prod";
 
 export class Values {
 
-    static SERVER_URL = "http://127.0.0.1";
+    static SERVER_URL = "http://gessi3.essi.upc.edu";
 
     static SERVER_PORT = ":1026";
 

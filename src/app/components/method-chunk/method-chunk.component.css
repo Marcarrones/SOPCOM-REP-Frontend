@@ -21,6 +21,7 @@
     border: 1px solid black;
     text-align: left;
     padding: 1em;
+    color: #5c5c5c;
 }
 
 .drop-div {
@@ -37,4 +38,9 @@
 
 .add-button {
     background-color: #ffcc00;
+}
+
+.button-custom {
+    color: #656565;
+    background-color: #ffe066;
 }

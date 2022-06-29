@@ -17,10 +17,10 @@
         <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noChunks">
             <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList">
                 <ng-container *ngIf="this.filterChunk == 'id'">
-                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
                 <ng-container *ngIf="this.filterChunk == 'name'">
-                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.name}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon> visibility </mat-icon></a>
+                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.name}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
                 <mat-divider></mat-divider>
             </ng-container>
@@ -53,10 +53,10 @@
             <ng-container *ngIf="navigatorService.toolFilteredList.length > 0; else noTools">
                 <ng-container *ngFor="let t of navigatorService.toolFilteredList">
                     <ng-container *ngIf="this.filterTool == 'id'">
-                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterTool == 'name'">
-                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -89,10 +89,10 @@
             <ng-container *ngIf="navigatorService.artefactFilteredList.length > 0; else noArtefacts">
                 <ng-container *ngFor="let ar of navigatorService.artefactFilteredList">
                     <ng-container *ngIf="this.filterArtefact == 'id'">
-                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.id}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.id}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterArtefact == 'name'">
-                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.name}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div [id]="ar.id" cdkDrag [cdkDragData]="ar" class="dragable"> {{ar.name}} </div> <a style="display: table-cell;" [routerLink]="['/artefact', ar.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -125,10 +125,10 @@
             <ng-container *ngIf="navigatorService.activityFilteredList.length > 0; else noActivities">
                 <ng-container *ngFor="let ac of navigatorService.activityFilteredList">
                     <ng-container *ngIf="this.filterActivity == 'id'">
-                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.id}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.id}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterActivity == 'name'">
-                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.name}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="ac" class="dragable"> {{ac.name}} </div> <a style="display: table-cell;" [routerLink]="['/activity', ac.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -160,10 +160,10 @@
             <ng-container *ngIf="navigatorService.roleFilteredList.length > 0; else noRoles">
                 <ng-container *ngFor="let r of navigatorService.roleFilteredList">
                     <ng-container *ngIf="this.filterRole == 'id'">
-                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.id}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.id}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <ng-container *ngIf="this.filterRole == 'name'">
-                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.name}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon> visibility </mat-icon></a>
+                        <div cdkDrag [cdkDragData]="r" class="dragable"> {{r.name}} </div> <a style="display: table-cell;" [routerLink]="['/role', r.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
@@ -184,7 +184,7 @@
         [cdkDropListConnectedTo]="['criteria']">
             <ng-container *ngIf="navigatorService.criterionFilteredList.length > 0; else noCriterions">
                 <ng-container *ngFor="let r of navigatorService.criterionFilteredList">
-                    <div cdkDrag [cdkDragData]="r"  class="dragable"> {{r.criterionName}} </div> <a style="display: table-cell;" [routerLink]="['/criterion', r.criterionId]"> <mat-icon> visibility </mat-icon></a>
+                    <div cdkDrag [cdkDragData]="r"  class="dragable"> {{r.criterionName}} </div> <a style="display: table-cell;" [routerLink]="['/criterion', r.criterionId]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>

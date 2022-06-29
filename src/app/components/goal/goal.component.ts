@@ -30,7 +30,7 @@ export class GoalComponent implements OnInit {
   public saveGoal() {
     if(this.goal !== '') {
       if(this.navigatorService.goalList.findIndex(g => g.name == this.goal) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       } else {
         let data = {name: this.goal};
         this.endpointService.addNewGoal(JSON.stringify(data)).subscribe(data => {
@@ -38,7 +38,7 @@ export class GoalComponent implements OnInit {
         })
       }
     } else {
-      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Name is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
   }
 }

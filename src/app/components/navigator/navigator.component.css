@@ -19,8 +19,12 @@
   margin-left: 10px;
 }
 
+:host /deep/ .mat-tab-label {
+  font-size: 15px;
+}
+
 :host /deep/ .mat-tab-label.mat-tab-label-active {
-  background-color: rgb(193, 191, 191);
+  background-color: #ffe066;
   color: black;
   border-right: 2px solid #ffcc00;
   text-transform: uppercase;
@@ -50,4 +54,8 @@
   border: 1px dotted #99cccc;
   border-radius: 10px;
   min-width: 20%;
+}
+
+.mat-icon-vis {
+  margin-right: 5px;
 }

@@ -81,7 +81,7 @@ export class CriterionComponent implements OnInit {
       this.navigatorService.allowChange = true;
       for(let t in this.criterion.values) {
         if(this.criterion.values[t]['name'] == value.value) {
-          this._snackBar.open("This criterion already has the value " + value.value, 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+          this._snackBar.open("This criterion already has the value " + value.value, 'X', {duration: 3000, panelClass: ['blue-snackbar']});
           return;
         }
       }
@@ -89,7 +89,7 @@ export class CriterionComponent implements OnInit {
       value.value = ""
     }
     else {
-      this._snackBar.open("Please enter a name", 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      this._snackBar.open("Please enter a name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
   }
 
@@ -100,14 +100,14 @@ export class CriterionComponent implements OnInit {
 
   public async saveCriterion() {
     if(this.criterion.values.length < 2) {
-      this._snackBar.open("The criterion must have at least 2 values", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("The criterion must have at least 2 values", 'X', {duration: 3000, panelClass: ['red-snackbar']});
       return false;
     } else if(!this.nameFormControl.valid) {
-      this._snackBar.open("Name is required", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("Name is required", 'X', {duration: 3000, panelClass: ['red-snackbar']});
       return false;
     } else {
       if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.criterion.name) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
         return false;
       } else {
         this.navigatorService.allowChange = false;
@@ -116,7 +116,7 @@ export class CriterionComponent implements OnInit {
           console.log("data", data)
           this.criterion.id = data['id']
           console.log(this.criterion)
-          this._snackBar.open("Criterion added!", 'X', {duration: 2000, panelClass: ['green-snackbar']});
+          this._snackBar.open("Criterion added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
           this.navigatorService.refreshCriterionList();
           if(!this.dialog)this.router.navigate(['/criterion', data['id']])
         })
@@ -200,19 +200,19 @@ export class UpdateCriterionDialog {
   public updateCriterion() {
     if(this.name.length > 0) {
       if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.name) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
       } else {
         let body = {name: this.name}
         this.endpointService.updateCriterion(this.data.id, body).subscribe(data => {
           if(data === null) {
             this.closeDialog(true)
           } else {
-            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+            this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
           }
         })
       }
     } else {
-      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
     }
   }
 
@@ -239,19 +239,19 @@ export class AddNewValueDialog {
   public addNewValueCriterion() {
     if(this.name.length > 0) {
       if(this.data.values.findIndex(v => v.name == this.name) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
       } else {
         let body = {name: this.name}
         this.endpointService.addValueCriterion(this.data.id, body).subscribe(data => {
           if(data['id']) {
             this.closeDialog()
           } else {
-            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+            this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
           }
         })
       }
     } else {
-      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
     }
   }
 
@@ -280,19 +280,19 @@ export class UpdateValueDialog {
   public updateValueCriterion() {
     if(this.name.length > 0) {
       if(this.data.values.findIndex(v => v.name == this.name) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
       } else {
         let body = {name: this.name}
         this.endpointService.updateValueCriterion(this.data.idC, this.data.idV, body).subscribe(data => {
           if(data === null) {
             this.closeDialog()
           } else {
-            this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+            this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
           }
         })
       }
     } else {
-      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
     }
   }
 
@@ -321,11 +321,11 @@ export class RemoveValueDialog {
         if(data === null) {
           this.closeDialog()
         } else {
-          this._snackBar.open(data['error'], 'X', {duration: 2000, panelClass: ['red-snackbar']});
+          this._snackBar.open(data['error'], 'X', {duration: 3000, panelClass: ['red-snackbar']});
         }
       })
     } else {
-      this._snackBar.open("A criterion must have at least 2 values", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+      this._snackBar.open("A criterion must have at least 2 values", 'X', {duration: 3000, panelClass: ['red-snackbar']});
     }
   }
 

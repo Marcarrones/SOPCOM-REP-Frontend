@@ -1,5 +1,5 @@
 <h1> Method Chunk</h1><div *ngIf="this.loaded" style="display: flex; justify-content: flex-end">
-        <button color="primary" mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.navigatorService.tableView = !this.navigatorService.tableView"> {{ this.navigatorService.tableView ? 'Edit view' : 'Table view'}} </button>
+        <button class="button-custom" mat-raised-button *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="this.navigatorService.tableView = !this.navigatorService.tableView"> {{ this.navigatorService.tableView ? 'Edit view' : 'Table view'}} </button>
     </div>
 <mat-divider style="margin-top: 10px;"></mat-divider>
 <ng-container *ngIf="this.loaded; else loading">
@@ -153,8 +153,8 @@
             </div>
         </div>
         <div style="margin-top: 10px;">
-            <button mat-raised-button color="primary" (click)="saveMethodChunk()"> Save </button>
-            <button mat-raised-button color="primary" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
+            <button mat-raised-button class="button-custom" (click)="saveMethodChunk()"> Save </button>
+            <button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
         </div>
     </ng-container>
     <ng-template #tableBlock>
@@ -278,7 +278,7 @@
                 </tr>
             </table>
         </div>
-        <button mat-raised-button (click)="exportPDF()"> Export to pdf </button>
+        <button mat-raised-button class="button-custom" style="margin-top: 10px;" (click)="exportPDF()"> Export to pdf </button>
     </ng-template>
 </ng-container>
 <ng-template #loading>
