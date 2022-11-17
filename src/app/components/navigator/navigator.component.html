@@ -208,11 +208,8 @@
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/tool']" style="display: table-cell; width: 10%;"> <mat-icon> add </mat-icon> </a>
         </div>
-        <div cdkDropList 
-        id="6"
-        #mapList="cdkDropList" 
-        [cdkDropListData]="this.navigatorService.mapFilteredList" 
-        [cdkDropListConnectedTo]="['structList', 'maps']"
+        <div cdkDropList #mapList="cdkDropList" [cdkDropListData]="this.navigatorService.mapFilteredList" 
+        [cdkDropListConnectedTo]="['maps']"
         [cdkDropListSortingDisabled]="true">
             <ng-container *ngIf="navigatorService.mapFilteredList.length > 0; else noMaps">
                 <ng-container *ngFor="let t of navigatorService.mapFilteredList">

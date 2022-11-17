@@ -14,6 +14,7 @@ export class EndpointService {
   ) { }
 
   private URL = Values.SERVER_URL + Values.SERVER_PORT + Values.ENTRY_FILE;
+  private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2;
 
   public getAllMethodChunk() {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
@@ -73,6 +74,17 @@ export class EndpointService {
   public getAllCriterions() {
     const request = this.URL + Values.RESOURCES.CRITERION;
     return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public getAllMaps() {
+    const request = this.URL2 + Values.RESOURCES2.MAPS;
+    
+    //return this.http.get<any[]>(request).pipe(map(response => response));
+    //var data = {}
+
+    //V2   return this.http.get('http://localhost:3000/posts').pipe(map(response => response));
+   
+    return this.http.get<any[]>('http://localhost:3000/posts').pipe(map(response => response));
   }
 
   public getCriterionById(id) {

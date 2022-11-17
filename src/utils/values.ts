@@ -3,8 +3,10 @@ import { environment } from "src/environments/environment.prod";
 export class Values {
 
     static SERVER_URL = "http://gessi3.essi.upc.edu";
+    static SERVER_URL2 = "http://localhost";
 
     static SERVER_PORT = ":1026";
+    static SERVER_PORT2 = ":3000";
 
     static ENTRY_FILE = "/index.php/";
 
@@ -16,5 +18,9 @@ export class Values {
         RELATIONS: 'relations',
         TYPES: 'types',
         VALUES: 'values'
+    }
+
+    static RESOURCES2= {
+        MAPS: 'posts'
     }
 }

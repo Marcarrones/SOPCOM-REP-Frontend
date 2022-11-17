@@ -60,10 +60,7 @@ export class NavigatorService {
         this.roleList = me
         this.roleFilteredList = me
       }
-      if(type == 6){ 
-        this.mapList = me
-        this.mapFilteredList = me
-      }
+      
     })
   }
 
@@ -72,6 +69,14 @@ export class NavigatorService {
       c.sort((a, b) => a.criterionName.toLowerCase() > b.criterionName.toLowerCase() ? 1 : a.criterionName.toLowerCase() < b.criterionName.toLowerCase() ? -1 : 0)
       this.criterionList = c;
       this.criterionFilteredList = c;
+    })
+  }
+
+  public refreshMapList() {
+    this.endpointService.getAllMaps().subscribe(c => {
+      c.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
+      this.mapList = c;
+      this.mapFilteredList = c;
     })
   }
 

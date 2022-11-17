@@ -43,6 +43,7 @@ export class NavigatorComponent implements OnInit {
     this.navigatorService.refreshMethodElementList(6);
 
     this.navigatorService.refreshCriterionList();
+    this.navigatorService.refreshMapList();
 
     this.navigatorService.getAllMethodElementRelationTypes();
 
