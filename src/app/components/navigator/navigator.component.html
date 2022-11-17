@@ -196,7 +196,7 @@
     <mat-tab label="Maps">
         <div style="display: table;">
             <mat-form-field class="filter-selection">
-                <mat-select style="display: table-cell; width: 10%;" [(value)]="filterTool">
+                <mat-select style="display: table-cell; width: 10%;" [(value)]="filterMap">
                     <mat-select-trigger>
                         <mat-icon>filter_alt</mat-icon>
                     </mat-select-trigger>
@@ -204,30 +204,34 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
-                <input matInput [formControl]="filterControlTool" style="display: table-cell; width: max-content;" [placeholder]="this.filterTool" autocomplete="off">
+                <input matInput [formControl]="filterControlMap" style="display: table-cell; width: max-content;" [placeholder]="this.filterMap" autocomplete="off">
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/tool']" style="display: table-cell; width: 10%;"> <mat-icon> add </mat-icon> </a>
         </div>
         <div cdkDropList 
-        id="1"
-        #toolList="cdkDropList" 
-        [cdkDropListData]="this.navigatorService.toolFilteredList" 
-        [cdkDropListConnectedTo]="['structList', 'tools']"
+        id="6"
+        #mapList="cdkDropList" 
+        [cdkDropListData]="this.navigatorService.mapFilteredList" 
+        [cdkDropListConnectedTo]="['structList', 'maps']"
         [cdkDropListSortingDisabled]="true">
-            <ng-container *ngIf="navigatorService.toolFilteredList.length > 0; else noTools">
-                <ng-container *ngFor="let t of navigatorService.toolFilteredList">
-                    <ng-container *ngIf="this.filterTool == 'id'">
-                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
+            <ng-container *ngIf="navigatorService.mapFilteredList.length > 0; else noMaps">
+                <ng-container *ngFor="let t of navigatorService.mapFilteredList">
+                    <ng-container *ngIf="this.filterMap == 'id'">
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.id}} </div> <a style="display: table-cell;" [routerLink]="['/map', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
-                    <ng-container *ngIf="this.filterTool == 'name'">
-                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/tool', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
+                    <ng-container *ngIf="this.filterMap == 'name'">
+                        <div cdkDrag [cdkDragData]="t" class="dragable"> {{t.name}} </div> <a style="display: table-cell;" [routerLink]="['/map', t.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                     </ng-container>
                     <mat-divider></mat-divider>
                 </ng-container>
             </ng-container>
-            <ng-template #noTools>
-                No tools found with {{ filterTool }}: {{ filterControlTool.value }}
+            <ng-template #noMaps>
+                <ng-container *ngIf="filterControlMap.value == ''; else noMapsFiltered">No maps found</ng-container>
             </ng-template>
+            <ng-template #noMapsFiltered>
+                No maps found with {{ filterMap }}: {{ filterControlMap.value }}
+            </ng-template>
+            
         </div>
     </mat-tab>
 </mat-tab-group>

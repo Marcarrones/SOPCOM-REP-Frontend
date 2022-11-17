@@ -36,7 +36,7 @@
             cdkDropList 
             id="structList"
             [cdkDropListData]="this.methodElement.me_struct_rel_to" 
-            [cdkDropListConnectedTo]="['toolList', 'artefactList', 'activityList', 'roleList']"
+            [cdkDropListConnectedTo]="['toolList', 'artefactList', 'activityList', 'roleList', 'mapList']"
             (cdkDropListDropped)="droppedStructRel($event)"
             [cdkDropListDisabled]="this.edit">
                 <ng-container *ngIf="this.methodElement.me_struct_rel_from.length > 0">

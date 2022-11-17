@@ -13,6 +13,8 @@ export class NavigatorService {
   public methodChunkFilteredList: any[] = []
   public toolList: any[] = []
   public toolFilteredList: any[] = []
+  public mapList: any[] = []
+  public mapFilteredList: any[] = []
   public artefactList: any[] = []
   public artefactFilteredList: any[] = []
   public activityList: any[] = []
@@ -57,6 +59,10 @@ export class NavigatorService {
       if(type == 4){ 
         this.roleList = me
         this.roleFilteredList = me
+      }
+      if(type == 6){ 
+        this.mapList = me
+        this.mapFilteredList = me
       }
     })
   }

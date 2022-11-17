@@ -59,6 +59,9 @@ const routes: Routes = [
   {path: 'criterion', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
   //{path: 'criterions', component: CriterionListComponent},
   {path: '**', redirectTo: 'method-chunk', pathMatch: 'full'},
+  //??
+  {path: 'map/:id', component: MethodElementDetailComponent, data: {type: 6, typeStr: "map"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  {path: 'map', component: MethodElementDetailComponent, data: {type: 6, typeStr: "map"}, canDeactivate:[ConfirmDeactivateGuardME]},
 ];
 
 @NgModule({

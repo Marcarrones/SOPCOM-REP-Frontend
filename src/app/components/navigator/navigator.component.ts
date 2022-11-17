@@ -22,6 +22,8 @@ export class NavigatorComponent implements OnInit {
   public filterControlRole: FormControl;
   public filterCriterion = "name";
   public filterControlCriterion: FormControl;
+  public filterMap = "name";
+  public filterControlMap: FormControl;
 
   constructor(
     private router: Router,
@@ -38,6 +40,7 @@ export class NavigatorComponent implements OnInit {
     this.navigatorService.refreshMethodElementList(2);
     this.navigatorService.refreshMethodElementList(3);
     this.navigatorService.refreshMethodElementList(4);
+    this.navigatorService.refreshMethodElementList(6);
 
     this.navigatorService.refreshCriterionList();
 
@@ -54,6 +57,7 @@ export class NavigatorComponent implements OnInit {
       if(event.index == 3) this.router.navigate(['/activities'])
       if(event.index == 4) this.router.navigate(['/roles'])
       if(event.index == 5) this.router.navigate(['/criterions'])
+      if(event.index == 6) this.router.navigate(['/maps'])
     }
   }
 
@@ -112,6 +116,16 @@ export class NavigatorComponent implements OnInit {
     this.filterControlCriterion.valueChanges.subscribe(value => {
       this.navigatorService.criterionList.sort((a, b) => a.criterionName.toLowerCase() > b.criterionName.toLowerCase() ? 1 : a.criterionName.toLowerCase() < b.criterionName.toLowerCase() ? -1 : 0)
       this.navigatorService.criterionFilteredList = this.navigatorService.criterionList.filter(c => c.criterionName.toLowerCase().includes(value.toLowerCase()))
+    })
+    this.filterControlMap = new FormControl("");
+    this.filterControlMap.valueChanges.subscribe(value => {
+      if(this.filterMap == 'id') {
+        this.navigatorService.toolList.sort((a, b) => a.id.toLowerCase() > b.id.toLowerCase() ? 1 : a.id.toLowerCase() < b.id.toLowerCase() ? -1 : 0)
+        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.id.toLowerCase().includes(value.toLowerCase()))
+      } else if(this.filterMap == 'name') {
+        this.navigatorService.toolList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
+        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
+      }
     })
   }
 }
