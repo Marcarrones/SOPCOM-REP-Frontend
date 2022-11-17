@@ -60,7 +60,6 @@ export class NavigatorService {
         this.roleList = me
         this.roleFilteredList = me
       }
-      
     })
   }
 

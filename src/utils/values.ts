@@ -21,6 +21,6 @@ export class Values {
     }
 
     static RESOURCES2= {
-        MAPS: 'posts'
+        MAPS: 'maps'
     }
 }

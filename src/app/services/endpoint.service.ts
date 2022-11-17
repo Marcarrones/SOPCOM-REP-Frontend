@@ -84,7 +84,7 @@ export class EndpointService {
 
     //V2   return this.http.get('http://localhost:3000/posts').pipe(map(response => response));
    
-    return this.http.get<any[]>('http://localhost:3000/posts').pipe(map(response => response));
+    return this.http.get<any[]>('http://localhost:3000/maps').pipe(map(response => response));
   }
 
   public getCriterionById(id) {

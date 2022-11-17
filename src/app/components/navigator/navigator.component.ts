@@ -121,11 +121,11 @@ export class NavigatorComponent implements OnInit {
     this.filterControlMap = new FormControl("");
     this.filterControlMap.valueChanges.subscribe(value => {
       if(this.filterMap == 'id') {
-        this.navigatorService.toolList.sort((a, b) => a.id.toLowerCase() > b.id.toLowerCase() ? 1 : a.id.toLowerCase() < b.id.toLowerCase() ? -1 : 0)
-        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.id.toLowerCase().includes(value.toLowerCase()))
+        this.navigatorService.mapList.sort((a, b) => a.id.toLowerCase() > b.id.toLowerCase() ? 1 : a.id.toLowerCase() < b.id.toLowerCase() ? -1 : 0)
+        this.navigatorService.mapFilteredList = this.navigatorService.mapList.filter(t => t.id.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterMap == 'name') {
-        this.navigatorService.toolList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
-        this.navigatorService.toolFilteredList = this.navigatorService.toolList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
+        this.navigatorService.mapList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
+        this.navigatorService.mapFilteredList = this.navigatorService.mapList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
       }
     })
   }
