@@ -9,6 +9,8 @@ import { CriterionDetailComponent } from './components/criterion/criterion-detai
 import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
 import { MethodElementComponent } from './components/method-element/method-element.component';
 import { CriterionComponent } from './components/criterion/criterion.component';
+import { MapComponent } from './components/Maps/map/map.component';
+
 
 
 
@@ -41,6 +43,16 @@ export class ConfirmDeactivateGuardC implements CanDeactivate<CriterionDetailCom
     }
 }
 
+@Injectable()
+export class ConfirmDeactivateGuardM implements CanDeactivate<MapComponent> {
+    canDeactivate(target: MapComponent) {
+        if (target.navigatorService.allowChange) {
+            return window.confirm('You have unsaved changes. Are you sure you want to leave?');
+        }
+        return true;
+    }
+}
+
 
 
 
@@ -63,8 +75,8 @@ const routes: Routes = [
   {path: 'criterion/:id', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
   {path: 'criterion', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
   //{path: 'criterions', component: CriterionListComponent},
-  {path: 'map/:id', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
-  {path: 'map', component: CriterionComponent, canDeactivate:[ConfirmDeactivateGuardC]},
+  {path: 'map/:id', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
+  {path: 'map', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
   //maps
   {path: '**', redirectTo: 'method-chunk', pathMatch: 'full'},
   //??
@@ -77,6 +89,7 @@ const routes: Routes = [
   providers: [
     ConfirmDeactivateGuardMC,
     ConfirmDeactivateGuardME,
-    ConfirmDeactivateGuardC]
+    ConfirmDeactivateGuardC,
+    ConfirmDeactivateGuardM]
 })
 export class AppRoutingModule { }
