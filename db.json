@@ -1,7 +1,7 @@
 {
     "maps": [
-        { "id": "M-01", "name": "Map1", "author": "aaa" },
-        { "id": "M-02", "name": "Map2", "author": "felix" }
+        { "id": "1", "name": "Map1", "author": "aaa" },
+        { "id": "2", "name": "Map2", "author": "felix" }
       ],
     "strategy": [
       { "id": 1, "name": "some comment"}
