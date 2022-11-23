@@ -36,6 +36,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GoalComponent } from './components/goal/goal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MapComponent } from './components/Maps/map/map.component';
+import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     UpdateCriterionDialog,
     AddNewValueDialog,
     UpdateValueDialog,
-    RemoveValueDialog
+    RemoveValueDialog,
+    MapComponent,
+    MapDetailComponent
   ],
   imports: [
     BrowserModule,

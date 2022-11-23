@@ -3,8 +3,8 @@
         { "id": "M-01", "name": "Map1", "author": "aaa" },
         { "id": "M-02", "name": "Map2", "author": "felix" }
       ],
-    "comments": [
-      { "id": 1, "body": "some comment", "postId": 1 }
+    "strategy": [
+      { "id": 1, "name": "some comment"}
     ],
     "profile": { "name": "typicode" }
   }
