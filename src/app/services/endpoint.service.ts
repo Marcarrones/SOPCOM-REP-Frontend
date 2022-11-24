@@ -89,7 +89,7 @@ export class EndpointService {
 
   public getMapById(id) {
     const request = this.URL2 + Values.RESOURCES2.MAPS + '/' + id;
-    return this.http.get<any[]>(request).pipe(map(response => response));
+    return this.http.get<any[]>('http://localhost:3000/maps' + '/' + id);
   }
 
   public addMap(data) {

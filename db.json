@@ -1,16 +1,75 @@
 {
   "maps": [
     {
-      "id": "M-01",
-      "name": "Map1",
-      "author": "aaa",
-      "Rows": []
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "1",
+          "Target": "A"
+        },
+        {
+          "Goal": "A",
+          "Strategy": "2",
+          "Target": "Stop"
+        },
+        {
+          "Goal": "C",
+          "Strategy": "3",
+          "Target": "Stop"
+        }
+      ],
+      "id": "M-03",
+      "name": "Map3",
+      "author": "felix"
     },
     {
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "1",
+          "Target": "A"
+        },
+        {
+          "Goal": "A",
+          "Strategy": "2",
+          "Target": "Stop"
+        }
+      ],
+      "id": "M-01",
+      "name": "Map1",
+      "author": "felix"
+    },
+    {
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "1",
+          "Target": "A"
+        },
+        {
+          "Goal": "A",
+          "Strategy": "2",
+          "Target": "B"
+        },
+        {
+          "Goal": "A",
+          "Strategy": "3",
+          "Target": "B"
+        },
+        {
+          "Goal": "B",
+          "Strategy": "4",
+          "Target": "Stop"
+        },
+        {
+          "Goal": "B",
+          "Strategy": "5",
+          "Target": "Stop"
+        }
+      ],
       "id": "M-02",
       "name": "Map2",
-      "author": "felix",
-      "Rows": []
+      "author": "felix"
     }
   ],
   "strategy": [

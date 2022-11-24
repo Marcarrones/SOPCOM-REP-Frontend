@@ -1,7 +1,30 @@
-<ng-container>
+<ng-container *ngIf="!this.edit">
     <p *ngIf="!this.edit" > Id del map es {{this.id}} </p>
     <a mat-button *ngIf="!this.edit" (click)="borraMap()"> Delete </a>
-
+    <br>
+    <br>
+    <table style= "border: 1px solid black;">
+        <tr>
+          <th>Goal</th>
+          <th>Strategy</th>
+          <th>Target</th>
+        </tr>
+        <tbody>
+          <tr *ngFor="let m of this.map.Rows; let i = index; let l = last">
+            <td style="padding-right:10px; border: 1px solid black;">
+              {{m.Goal}}
+            </td>
+            <td style="padding-right:10px; border: 1px solid black;">
+                {{m.Strategy}}
+            </td>
+            <td style="padding-right:10px; border: 1px solid black;">
+                {{m.Target}}
+            </td>
+            
+        </tr>
+        </tbody>
+      </table>
+        
 </ng-container>
 
 
@@ -21,7 +44,6 @@
     
     
     <br>
-    <a mat-button (click)="creaMap()"> Add </a>
 </ng-container>
 
 <br>
@@ -32,7 +54,7 @@
 
 
 <ng-container *ngIf="this.edit">
-    <h1>Reactive Table</h1>
+<br>
     <form [formGroup]="FeedBack" (ngSubmit)="submitFinal()">
         <table class="form-group">
           <tr>

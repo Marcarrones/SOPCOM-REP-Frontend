@@ -33,6 +33,7 @@ export class MapComponent implements OnInit {
   FeedBack!: FormGroup;
 
 
+
   constructor(
     public navigatorService: NavigatorService,
     private router: Router,
@@ -49,7 +50,6 @@ export class MapComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id')!;
     this.createContactForm();
     this.sampleData();
-    console.log(this.id);
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
       console.log(this.id);
       this.endpointService.getMapById(this.id).subscribe(data => {
@@ -60,16 +60,18 @@ export class MapComponent implements OnInit {
           this.loadFormControls();
           this.navigatorService.allowChange = false;
         }
+        console.log(this.map);
         this.loadFormControls();
         this.loaded = true;
+        
       })
-
     } else {
       this.map = new Map(null);
       this.edit = true;
       this.loadFormControls();
       this.loaded = true;
       this.navigatorService.allowChange = false;
+      
 
     }
   }
@@ -122,7 +124,7 @@ addRow(obj) {
 
   private parseMap(data) {
     this.edit = false;
-    return new Map(data['id']);
+    return data;
   }
 
   private loadFormControls() {
