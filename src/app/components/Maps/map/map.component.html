@@ -24,3 +24,68 @@
     <a mat-button (click)="creaMap()"> Add </a>
 </ng-container>
 
+<br>
+<br>
+<br>
+
+
+
+
+<ng-container *ngIf="this.edit">
+    <h1>Reactive Table</h1>
+    <form [formGroup]="FeedBack" (ngSubmit)="vacio()">
+        <table class="form-group">
+          <tr>
+            <th>Goal</th>
+            <th>Strategy</th>
+            <th>Target</th>
+          </tr>
+          <tbody formArrayName="Rows">
+            <tr
+              *ngFor="let obj of formArr.controls; let i = index; let l = last"
+              [formGroupName]="i"
+            >
+              <td>
+                <input
+                  type="textarea"
+                  class="form-control"
+                  id="Goal"
+                  formControlName="Goal"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Strategy"
+                  formControlName="Strategy"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Target"
+                  formControlName="Target"
+                />
+              </td>
+              <td>
+                <button
+                  
+                  (click)="deleteRow(i)"
+                  class="btn btn-danger"
+                >
+                  Delete
+                </button>
+              </td>
+              
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" (click)="addNewRow()" class="btn btn-dark">
+            Add new Row
+          </button>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        
+      </form>
+</ng-container>

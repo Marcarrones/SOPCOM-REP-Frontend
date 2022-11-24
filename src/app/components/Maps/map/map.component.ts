@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 
@@ -21,18 +21,34 @@ export class MapComponent implements OnInit {
   public idFormControl: FormControl;
 
 
+  //Sample test data it can be dynamic as well.
+  QuestionsForSubmittedAnswersArray: any[] = [
+    {
+      Goal: '',
+      Strategy: '',
+      Target: 'Stop',
+    }
+  ];
+
+  FeedBack!: FormGroup;
+
+
   constructor(
     public navigatorService: NavigatorService,
     private router: Router,
     private route: ActivatedRoute,
     private endpointService: EndpointService,
-    private http: HttpClient
+    private http: HttpClient,
+    public formBuilder: FormBuilder
   ) {  }
 
-  
+
+ 
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
+    this.createContactForm();
+    this.sampleData();
     console.log(this.id);
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
       console.log(this.id);
@@ -57,6 +73,52 @@ export class MapComponent implements OnInit {
 
     }
   }
+
+
+  createContactForm() {
+    this.FeedBack = this.formBuilder.group({
+      Rows: this.formBuilder.array([this.initRows()]),
+    });
+  }
+
+  initRows() {
+    return this.formBuilder.group({
+      Goal: ['Start'],
+      Strategy: [''],
+      Target: [''],
+    });
+  }
+
+  get formArr() {
+    return this.FeedBack.get('Rows') as FormArray;
+  }
+  sampleData() {
+    this.QuestionsForSubmittedAnswersArray.forEach((row) => {
+      this.formArr.push(this.addRow(row));
+    });
+  }
+addRow(obj) {
+    return this.formBuilder.group({
+      Goal: [obj.Goal],
+      Strategy: [obj.Strategy],
+      Target: [obj.Target],
+    });
+  }
+
+  addNewRow() {
+    let obj1 = {
+      Goal: '',
+      Strategy: '',
+      Target: 'Stop',
+    };
+    this.formArr.push(this.addRow(obj1));
+  }
+
+
+  deleteRow(index: number) {
+    this.formArr.removeAt(index);
+  }
+
 
   private parseMap(data) {
     this.edit = false;
@@ -148,6 +210,9 @@ this.navigatorService.allowChange = false;
 
 
 }
+
+
+public vacio(){}
 
  
 }
