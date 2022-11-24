@@ -1,2 +1,22 @@
 <p *ngIf="!this.edit" > Id del map es {{this.id}} </p>
-<p *ngIf="this.edit" > Creacion </p>
+
+
+
+
+
+
+
+<ng-container *ngIf="this.loaded; else loading">
+    <p *ngIf="this.edit" > Creacion </p>
+    <mat-form-field *ngIf="this.edit">
+        <mat-label> Name </mat-label>
+        <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
+    </mat-form-field>
+    
+    
+    <br>
+    <a mat-button (click)="prueba()"> Add </a>
+</ng-container>
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>

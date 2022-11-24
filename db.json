@@ -1,10 +1,28 @@
 {
-    "maps": [
-        { "id": "1", "name": "Map1", "author": "aaa" },
-        { "id": "2", "name": "Map2", "author": "felix" }
-      ],
-    "strategy": [
-      { "id": 1, "name": "some comment"}
-    ],
-    "profile": { "name": "typicode" }
+  "maps": [
+    {
+      "id": "M-01",
+      "name": "Map1",
+      "author": "aaa"
+    },
+    {
+      "id": "M-02",
+      "name": "Map2",
+      "author": "felix"
+    },
+    {
+      "name": "Map3",
+      "id": "3",
+      "author": "fexil"
+    }
+  ],
+  "strategy": [
+    {
+      "id": 1,
+      "name": "some comment"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
   }
+}
