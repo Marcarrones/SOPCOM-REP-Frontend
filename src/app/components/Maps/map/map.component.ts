@@ -18,6 +18,7 @@ export class MapComponent implements OnInit {
   public map;
   public loaded = false;
   public nameFormControl: FormControl;
+  public idFormControl: FormControl;
 
 
   constructor(
@@ -50,6 +51,7 @@ export class MapComponent implements OnInit {
     } else {
       this.map = new Map(null);
       this.edit = true;
+      this.loadFormControls();
       this.loaded = true;
       this.navigatorService.allowChange = false;
 
@@ -66,6 +68,11 @@ export class MapComponent implements OnInit {
     this.nameFormControl.valueChanges.subscribe(value => {
       this.navigatorService.allowChange = true;
       this.map.name = value;
+    })
+    this.idFormControl = new FormControl({value: this.map.id, disabled: !this.edit}, Validators.required);
+    this.idFormControl.valueChanges.subscribe(value => {
+      this.navigatorService.allowChange = true;
+      this.map.id = value;
     })
     
   }
@@ -89,10 +96,12 @@ export class MapComponent implements OnInit {
       this.map.id = data.id;
       console.log(this.map)
       this.navigatorService.refreshMapList();
+      this.router.navigate(['/map', data['id']])
     })
 
 
         this.navigatorService.refreshMapList();
+        
         return true;
     
   
@@ -100,13 +109,15 @@ export class MapComponent implements OnInit {
 
 
   public stringifyName() {
-    let body = {id: '3', name: 'Map3', author:'fexil'};
+    
+
+    let body = {id: this.map.id, name: this.map.name, author:'fexil'};
     console.log(body);
     
     
     
-    console.log(body);
-    console.log(JSON.stringify(body));
+    //console.log(body);
+    //console.log(JSON.stringify(body));
     //return JSON.stringify(body);
     return body;
   }

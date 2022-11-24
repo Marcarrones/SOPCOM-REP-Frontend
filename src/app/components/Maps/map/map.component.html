@@ -8,10 +8,15 @@
 
 
 <ng-container *ngIf="this.loaded;">
-    <p *ngIf="this.edit" > Creacion </p>
+    <h1 *ngIf="this.edit" > Creació </h1>
     <mat-form-field *ngIf="this.edit">
         <mat-label> Name </mat-label>
         <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
+    </mat-form-field>
+    <mat-form-field *ngIf="this.edit">
+        <mat-label> ID </mat-label>
+        <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
+        
     </mat-form-field>
     
     
