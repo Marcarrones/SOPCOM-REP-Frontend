@@ -98,6 +98,11 @@ export class EndpointService {
     return this.http.post<any>('http://localhost:3000/maps', data)
   }
 
+  public deleteMap(id) {
+    const request = this.URL2 + Values.RESOURCES2.MAPS + '/' + id;
+    return this.http.delete<any[]>('http://localhost:3000/maps' + '/' + id);
+  }
+
   public getCriterionById(id) {
     const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
     return this.http.get<any[]>(request).pipe(map(response => response));

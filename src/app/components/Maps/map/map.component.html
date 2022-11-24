@@ -1,12 +1,13 @@
-<p *ngIf="!this.edit" > Id del map es {{this.id}} </p>
+<ng-container>
+    <p *ngIf="!this.edit" > Id del map es {{this.id}} </p>
+    <a mat-button *ngIf="!this.edit" (click)="borraMap()"> Delete </a>
+
+</ng-container>
 
 
 
 
-
-
-
-<ng-container *ngIf="this.loaded; else loading">
+<ng-container *ngIf="this.loaded;">
     <p *ngIf="this.edit" > Creacion </p>
     <mat-form-field *ngIf="this.edit">
         <mat-label> Name </mat-label>
@@ -15,8 +16,6 @@
     
     
     <br>
-    <a mat-button (click)="prueba()"> Add </a>
+    <a mat-button (click)="creaMap()"> Add </a>
 </ng-container>
-<ng-template #loading>
-    <mat-spinner></mat-spinner>
-</ng-template>
+

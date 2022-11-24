@@ -70,7 +70,7 @@ export class MapComponent implements OnInit {
     
   }
 
-  public prueba(){
+  public creaMap(){
     
     
         /*version buena  1
@@ -111,6 +111,32 @@ export class MapComponent implements OnInit {
     return body;
   }
 
+
+
+  public borraMap(){
+    
+    /*
+  this.navigatorService.allowChange = false;
+  let body = this.stringifyName();      
+  this.endpointService.addMap(body).subscribe(data => {
+  console.log("data", data)
+  this.map.id = data.id;
+  console.log(this.map)
+  this.navigatorService.refreshMapList();
+})*/
+console.log(this.id);
+this.navigatorService.allowChange = false;
+    this.endpointService.deleteMap(this.id).subscribe( data => {
+      this.navigatorService.refreshMapList();
+      this.router.navigate(['/map']);
+    })
+
+
+    this.navigatorService.refreshMapList();
+    return true;
+
+
+}
 
  
 }
