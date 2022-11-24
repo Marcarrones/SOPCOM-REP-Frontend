@@ -3,12 +3,14 @@
     {
       "id": "M-01",
       "name": "Map1",
-      "author": "aaa"
+      "author": "aaa",
+      "Rows": []
     },
     {
       "id": "M-02",
       "name": "Map2",
-      "author": "felix"
+      "author": "felix",
+      "Rows": []
     }
   ],
   "strategy": [
