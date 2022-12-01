@@ -12,24 +12,24 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$SOPCOM-frontend-primary: mat.define-palette(mat.$indigo-palette);
-$SOPCOM-frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$SOPCOM_personal-frontend-primary: mat.define-palette(mat.$indigo-palette);
+$SOPCOM_personal-frontend-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$SOPCOM-frontend-warn: mat.define-palette(mat.$red-palette);
+$SOPCOM_personal-frontend-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$SOPCOM-frontend-theme: mat.define-light-theme((
+$SOPCOM_personal-frontend-theme: mat.define-light-theme((
   color: (
-    primary: $SOPCOM-frontend-primary,
-    accent: $SOPCOM-frontend-accent,
-    warn: $SOPCOM-frontend-warn,
+    primary: $SOPCOM_personal-frontend-primary,
+    accent: $SOPCOM_personal-frontend-accent,
+    warn: $SOPCOM_personal-frontend-warn,
   )
 ));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($SOPCOM-frontend-theme);
+@include mat.all-component-themes($SOPCOM_personal-frontend-theme);
 
