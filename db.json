@@ -11,28 +11,6 @@
           "Goal": "A",
           "Strategy": "2",
           "Target": "Stop"
-        },
-        {
-          "Goal": "C",
-          "Strategy": "3",
-          "Target": "Stop"
-        }
-      ],
-      "id": "M-03",
-      "name": "Map3",
-      "author": "felix"
-    },
-    {
-      "Rows": [
-        {
-          "Goal": "Start",
-          "Strategy": "1",
-          "Target": "A"
-        },
-        {
-          "Goal": "A",
-          "Strategy": "2",
-          "Target": "Stop"
         }
       ],
       "id": "M-01",
@@ -69,6 +47,70 @@
       ],
       "id": "M-02",
       "name": "Map2",
+      "author": "felix"
+    },
+    {
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "4",
+          "Target": "33"
+        },
+        {
+          "Goal": "33",
+          "Strategy": "3",
+          "Target": "Stop"
+        }
+      ],
+      "id": "M-03",
+      "name": "Map3",
+      "author": "felix"
+    },
+    {
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "email",
+          "Target": "Collect Data"
+        },
+        {
+          "Goal": "Start",
+          "Strategy": "reviews",
+          "Target": "Collect Data"
+        },
+        {
+          "Goal": "Start",
+          "Strategy": "policy documents",
+          "Target": "Collect Data"
+        },
+        {
+          "Goal": "Collect Data",
+          "Strategy": "image processing",
+          "Target": "Analyse Data"
+        },
+        {
+          "Goal": "Collect Data",
+          "Strategy": "video processing",
+          "Target": "Analyse Data"
+        },
+        {
+          "Goal": "Collect Data",
+          "Strategy": "NLP",
+          "Target": "Analyse Data"
+        },
+        {
+          "Goal": "Analyse Data",
+          "Strategy": "hybrid",
+          "Target": "Stop"
+        },
+        {
+          "Goal": "Analyse Data",
+          "Strategy": "ontology-based",
+          "Target": "Stop"
+        }
+      ],
+      "id": "M-04",
+      "name": "Data Map",
       "author": "felix"
     }
   ],

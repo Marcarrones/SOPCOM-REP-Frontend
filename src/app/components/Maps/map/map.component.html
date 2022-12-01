@@ -1,8 +1,26 @@
+
+
+
 <ng-container *ngIf="!this.edit">
-    <p *ngIf="!this.edit" > Id del map es {{this.id}} </p>
-    <a mat-button *ngIf="!this.edit" (click)="borraMap()"> Delete </a>
-    <br>
-    <br>
+  <h1 style="text-transform: capitalize;"> Map </h1>
+<mat-divider style="margin-top: 10px;"></mat-divider>
+
+<h2>General information</h2>
+
+<form>
+  <mat-form-field>
+    <mat-label> ID </mat-label>
+    <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
+  </mat-form-field>
+<br>
+<mat-form-field>
+  <mat-label> Name </mat-label>
+  <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
+</mat-form-field>
+</form>
+
+<mat-divider style="margin-top: 10px;"></mat-divider>
+<h2>Figure / Table</h2>
     <table style= "border: 1px solid black;">
         <tr>
           <th>Goal</th>
@@ -11,45 +29,48 @@
         </tr>
         <tbody>
           <tr *ngFor="let m of this.map.Rows; let i = index; let l = last">
-            <td style="padding-right:10px; border: 1px solid black;">
+            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
               {{m.Goal}}
             </td>
-            <td style="padding-right:10px; border: 1px solid black;">
+            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
                 {{m.Strategy}}
             </td>
-            <td style="padding-right:10px; border: 1px solid black;">
+            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
                 {{m.Target}}
             </td>
             
         </tr>
         </tbody>
       </table>
+<br>
+
+<button mat-raised-button class="button-custom"  *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="nada()"> Save </button>
+<button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="borraMap()"> Delete </button>
+
         
 </ng-container>
 
 
 
 
-<ng-container *ngIf="this.loaded;">
-    <h1 *ngIf="this.edit" > Creació </h1>
+<ng-container *ngIf="this.edit;">
+  <h1 style="text-transform: capitalize;"> Map </h1>
+  <mat-divider style="margin-top: 10px;"></mat-divider>
+  
+  <h2>General information</h2>
+    <mat-form-field *ngIf="this.edit">
+        <mat-label> ID </mat-label>
+        <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
+    </mat-form-field>
+    <br>
     <mat-form-field *ngIf="this.edit">
         <mat-label> Name </mat-label>
         <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
     </mat-form-field>
-    <mat-form-field *ngIf="this.edit">
-        <mat-label> ID </mat-label>
-        <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
-        
-    </mat-form-field>
     
-    
-    <br>
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+<h2>Figure / Table</h2>    
 </ng-container>
-
-<br>
-<br>
-<br>
-
 
 
 
@@ -93,7 +114,7 @@
               </td>
               <td>
                 <button
-                  
+                style="color: black; background-color: #ffcecefd; border-radius: 8px;"
                   (click)="deleteRow(i)"
                   class="btn btn-danger"
                 >
@@ -104,10 +125,12 @@
             </tr>
           </tbody>
         </table>
-        <button type="button" (click)="addNewRow()" class="btn btn-dark">
+        <button type="button" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" (click)="addNewRow()" class="btn btn-dark">
             Add new Row
           </button>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" mat-raised-button style="margin-left: 5px; margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Save</button>
         
       </form>
 </ng-container>
+
+
