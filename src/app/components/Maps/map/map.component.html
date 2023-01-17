@@ -131,6 +131,26 @@
           <button type="submit" mat-raised-button style="margin-left: 5px; margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Save</button>
         
       </form>
+      <br>
+
+<!--
+      <h2>Intention</h2>
+        <form>
+          <ng-container style="display: table;">
+            <mat-form-field style="width: 95%;">
+              <mat-label>Goal</mat-label>
+              <input matInput type="text" aria-label="intention" [value]="null" [formControl]="goalFormControl" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="intentionSelected($event)" >
+                  <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
+                  {{option['name']}}
+                  </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <a style="width: 5%;" mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
+        </ng-container>
+        </form>
+      -->
+
 </ng-container>
 
 

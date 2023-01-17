@@ -74,7 +74,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   private parseMethodElement(data) {
-    if(data['figure'] !== null && data['figure'] !== '') this.figureUrl = Values.SERVER_URL + Values.SERVER_PORT + data['figure']
+    if(data['figure'] !== null && data['figure'] !== '') this.figureUrl = Values.SERVER_URL2 + Values.SERVER_PORT2 + data['figure']
     return new MethodElement(data['id'], data['name'], data['abstract'], data['description'], data['figure'], this.type, data['to']['meStrRel'], data['from']['meStrRel'], data['to']['actRel'], data['from']['actRel'], data['to']['artRel'], data['from']['artRel']);
   }
 

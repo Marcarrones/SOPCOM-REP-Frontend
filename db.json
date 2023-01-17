@@ -53,23 +53,6 @@
       "Rows": [
         {
           "Goal": "Start",
-          "Strategy": "4",
-          "Target": "33"
-        },
-        {
-          "Goal": "33",
-          "Strategy": "3",
-          "Target": "Stop"
-        }
-      ],
-      "id": "M-03",
-      "name": "Map3",
-      "author": "felix"
-    },
-    {
-      "Rows": [
-        {
-          "Goal": "Start",
           "Strategy": "email",
           "Target": "Collect Data"
         },
@@ -111,6 +94,23 @@
       ],
       "id": "M-04",
       "name": "Data Map",
+      "author": "felix"
+    },
+    {
+      "Rows": [
+        {
+          "Goal": "Start",
+          "Strategy": "1",
+          "Target": "2"
+        },
+        {
+          "Goal": "2",
+          "Strategy": "3",
+          "Target": "Stop"
+        }
+      ],
+      "id": "Map5",
+      "name": "M-05",
       "author": "felix"
     }
   ],

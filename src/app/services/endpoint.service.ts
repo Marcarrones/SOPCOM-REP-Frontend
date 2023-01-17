@@ -13,7 +13,7 @@ export class EndpointService {
     private http: HttpClient
   ) { }
 
-  private URL = Values.SERVER_URL + Values.SERVER_PORT + Values.ENTRY_FILE;
+  private URL = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
   private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2;
 
   public getAllMethodChunk() {
@@ -77,30 +77,30 @@ export class EndpointService {
   }
 
   public getAllMaps() {
-    const request = this.URL2 + Values.RESOURCES2.MAPS;
+    const request = this.URL2 + Values.RESOURCES.MAPS;
     
     //return this.http.get<any[]>(request).pipe(map(response => response));
     //var data = {}
 
     //V2   return this.http.get('http://localhost:3000/posts').pipe(map(response => response));
    
-    return this.http.get<any[]>('http://localhost:3000/maps').pipe(map(response => response));
+    return this.http.get<any[]>('http://localhost:1031/index.php/maps').pipe(map(response => response));
   }
 
   public getMapById(id) {
-    const request = this.URL2 + Values.RESOURCES2.MAPS + '/' + id;
-    return this.http.get<any[]>('http://localhost:3000/maps' + '/' + id);
+    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.get<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
   }
 
   public addMap(data) {
-    const request = this.URL2 + Values.RESOURCES2.MAPS;
+    const request = this.URL2 + Values.RESOURCES.MAPS;
     console.log(data);
-    return this.http.post<any>('http://localhost:3000/maps', data)
+    return this.http.post<any>('http://localhost:1031/index.php/maps', data)
   }
 
   public deleteMap(id) {
-    const request = this.URL2 + Values.RESOURCES2.MAPS + '/' + id;
-    return this.http.delete<any[]>('http://localhost:3000/maps' + '/' + id);
+    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.delete<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
   }
 
   public getCriterionById(id) {

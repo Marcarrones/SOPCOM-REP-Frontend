@@ -4,6 +4,13 @@ import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormControl, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogClose } from '@angular/material/dialog';
+import { GoalComponent } from '../../goal/goal.component';
+import { Goal } from 'src/app/models/goal';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
 
 
 
@@ -19,6 +26,9 @@ export class MapComponent implements OnInit {
   public loaded = false;
   public nameFormControl: FormControl;
   public idFormControl: FormControl;
+  public goalFormControl: FormControl;
+  public intention;
+  public goalsFilter: Observable<string[]>;
 
 
   //Sample test data it can be dynamic as well.
@@ -37,9 +47,11 @@ export class MapComponent implements OnInit {
   constructor(
     public navigatorService: NavigatorService,
     private router: Router,
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private endpointService: EndpointService,
     private http: HttpClient,
+    private _snackBar: MatSnackBar,
     public formBuilder: FormBuilder
   ) {  }
 
@@ -76,6 +88,8 @@ export class MapComponent implements OnInit {
     }
   }
 
+
+  
 
   createContactForm() {
     this.FeedBack = this.formBuilder.group({
@@ -139,6 +153,19 @@ addRow(obj) {
       this.map.id = value;
     })
     
+    
+    if(this.intention !== undefined && this.intention !== null)
+      this.goalFormControl = new FormControl(this.intention.name, Validators.required)
+    else this.goalFormControl = new FormControl('', Validators.required)
+    this.goalsFilter = this.goalFormControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+    
+  }
+  
+  private _filter(value) {
+    return this.navigatorService.goalList.filter(goal => goal.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   public creaMap(){
@@ -204,6 +231,7 @@ this.navigatorService.allowChange = false;
     this.endpointService.deleteMap(this.id).subscribe( data => {
       this.navigatorService.refreshMapList();
       this.router.navigate(['/map']);
+      this._snackBar.open("Map deleted!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
     })
 
 
@@ -241,6 +269,7 @@ public submitFinal(){
       console.log(this.map)
       this.navigatorService.refreshMapList();
       this.router.navigate(['/map', data['id']])
+      this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
     })
 
 
@@ -254,5 +283,19 @@ public nada(){
 
 }
 
+public openGoalDialog() {
+  const dialogRef = this.dialog.open(GoalComponent, {
+    width: '1000px',
+  });
+  dialogRef.afterClosed().subscribe(result => {
+    this.navigatorService.refreshGoalList();
+  });
+}
+
+public intentionSelected(event) {
+  this.edit = true;
+  let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
+  if(index !== -1) this.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
+}
  
 }
