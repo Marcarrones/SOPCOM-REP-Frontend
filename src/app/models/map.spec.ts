@@ -1,6 +1,6 @@
 import { Map } from './map';
 
-describe('Criterion', () => {
+describe('Map', () => {
   it('should create an instance', () => {
     expect(new Map()).toBeTruthy();
   });

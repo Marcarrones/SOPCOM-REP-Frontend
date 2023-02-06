@@ -87,9 +87,9 @@ export class EndpointService {
     return this.http.get<any[]>('http://localhost:1031/index.php/maps').pipe(map(response => response));
   }
 
-  public getMapById(id) {
+  public getMap(id) {
     const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.get<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
+    return this.http.get<any[]>('http://localhost:1031/index.php/maps/' + id);
   }
 
   public addMap(data) {

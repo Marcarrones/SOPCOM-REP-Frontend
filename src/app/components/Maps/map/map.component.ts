@@ -64,7 +64,7 @@ export class MapComponent implements OnInit {
     this.sampleData();
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
       console.log(this.id);
-      this.endpointService.getMapById(this.id).subscribe(data => {
+      this.endpointService.getMap(this.id).subscribe(data => {
         if(data['error'] === undefined) this.map = this.parseMap(data);
         else {
           this.edit = true;
@@ -168,35 +168,7 @@ addRow(obj) {
     return this.navigatorService.goalList.filter(goal => goal.name.toLowerCase().includes(value.toLowerCase()))
   }
 
-  public creaMap(){
-    
-    
-        /*version buena  1
 
-        this.navigatorService.allowChange = false;
-        let body = this.stringifyName();
-        this.http.post<any>('http://localhost:3000/maps', body).subscribe(data => {
-          this.id = data.id;
-          */
-
-
-      this.navigatorService.allowChange = false;
-      let body = this.stringifyName();      
-      this.endpointService.addMap(body).subscribe(data => {
-      console.log("data", data)
-      this.map.id = data.id;
-      console.log(this.map)
-      this.navigatorService.refreshMapList();
-      this.router.navigate(['/map', data['id']])
-    })
-
-
-        this.navigatorService.refreshMapList();
-        
-        return true;
-    
-  
-  }
 
 
   public stringifyName() {
@@ -242,41 +214,39 @@ this.navigatorService.allowChange = false;
 }
 
 
-public submitFinal(){
+public async submitFinal(){
 
-  console.log(this.FeedBack.value);
+  //console.log(this.FeedBack.value);
   //console.log(this.FeedBack.value.Rows.length);
   var tamany = this.FeedBack.value.Rows.length;
 
-  
-  //for (let num = 0; num < tamany; num++ ){
-    //console.log(this.FeedBack.value.Rows[num]);
-  //}
-
-
-  
-
-  
   this.FeedBack.value.id = this.map.id;
   this.FeedBack.value.name = this.map.name;
   this.FeedBack.value.author = 'felix';
 
 
-  this.navigatorService.allowChange = false;
-      this.endpointService.addMap(this.FeedBack.value).subscribe(data => {
-      console.log("data", data)
-      this.map.id = data.id;
-      console.log(this.map)
-      this.navigatorService.refreshMapList();
-      this.router.navigate(['/map', data['id']])
-      this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-    })
+  //this.navigatorService.allowChange = true;
+  let body = this.stringifyMap();
 
-
+  await this.endpointService.addMap(body).subscribe(data => {
+        console.log("data", data)
+        this.map.id = data.id;
+        console.log(this.map)
+        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMapList();
-        
+        if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+    })
+        //this.navigatorService.refreshMapList();
+        this.router.navigate(['/map', this.map.id]);  
         return true;
 }
+
+
+public stringifyMap() {
+  let body = {name: this.map.name, id: this.map.id};
+  return JSON.stringify(body);
+}
+
 
 
 public nada(){
