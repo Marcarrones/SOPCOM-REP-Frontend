@@ -1,0 +1,28 @@
+<div id="mynetwork" #siteConfigNetwork></div>
+
+<button id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
+<input #nodelabel type="text" value="Node 6" />
+
+<br>
+
+<button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="modoEditEdge();">Create Strategy</button>
+<input #createSt type="text" value="Strategy Name" />
+
+<br>
+
+<button class="btn btn-primary" style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName();">Update</button>
+<input #updatename type="text" value="A" />
+
+<br>
+
+<button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="deleteSelected();">Delete Selected</button>
+
+
+
+<style type="text/css">
+    #mynetwork {
+        width: 700px;
+        height: 300px;
+        border: 1px solid lightgray;
+    }
+</style>

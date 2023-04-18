@@ -38,6 +38,7 @@ import { GoalComponent } from './components/goal/goal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MapComponent } from './components/Maps/map/map.component';
 import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
+import { GrafComponent } from './components/Maps/graf/graf.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { MapDetailComponent } from './components/Maps/map-detail/map-detail.comp
     UpdateValueDialog,
     RemoveValueDialog,
     MapComponent,
-    MapDetailComponent
+    MapDetailComponent,
+    GrafComponent
   ],
   imports: [
     BrowserModule,

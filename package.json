@@ -23,6 +23,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
     "rxjs": "~7.5.0",
+    "vis-network": "^9.1.6",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

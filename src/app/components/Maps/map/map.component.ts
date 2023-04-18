@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
@@ -7,12 +7,17 @@ import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogClose } from '@angular/material/dialog';
 import { GoalComponent } from '../../goal/goal.component';
+import { GrafComponent } from '../graf/graf.component';
 import { Goal } from 'src/app/models/goal';
 import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-
-
-
+import {distinct, map, startWith} from 'rxjs/operators';
+import { DataSet } from "vis-data/peer/esm/vis-data";
+import { Network } from "vis-network/peer/esm/vis-network";
+//import * as vis from 'visjs';
+//import * as vis from 'dist/vis-network.min.js';
+//import { Network, DataSet } from "vis-network";
+//import * as vis  from "vis-network";
+//import * as vis from 'vis-network';
 
 @Component({
   selector: 'app-map',
@@ -21,7 +26,14 @@ import {map, startWith} from 'rxjs/operators';
 })
 export class MapComponent implements OnInit {
   public edit = false;
+  @ViewChild('treeContainer', { static: true }) treeContainer: ElementRef;
   @Input() id;
+  public nooodes;
+  public edgeees;
+  public container;
+  public data;
+  public options;
+  public network;
   public map;
   public loaded = false;
   public nameFormControl: FormControl;
@@ -60,6 +72,7 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
+    //this.iniciar_test();
     this.createContactForm();
     this.sampleData();
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
@@ -86,6 +99,32 @@ export class MapComponent implements OnInit {
       
 
     }
+
+    this.nooodes = new DataSet([
+      { id: 1, label: "Start", title: 1 },
+      { id: 2, label: "Stop", title: 2 }
+    ]);
+
+    this.edgeees = new DataSet([
+    ]);
+  
+    // create a network
+    //this.container = document.getElementById('pruebas');
+    console.log(this.container);
+    //this.container = this.divv.nativeElement.value;
+    this.data = {
+      nodes: this.nooodes,
+      edges: this.edgeees,
+    };
+
+    this.options = {
+      physics: false,
+      interaction: { hover: true, multiselect: false }
+    };
+
+//    this.network = new Network(this.treeContainer.nativeElement, this.data, this.options);
+
+
   }
 
 
@@ -108,11 +147,13 @@ export class MapComponent implements OnInit {
   get formArr() {
     return this.FeedBack.get('Rows') as FormArray;
   }
+  
   sampleData() {
     this.QuestionsForSubmittedAnswersArray.forEach((row) => {
       this.formArr.push(this.addRow(row));
     });
   }
+
 addRow(obj) {
     return this.formBuilder.group({
       Goal: [obj.Goal],
@@ -172,45 +213,25 @@ addRow(obj) {
 
 
   public stringifyName() {
-    
 
-    let body = {id: this.map.id, name: this.map.name, author:'fexil'};
+    let body = {id: this.map.id, name: this.map.name, author:'felix'};
     console.log(body);
     
-    
-    
-    //console.log(body);
-    //console.log(JSON.stringify(body));
-    //return JSON.stringify(body);
     return body;
   }
 
 
 
   public borraMap(){
-    
-    /*
+  console.log(this.id);
   this.navigatorService.allowChange = false;
-  let body = this.stringifyName();      
-  this.endpointService.addMap(body).subscribe(data => {
-  console.log("data", data)
-  this.map.id = data.id;
-  console.log(this.map)
-  this.navigatorService.refreshMapList();
-})*/
-console.log(this.id);
-this.navigatorService.allowChange = false;
-    this.endpointService.deleteMap(this.id).subscribe( data => {
+  this.endpointService.deleteMap(this.id).subscribe( data => {
       this.navigatorService.refreshMapList();
       this.router.navigate(['/map']);
       this._snackBar.open("Map deleted!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
     })
-
-
     this.navigatorService.refreshMapList();
     return true;
-
-
 }
 
 
@@ -268,4 +289,75 @@ public intentionSelected(event) {
   if(index !== -1) this.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
 }
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+iniciar_test(){
+  var nodes = new vis.DataSet([
+  ]);
+
+
+  nodes.add({
+    id: 1,
+    label: "Start",
+    title: '1'
+  });
+  nodes.add({
+    id: 2,
+    label: "Stop",
+    title: '2'
+  });
+  // create an array with edges
+  var edges = new vis.DataSet([
+  ]);
+
+  // create a network
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: nodes,
+    edges: edges,
+  };
+  
+
+
+  
+  var network = new vis.Network(container, data);
+}
+
+
+*/
+
+
+
+
+
 }

@@ -100,7 +100,7 @@ export class EndpointService {
 
   public deleteMap(id) {
     const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.delete<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
+    return this.http.delete<any[]>('http://localhost/index.php/maps' + '/' + id);
   }
 
   public getCriterionById(id) {
