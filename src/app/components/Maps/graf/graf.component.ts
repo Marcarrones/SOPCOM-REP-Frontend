@@ -20,6 +20,7 @@ export class GrafComponent implements OnInit {
   public selected: any;
   public nodes;
   public edges;
+  public paramsauxiliar;
 
   constructor() { }
 
@@ -44,6 +45,7 @@ export class GrafComponent implements OnInit {
     var c = this.networkContainer.nativeElement;
     this.network.on("click",  (params) => {
       params.event = "[original event]";
+      this.paramsauxiliar = params;
       this.selected = this.network.getNodeAt(params.pointer.DOM)
       console.log(
         "ID de Nodo Seleccionado: " + this.network.getNodeAt(params.pointer.DOM)
@@ -98,16 +100,42 @@ export class GrafComponent implements OnInit {
 
 
   public modoEditNode() {
-    console.log(this.nodeLabel.nativeElement.value);
+    var x = this.network.clustering.findNode(this.nodeLabel.nativeElement.value);
+    if(this.nodeLabel.nativeElement.value != x){
     this.network.addNodeMode();
+    }else{
+      alert('Node name already exists');
+    }
     }
 
   public modoEditEdge() {
+    var x = this.network.clustering.findNode('S_' + this.createSt.nativeElement.value);
+    console.log(x);
+    if('S_' + this.createSt.nativeElement.value != x){
     this.network.addEdgeMode();
+    }else{
+      alert('Strategy name already exists');
+    }
     }
 
   public deleteSelected() {
-      this.nodes.remove({ id: this.selected });
+      //this.nodes.remove({ id: this.selected });
+      var tipo = typeof this.paramsauxiliar.nodes[0];
+      console.log(this.paramsauxiliar.nodes[0]);
+      console.log(typeof this.paramsauxiliar.nodes[0]);
+      var starts = "S_";
+      var es_st;
+      if(typeof this.paramsauxiliar.nodes[0] == 'number'){
+       es_st = JSON.stringify(this.paramsauxiliar.nodes[0]).startsWith(starts);
+      }else{
+        es_st = this.paramsauxiliar.nodes[0].startsWith(starts);
+      }
+      //console.log(JSON.stringify(this.paramsauxiliar.nodes[0]).startsWith(starts));
+      if(this.paramsauxiliar.edges.length == 0 || es_st == true){
+        this.network.deleteSelected();
+      }else{
+        alert('Delete Strategies before deleting Node');
+      }
     }
 
 
@@ -135,7 +163,7 @@ export class GrafComponent implements OnInit {
       var pos2 = this.network.getPosition(b);
       console.log(pos1.x, pos2.x);
       this.nodes.add({
-        id: this.createSt.nativeElement.value,
+        id: 'S_' + this.createSt.nativeElement.value,
         label: this.createSt.nativeElement.value,
         shape: "box",
         color: "#FB7E81",
@@ -150,7 +178,7 @@ export class GrafComponent implements OnInit {
       this.edges.add({
         //id: document.getElementById("edge-id").value,
         from: a,
-        to: this.createSt.nativeElement.value,
+        to: 'S_' + this.createSt.nativeElement.value,
         arrows: "to",
         smooth: {type: 'cubicBezier'},
       });
@@ -161,7 +189,7 @@ export class GrafComponent implements OnInit {
     try {
       this.edges.add({
         //id: document.getElementById("edge-id").value + 1,
-        from: this.createSt.nativeElement.value,
+        from: 'S_' + this.createSt.nativeElement.value,
         to: b,
         arrows: "to",
         color: "#2B7CE9",
