@@ -27,6 +27,8 @@ import { Network } from "vis-network/peer/esm/vis-network";
 export class MapComponent implements OnInit {
   public edit = false;
   @ViewChild('treeContainer', { static: true }) treeContainer: ElementRef;
+  @ViewChild("compGraf", { static: true }) graf: ElementRef;
+
   @Input() id;
   public nooodes;
   public edgeees;
@@ -41,6 +43,13 @@ export class MapComponent implements OnInit {
   public goalFormControl: FormControl;
   public intention;
   public goalsFilter: Observable<string[]>;
+  public pruebas;
+
+
+
+
+
+  
 
 
   //Sample test data it can be dynamic as well.
@@ -100,29 +109,8 @@ export class MapComponent implements OnInit {
 
     }
 
-    this.nooodes = new DataSet([
-      { id: 1, label: "Start", title: 1 },
-      { id: 2, label: "Stop", title: 2 }
-    ]);
+    
 
-    this.edgeees = new DataSet([
-    ]);
-  
-    // create a network
-    //this.container = document.getElementById('pruebas');
-    console.log(this.container);
-    //this.container = this.divv.nativeElement.value;
-    this.data = {
-      nodes: this.nooodes,
-      edges: this.edgeees,
-    };
-
-    this.options = {
-      physics: false,
-      interaction: { hover: true, multiselect: false }
-    };
-
-//    this.network = new Network(this.treeContainer.nativeElement, this.data, this.options);
 
 
   }
@@ -237,8 +225,7 @@ addRow(obj) {
 
 public async submitFinal(){
 
-  //console.log(this.FeedBack.value);
-  //console.log(this.FeedBack.value.Rows.length);
+
   var tamany = this.FeedBack.value.Rows.length;
 
   this.FeedBack.value.id = this.map.id;
@@ -255,11 +242,12 @@ public async submitFinal(){
         console.log(this.map)
         this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMapList();
-        if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
     })
         //this.navigatorService.refreshMapList();
-        this.router.navigate(['/map', this.map.id]);  
-        return true;
+        //this.router.navigate(['/map', this.map.id]);  
+        console.log('creacio map completa')    
+    return true;
 }
 
 
@@ -271,7 +259,7 @@ public stringifyMap() {
 
 
 public nada(){
-
+console.log('aaa');
 }
 
 public openGoalDialog() {
@@ -289,75 +277,6 @@ public intentionSelected(event) {
   if(index !== -1) this.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
 }
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-iniciar_test(){
-  var nodes = new vis.DataSet([
-  ]);
-
-
-  nodes.add({
-    id: 1,
-    label: "Start",
-    title: '1'
-  });
-  nodes.add({
-    id: 2,
-    label: "Stop",
-    title: '2'
-  });
-  // create an array with edges
-  var edges = new vis.DataSet([
-  ]);
-
-  // create a network
-  var container = document.getElementById("mynetwork");
-  var data = {
-    nodes: nodes,
-    edges: edges,
-  };
-  
-
-
-  
-  var network = new vis.Network(container, data);
-}
-
-
-*/
-
-
-
 
 
 }

@@ -1,7 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ElementRef, Renderer2 } from '@angular/core';
 import { Network } from "vis-network/peer/esm/vis-network";
 import { DataSet } from "vis-data/peer/esm/vis-data";
+import { EndpointService } from 'src/app/services/endpoint.service';
+import { MapComponent } from '../map/map.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavigatorService } from 'src/app/services/navigator.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
+
 //declare var vis:any;
 
 
@@ -21,18 +28,76 @@ export class GrafComponent implements OnInit {
   public nodes;
   public edges;
   public paramsauxiliar;
+  @Input() prueba_id: MapComponent;
+  @Input() prueba_name: MapComponent;
+  @Input() info_completa: string;
+  @Input() acceso: boolean;
 
-  constructor() { }
+  constructor(
+    private endpointService: EndpointService,
+    private _snackBar: MatSnackBar,
+    public navigatorService: NavigatorService,
+    private router: Router,
+  ) {  }
 
   ngOnInit(): void {
+    console.log(this.acceso);
+    if(this.acceso != true){
     this.nodes = new DataSet([
       { id: 1, label: "Start", title: 1 },
       { id: 2, label: "Stop", title: 2 }
     ]);
-
-    // create an array with edges
     this.edges = new DataSet([
     ]);
+  }else{
+    var info = JSON.parse(this.info_completa);
+    var auxnodes : any = [];
+    var auxedges : any = [];
+    info.forEach(x => {
+      if(x.id.startsWith('S_')){
+        auxnodes.push({
+          id: x.id,
+          label: x.name,
+          x: x.x,
+          y: x.y,
+          shape: "box",
+          color: "#FB7E81",
+        });
+      }else{
+        auxnodes.push({
+          id: x.id,
+          label: x.name,
+          x: x.x,
+          y: x.y,
+        });
+      }
+      
+    });
+
+    info.forEach(x => {
+      if(x.id.startsWith('S_')){
+        auxedges.push({
+          from: x.source,
+          to: x.id,
+          arrows: "to",
+        smooth: {type: 'cubicBezier'},
+        });
+        auxedges.push({
+          from: x.id,
+          to: x.target,
+          color: "#2B7CE9",
+          arrows: "to",
+        smooth: {type: 'cubicBezier'},
+        });
+      }
+      
+    });
+    this.nodes = new DataSet(auxnodes);
+    this.edges = new DataSet(auxedges);
+  }
+
+    // create an array with edges
+    
 
     var treeData = {
       nodes: this.nodes,
@@ -200,6 +265,148 @@ export class GrafComponent implements OnInit {
     }
   }
 
+
+  public async nada(){
+
+   
+    var N : any = [];
+    var ST : any = [];
+    var testing =this.objectToArray(this.network.body.nodes);
+    console.log(this.network.body.nodes);
+    console.log(testing);
+    testing.forEach(x => {
+      if(x.id.startsWith('S_')){
+        ST.push(x);
+      }else{
+        N.push(x);
+      }
+      
+    }
+      );
+      console.log(N);
+      console.log(ST);
+    
+    N.forEach(async x => {
+      let dataN = {name: x.options.label, map: this.prueba_id};
+        await this.endpointService.addNewGoal(dataN).subscribe(data => {
+        console.log("data", data)
+        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+    })
+    });
+
+
+    ST.forEach(async x => {
+      let source = x.edges[0].fromId;
+      let target = x.edges[1].toId;
+      let dataST = {id:x.options.label, name: x.options.label, goal_tgt: target, goal_src: source};
+        await this.endpointService.addNewStrategy(dataST).subscribe(data => {
+        console.log("data", data)
+        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+    })
+    });
+    
+
+
+
+
+
+    this.router.navigate(['/map', this.prueba_id]);
+    
+      
+    
+
+
+    //console.log(this.network.params);
+    //console.log(this.prueba_id);
+    //console.log(this.prueba_name);
+  }
+
+  public objectToArray(obj) {
+    return Object.keys(obj).map(function (key) {
+      obj[key].id = key;
+      return obj[key];
+    });
+  }
+
   
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public async submitFinal(){
+
+    let body = this.stringifyMap();
+
+
+  
+    await this.endpointService.addMap(body).subscribe(data => {
+          console.log("data", data)
+          this.prueba_id = data.id;
+          this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+          this.navigatorService.refreshMapList();
+          //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+      })
+          //this.navigatorService.refreshMapList();
+          //this.router.navigate(['/map', this.prueba_id]);  
+          console.log('creacio map completa')    
+      //return true;
+
+      
+      
+      /*
+      await this.endpointService.addMap(body).subscribe(data => {
+        console.log("data", data)
+        this.prueba_id = data.id;
+        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+        this.navigatorService.refreshMapList();
+        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+    })*/
+
+      this.nada();
+  }
+  
+  
+  public stringifyMap() {
+
+    let jsontesting =this.objectToArray(this.network.body.nodes);
+    var real : any = [];
+    jsontesting.forEach(x => {
+      if(x._localColor == "#FB7E81"){
+        let d = {id: x.id, name: x.options.label, x: x.x, y: x.y, source: x.edges[0].fromId, target: x.edges[1].toId};
+        real.push(d);
+      }else{
+        let d = {id: x.id, name: x.options.label, x: x.x, y: x.y};
+        real.push(d);
+      }
+    });
+    var tt = (JSON.stringify(real));
+
+    let body = {name: this.prueba_name, id: this.prueba_id, pruebas: tt};
+    return JSON.stringify(body);
+  }
+  
+  public nada2(){
+    let jsontesting =this.objectToArray(this.network.body.nodes);
+    var real : any = [];
+    jsontesting.forEach(x => {
+      let d = {id: x.id, name: x.options.label, x: x.x, y: x.y};
+      real.push(d);
+    });
+    console.log(JSON.stringify(real));
+  }
 
 }

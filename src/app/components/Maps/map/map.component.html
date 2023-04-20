@@ -8,278 +8,6 @@
 
 
 
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js">
- 
-
-  // create an array with nodes
-  var nodes = new vis.DataSet([
-    { id: 1, label: "Start", title: 1 },
-    { id: 2, label: "Stop", title: 2 }
-  ]);
-
-  // create an array with edges
-  var edges = new vis.DataSet([
-  ]);
-
-  // create a network
-  var container = document.getElementById("mynetwork");
-  var data = {
-    nodes: nodes,
-    edges: edges,
-  };
-  var options = {
-    physics: false,
-    interaction: { hover: true, multiselect: false },
-    manipulation: {
-      enabled: false,
-      addEdge: function(edgeData,callback) {
-        addStrategy_dos(edgeData.from, edgeData.to);
-        callback(edgeData);
-      },
-      addNode: function(nodeData,callback) {
-        //addNode2();
-        nodeData.id = tamany + 1,
-        nodeData.label = document.getElementById("node-label").value,
-        nodeData.title = tamany + 1
-        tamany++;
-        //nodeData.label = 'hello world';
-        callback(nodeData);
-}   
-    },
-  };
-
-
-  
-  //var network = new vis.Network(container, data, options);
-  var selected;
-  var tamany = nodes.length;
-
-
-  network.on("click", function (params) {
-    params.event = "[original event]";
-    selected = this.getNodeAt(params.pointer.DOM)
-    console.log(
-      "ID de Nodo Seleccionado: " + this.getNodeAt(params.pointer.DOM)
-    );
-});
-
-   
-
-
-
-//funciones
-
-function addNode() {
-try {
-nodes.add({
-  id: tamany + 1,
-  label: document.getElementById("node-label").value,
-  title: tamany + 1
-});
-tamany++;
-} catch (err) {
-alert(err);
-}
-}
-
-function updateNode() {
-try {
-nodes.update({
-  id: document.getElementById("node-id").value,
-  label: document.getElementById("node-label").value,
-});
-} catch (err) {
-alert(err);
-}
-}
-function removeNode() {
-try {
-nodes.remove({ id: document.getElementById("node-id").value });
-} catch (err) {
-alert(err);
-}
-}
-
-function addEdge() {
-try {
-edges.add({
-  id: document.getElementById("edge-id").value,
-  from: document.getElementById("edge-from").value,
-  to: document.getElementById("edge-to").value,
-});
-} catch (err) {
-alert(err);
-}
-}
-function updateEdge() {
-try {
-edges.update({
-  id: document.getElementById("edge-id").value,
-  from: document.getElementById("edge-from").value,
-  to: document.getElementById("edge-to").value,
-});
-} catch (err) {
-alert(err);
-}
-}
-function removeEdge() {
-try {
-edges.remove({ id: document.getElementById("edge-id").value });
-} catch (err) {
-alert(err);
-}
-}
-
-
-
-//Funciones mias
-
-
-function addStrategy() {
-try {
-nodes.add({
-  id: document.getElementById("st-id").value,
-  label: document.getElementById("st-label").value,
-  shape: "box",
-  color: "#FB7E81",
-});
-} catch (err) {
-alert(err);
-}
-
-try {
-edges.add({
-  id: document.getElementById("edge-id").value,
-  from: document.getElementById("st-from").value,
-  to: document.getElementById("st-id").value,
-  arrows: "to",
-  smooth: {type: 'cubicBezier'},
-});
-} catch (err) {
-alert(err);
-}
-
-try {
-edges.add({
-  id: document.getElementById("edge-id").value + 1,
-  from: document.getElementById("st-id").value,
-  to: document.getElementById("st-to").value,
-  arrows: "to",
-  color: "#2B7CE9",
-  smooth: {type: 'cubicBezier'},
-});
-} catch (err) {
-alert(err);
-}
-}
-
-function addStrategy_dos(a, b) {
-try {
-var pos1 = network.getPosition(a);
-var pos2 = network.getPosition(b);
-console.log(a.x, b.x);
-nodes.add({
-  id: tamany + 1,
-  label: document.getElementById("st-label").value,
-  shape: "box",
-  color: "#FB7E81",
-  x: ((pos1.x + pos2.x) / 2),
-  y: ((pos1.y + pos2.y) / 2)
-});
-tamany++;
-} catch (err) {
-alert(err);
-}
-
-try {
-edges.add({
-  //id: document.getElementById("edge-id").value,
-  from: a,
-  to: tamany,
-  arrows: "to",
-  smooth: {type: 'cubicBezier'},
-});
-} catch (err) {
-alert(err);
-}
-
-try {
-edges.add({
-  //id: document.getElementById("edge-id").value + 1,
-  from: tamany,
-  to: b,
-  arrows: "to",
-  color: "#2B7CE9",
-  smooth: {type: 'cubicBezier'},
-});
-} catch (err) {
-alert(err);
-}
-}
-
-function updateStrategy() {
-try {
-nodes.update({
-  id: document.getElementById("st-id").value,
-  label: document.getElementById("st-label").value,
-});
-} catch (err) {
-alert(err);
-}
-}
-
-
-
-
-function changeName() {
-if(selected != undefined){
-try {
-nodes.update({
-  id:selected,
-  label: document.getElementById("actualizar-nombre").value,
-});
-} catch (err) {
-alert(err);
-}
-}
-}
-
-
-function modoEditEdge() {
-  network.addEdgeMode();
-}
-function modoEditNode() {
-  network.addNodeMode();
-}
-
-function deleteSelected() {
-  nodes.remove({ id: selected });
-}
-
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -303,6 +31,7 @@ function deleteSelected() {
 </mat-form-field>
 </form>
 
+<!--
 <mat-divider style="margin-top: 10px;"></mat-divider>
 <h2>Figure / Table</h2>
     <table style= "border: 1px solid black;">
@@ -326,13 +55,23 @@ function deleteSelected() {
         </tr>
         </tbody>
       </table>
+    
 <br>
-
+    -->
 <button mat-raised-button class="button-custom"  *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="nada()"> Save </button>
 <button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="borraMap()"> Delete </button>
 
-        
+<br>
+<br>
+
+<app-graf [info_completa]="this.map.pruebas" [acceso]="true"></app-graf>
 </ng-container>
+
+
+
+
+<br>
+<br>
 
 
 
@@ -355,84 +94,15 @@ function deleteSelected() {
     <mat-divider style="margin-top: 10px;"></mat-divider>
 
 
-<!-- Versió 1 - Taules Basiques HTML
-
-
-<h2>Figure / Table</h2>    
-</ng-container>
-
-
-<ng-container *ngIf="this.edit">
-<br>
-    <form [formGroup]="FeedBack" (ngSubmit)="submitFinal()">
-        <table class="form-group">
-          <tr>
-            <th>Goal</th>
-            <th>Strategy</th>
-            <th>Target</th>
-          </tr>
-          <tbody formArrayName="Rows">
-            <tr
-              *ngFor="let obj of formArr.controls; let i = index; let l = last"
-              [formGroupName]="i"
-            >
-              <td>
-                <input
-                  type="textarea"
-                  class="form-control"
-                  id="Goal"
-                  formControlName="Goal"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="Strategy"
-                  formControlName="Strategy"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="Target"
-                  formControlName="Target"
-                />
-              </td>
-              <td>
-                <button mat-icon-button (click)="deleteRow(i)"> <mat-icon> delete </mat-icon> </button>
-              </td>
-              
-            </tr>
-          </tbody>
-        </table>
-        <button type="button" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" (click)="addNewRow()" class="btn btn-dark">
-            Add new Row
-          </button>
-          <button type="submit" mat-raised-button style="margin-left: 5px; margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Save</button>
-        
-      </form>
-      <br>
-
-</ng-container>
--->
-
-
-
-
-
-
-
 
 
 
 
 
 <br>
-
+<!--
       <h2>Figure / Table</h2>
-        <form [formGroup]="FeedBack" (ngSubmit)="submitFinal()">
+        <form [formGroup]="FeedBack" (ngSubmit)="nada()">
           <table class="form-group" style="width: 90%;">
             <tr>
               <th>Source Goal</th>
@@ -498,7 +168,7 @@ function deleteSelected() {
 
         </form>
 
-
+      -->
 
 <br>
 <br>
@@ -506,110 +176,15 @@ function deleteSelected() {
 
 
 <h2>Grafs</h2>
-<!--
-<div #siteConfigNetwork id="mynetwork"></div>
-<div #treeContainer></div>
---> 
 
-
-
-<!--
-<table>
-  <tbody>
-    <tr>
-      <td>
-        <h2>Node</h2>
-        <table>
-          <tbody>
-            <tr>
-              <td></td>
-              <td><label for="node-label">Label</label></td>
-              <td><input id="node-label" type="text" value="Node 6" /></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>Action</td>
-              <td>
-                <button id="node-add" onclick="modoEditNode();">Add</button>
-                <button id="node-update" onclick="updateNode();">Update</button>
-                <button id="node-remove" onclick="removeNode();">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
-  </tbody>
-</table>
--->
 <mat-divider></mat-divider>
 
-<app-graf></app-graf>
+<app-graf #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-
-
+<!--
+<button (click)="submitFinal(); compGraf.nada();">Pruebas</button>
+-->
 
 

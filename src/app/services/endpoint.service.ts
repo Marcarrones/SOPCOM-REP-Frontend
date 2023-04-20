@@ -100,7 +100,7 @@ export class EndpointService {
 
   public deleteMap(id) {
     const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.delete<any[]>('http://localhost/index.php/maps' + '/' + id);
+    return this.http.delete<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
   }
 
   public getCriterionById(id) {
@@ -129,6 +129,15 @@ export class EndpointService {
   }
 
   public addNewGoal(data) {
+    const request = this.URL + Values.RESOURCES.GOAL;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+  public addNewStrategy(data) {
+    const request = this.URL + Values.RESOURCES.STRATEGY;
+    return this.http.post<any[]>(request, data).pipe(map(response => response));
+  }
+
+  public addNewGoal2(data) {
     const request = this.URL + Values.RESOURCES.GOAL;
     return this.http.post<any[]>(request, data).pipe(map(response => response));
   }

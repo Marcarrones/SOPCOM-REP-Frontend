@@ -15,6 +15,7 @@ export class Values {
         METHOD_ELEMENT: 'method-element',
         CRITERION: 'criterion',
         GOAL: 'goal',
+        STRATEGY: 'strategy',
         RELATIONS: 'relations',
         TYPES: 'types',
         VALUES: 'values',
