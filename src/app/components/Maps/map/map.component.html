@@ -7,12 +7,6 @@
     </style>
 
 
-
-
-
-
-
-
 <ng-container *ngIf="!this.edit">
   <h1 style="text-transform: capitalize;"> Map </h1>
 <mat-divider style="margin-top: 10px;"></mat-divider>
@@ -64,14 +58,10 @@
 <br>
 <br>
 
-<app-graf [info_completa]="this.map.pruebas" [acceso]="true"></app-graf>
+<app-graf [info_completa]="this.map.pruebas" [readMapid]="this.map.id" [acceso]="true"></app-graf>
 </ng-container>
 
 
-
-
-<br>
-<br>
 
 
 
@@ -175,7 +165,7 @@
 <br>
 
 
-<h2>Grafs</h2>
+<h2>Graf</h2>
 
 <mat-divider></mat-divider>
 

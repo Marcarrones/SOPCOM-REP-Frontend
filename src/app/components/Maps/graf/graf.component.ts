@@ -28,10 +28,14 @@ export class GrafComponent implements OnInit {
   public nodes;
   public edges;
   public paramsauxiliar;
+  public prueba_id_aux;
+  public goals_de_map : any = [];
+  public strategies_de_map : any = [];
   @Input() prueba_id: MapComponent;
   @Input() prueba_name: MapComponent;
   @Input() info_completa: string;
   @Input() acceso: boolean;
+  @Input() readMapid: string;
 
   constructor(
     private endpointService: EndpointService,
@@ -40,19 +44,71 @@ export class GrafComponent implements OnInit {
     private router: Router,
   ) {  }
 
-  ngOnInit(): void {
+   async ngOnInit() {
     console.log(this.acceso);
-    if(this.acceso != true){
+    if(this.acceso != true){ //Creació de Graf, Buit
     this.nodes = new DataSet([
-      { id: 1, label: "Start", title: 1 },
-      { id: 2, label: "Stop", title: 2 }
+      { id: "Start", label: "Start", title: 1 },
+      { id: "Stop", label: "Stop", title: 2 }
     ]);
     this.edges = new DataSet([
     ]);
-  }else{
+  }else{ //Lectura de Graf Existent
+    //await this.goalsmap();
+    //console.log('----------------------------------------');
+    //const sleep = (ms) => new Promise(r => setTimeout(r, ms)); //funcio per esperar 1 segon (Millora a fer: Observables, Await, Async per solucionar-ho)
+    //await sleep(1000);
+    //console.log(this.goals_de_map);
+    //console.log(this.strategies_de_map);
+
     var info = JSON.parse(this.info_completa);
     var auxnodes : any = [];
     var auxedges : any = [];
+/*
+    this.goals_de_map.forEach(x => {
+      var nom_start_end;
+      if(x.name.startsWith('Start')){
+        nom_start_end = 'Start';
+      }else if(x.name.startsWith('Stop')){
+        nom_start_end = 'Stop';
+      }else{
+        nom_start_end = x.name;
+      }
+        auxnodes.push({
+          id: x.id,
+          label: nom_start_end,
+          x: x.x,
+          y: x.y,
+          map: x.map
+        });
+      
+      
+    });
+
+    this.strategies_de_map.forEach(x => {
+      auxnodes.push({
+        id: x.id,
+        label: x.name,
+        x: x.x,
+        y: x.y,
+        shape: "box",
+        color: "#FB7E81",
+      });
+      auxedges.push({
+        from: x.goal_src,
+        to: x.name,
+        arrows: "to",
+      smooth: {type: 'cubicBezier'},
+      });
+      auxedges.push({
+        from: x.name,
+        to: x.goal_tgt,
+        color: "#2B7CE9",
+        arrows: "to",
+      smooth: {type: 'cubicBezier'},
+      });
+    });
+    */
     info.forEach(x => {
       if(x.id.startsWith('S_')){
         auxnodes.push({
@@ -274,6 +330,7 @@ export class GrafComponent implements OnInit {
     var testing =this.objectToArray(this.network.body.nodes);
     console.log(this.network.body.nodes);
     console.log(testing);
+
     testing.forEach(x => {
       if(x.id.startsWith('S_')){
         ST.push(x);
@@ -283,22 +340,33 @@ export class GrafComponent implements OnInit {
       
     }
       );
+      console.log('N:');
       console.log(N);
+      console.log('ST:');
       console.log(ST);
+
+      this.prueba_id_aux = this.prueba_id;
     
-    N.forEach(async x => {
-      let dataN = {name: x.options.label, map: this.prueba_id};
+    await N.forEach(async x => {
+      let dataN = {id: x.options.label, name: x.options.label, map: this.prueba_id, x: x.x, y: x.y};
         await this.endpointService.addNewGoal(dataN).subscribe(data => {
         console.log("data", data)
         //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
     })
     });
-
+    //const sleep = (ms) => new Promise(r => setTimeout(r, ms)); //funcio per esperar 1 segon (Millora a fer: Observables, Await, Async per solucionar-ho)
+    //await sleep(1000);
+    
+    
 
     ST.forEach(async x => {
+      console.log("Element de St:");
+      console.log(x);
       let source = x.edges[0].fromId;
       let target = x.edges[1].toId;
       let dataST = {id:x.options.label, name: x.options.label, goal_tgt: target, goal_src: source};
+      console.log('Dataset:');
+      console.log(dataST);
         await this.endpointService.addNewStrategy(dataST).subscribe(data => {
         console.log("data", data)
         //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
@@ -310,7 +378,7 @@ export class GrafComponent implements OnInit {
 
 
 
-    this.router.navigate(['/map', this.prueba_id]);
+    this.router.navigate(['/map', this.prueba_id_aux]);
     
       
     
@@ -366,15 +434,6 @@ export class GrafComponent implements OnInit {
       //return true;
 
       
-      
-      /*
-      await this.endpointService.addMap(body).subscribe(data => {
-        console.log("data", data)
-        this.prueba_id = data.id;
-        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-        this.navigatorService.refreshMapList();
-        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
-    })*/
 
       this.nada();
   }
@@ -407,6 +466,64 @@ export class GrafComponent implements OnInit {
       real.push(d);
     });
     console.log(JSON.stringify(real));
+  }
+
+
+
+
+
+
+
+
+  public async goalsmap(){
+    
+    this.endpointService.getMapGoals(this.readMapid).subscribe(async data => {
+      this.goals_de_map = data;
+      //console.log(this.goals_de_map);
+      //console.log('maps');
+
+      
+      await this.goals_de_map.forEach(async x => {
+        //console.log(x.name);
+        await this.endpointService.goalStrategies(x.name).subscribe(data => {
+          if(data.length > 0){
+            data.forEach(async x => {
+              this.strategies_de_map.push(x);
+            });
+            //this.strategies_de_map.push(data);
+          }
+          
+        });
+        });
+        //console.log(this.strategies_de_map);
+      
+        return true;
+    });
+  
+  }
+
+
+
+
+
+
+
+
+
+  public updateGraf(){
+    let body = this.stringifyMap();
+
+    console.log(body);
+console.log(this.readMapid);
+    this.endpointService.updateMap(this.readMapid, body).subscribe(data => {
+      if(data.length > 0){
+        data.forEach(async x => {
+          this.strategies_de_map.push(x);
+        });
+        //this.strategies_de_map.push(data);
+      }
+      
+    });
   }
 
 }

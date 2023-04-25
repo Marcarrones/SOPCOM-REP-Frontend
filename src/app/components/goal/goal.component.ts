@@ -32,7 +32,7 @@ export class GoalComponent implements OnInit {
       if(this.navigatorService.goalList.findIndex(g => g.name == this.goal) !== -1) {
         this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       } else {
-        let data = {name: this.goal};
+        let data = {name: this.goal, id: this.goal};
         this.endpointService.addNewGoal(JSON.stringify(data)).subscribe(data => {
           this.closeDialog()
         })

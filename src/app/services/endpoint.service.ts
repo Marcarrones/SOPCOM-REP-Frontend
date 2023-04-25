@@ -92,10 +92,25 @@ export class EndpointService {
     return this.http.get<any[]>('http://localhost:1031/index.php/maps/' + id);
   }
 
+  public goalStrategies(name) {
+    const request = this.URL2 + Values.RESOURCES.GOAL + '/' + name;
+    return this.http.get<any[]>('http://localhost:1031/index.php/goal/' + name + '/strategies');
+  }
+
+  public getMapGoals(id) {
+    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.get<any[]>('http://localhost:1031/index.php/maps/' + id + '/goals');
+  }
+
   public addMap(data) {
     const request = this.URL2 + Values.RESOURCES.MAPS;
     console.log(data);
     return this.http.post<any>('http://localhost:1031/index.php/maps', data)
+  }
+
+  public updateMap(id, data) {
+    const request = this.URL2 + Values.RESOURCES.MAPS;
+    return this.http.put<any>('http://localhost:1031/index.php/maps' + '/' + id, data)
   }
 
   public deleteMap(id) {

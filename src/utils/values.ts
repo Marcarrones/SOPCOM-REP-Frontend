@@ -3,6 +3,9 @@ import { environment } from "src/environments/environment.prod";
 export class Values {
 
     //static SERVER_URL = "http://gessi3.essi.upc.edu";
+    //static SERVER_URL2 = "http://gessi3.essi.upc.edu";
+
+    static SERVER_URL = "http://localhost"; //localhost
     static SERVER_URL2 = "http://localhost"; //localhost
 
     static SERVER_PORT = ":1026";
