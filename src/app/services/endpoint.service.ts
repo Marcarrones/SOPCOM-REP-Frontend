@@ -94,7 +94,10 @@ export class EndpointService {
 
   public goalStrategies(name) {
     const request = this.URL2 + Values.RESOURCES.GOAL + '/' + name;
-    return this.http.get<any[]>('http://localhost:1031/index.php/goal/' + name + '/strategies');
+    console.log('ariba fins aqui');
+    console.log(name);
+    console.log('---------------------')
+    return this.http.get<any[]>('http://localhost:1031/index.php/goal/' + name + '/strategies').pipe(map(response => response));
   }
 
   public getMapGoals(id) {
@@ -110,7 +113,12 @@ export class EndpointService {
 
   public updateMap(id, data) {
     const request = this.URL2 + Values.RESOURCES.MAPS;
-    return this.http.put<any>('http://localhost:1031/index.php/maps' + '/' + id, data)
+    return this.http.put<any>('http://localhost:1031/index.php/maps' + '/' + id, data).pipe(map(response => response));
+  }
+
+  public updateGoal(id, data) {
+    const request = this.URL2 + Values.RESOURCES.GOAL;
+    return this.http.put<any>('http://localhost:1031/index.php/goal' + '/' + id, data)
   }
 
   public deleteMap(id) {
@@ -141,6 +149,11 @@ export class EndpointService {
   public getAllGoals() {
     const request = this.URL + Values.RESOURCES.GOAL;
     return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
+  public getAllStrategies() {
+    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
+    return this.http.get<any[]>('http://localhost:1031/index.php/strategy').pipe(map(response => response));
   }
 
   public addNewGoal(data) {

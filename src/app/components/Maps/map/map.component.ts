@@ -211,6 +211,7 @@ addRow(obj) {
 
 
   public borraMap(){
+  if(confirm("Are you sure you want to delete this map?")) {
   console.log(this.id);
   this.navigatorService.allowChange = false;
   this.endpointService.deleteMap(this.id).subscribe( data => {
@@ -220,6 +221,7 @@ addRow(obj) {
     })
     this.navigatorService.refreshMapList();
     return true;
+  }
 }
 
 
@@ -235,19 +237,21 @@ public async submitFinal(){
 
   //this.navigatorService.allowChange = true;
   let body = this.stringifyMap();
-
-  await this.endpointService.addMap(body).subscribe(data => {
-        console.log("data", data)
-        this.map.id = data.id;
-        console.log(this.map)
-        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+    
+   this.endpointService.addMap(body).subscribe(async data => {
+        //console.log("data", data)
+        //this.map.id = data.id;
+        //console.log(this.map)
         this.navigatorService.refreshMapList();
-        //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
+        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+        console.log(data.id);
+        this.router.navigate(['/map', data.id]);
     })
         //this.navigatorService.refreshMapList();
         //this.router.navigate(['/map', this.map.id]);  
         console.log('creacio map completa')    
-    return true;
+    //return true;
+  
 }
 
 

@@ -52,8 +52,8 @@
     
 <br>
     -->
-<button mat-raised-button class="button-custom"  *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="nada()"> Save </button>
-<button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="borraMap()"> Delete </button>
+<!--<button mat-raised-button class="button-custom"  *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="nada()"> Save </button>-->
+<button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="borraMap()"> Delete Map</button>
 
 <br>
 <br>
@@ -81,7 +81,7 @@
         <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
     </mat-form-field>
     
-    <mat-divider style="margin-top: 10px;"></mat-divider>
+   
 
 
 
@@ -160,14 +160,13 @@
 
       -->
 
-<br>
-<br>
-<br>
 
+<br>
+<mat-divider style="margin-top: 10px;"></mat-divider>
 
 <h2>Graf</h2>
 
-<mat-divider></mat-divider>
+
 
 <app-graf #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
 

@@ -22,7 +22,7 @@ export class Values {
         RELATIONS: 'relations',
         TYPES: 'types',
         VALUES: 'values',
-        MAPS: 'maps'
+        MAPS: 'maps',
     }
 
     

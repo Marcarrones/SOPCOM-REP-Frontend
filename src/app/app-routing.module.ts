@@ -43,6 +43,7 @@ export class ConfirmDeactivateGuardC implements CanDeactivate<CriterionDetailCom
     }
 }
 
+
 @Injectable()
 export class ConfirmDeactivateGuardM implements CanDeactivate<MapComponent> {
     canDeactivate(target: MapComponent) {
@@ -52,6 +53,7 @@ export class ConfirmDeactivateGuardM implements CanDeactivate<MapComponent> {
         return true;
     }
 }
+
 
 
 
@@ -75,8 +77,10 @@ const routes: Routes = [
   {path: 'criterion/:id', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
   {path: 'criterion', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
   //{path: 'criterions', component: CriterionListComponent},
-  {path: 'map/:id', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
-  {path: 'map', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
+  //{path: 'map/:id', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
+  //{path: 'map', component: MapComponent, canDeactivate:[ConfirmDeactivateGuardM]},
+  {path: 'map/:id', component: MapComponent},
+  {path: 'map', component: MapComponent},
   //maps
   {path: '**', redirectTo: 'method-chunk', pathMatch: 'full'},
   //??
@@ -90,6 +94,7 @@ const routes: Routes = [
     ConfirmDeactivateGuardMC,
     ConfirmDeactivateGuardME,
     ConfirmDeactivateGuardC,
-    ConfirmDeactivateGuardM]
+    ConfirmDeactivateGuardM
+]
 })
 export class AppRoutingModule { }

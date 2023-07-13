@@ -1,21 +1,38 @@
 <div id="mynetwork" #siteConfigNetwork></div>
 
-<button id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
-<input #nodelabel type="text" value="Node 1" />
+
+
+<button *ngIf="!this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
+<button *ngIf="this.acceso" id="node-add" (click)="modoEditNode2()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
+<input #nodelabel type="text" style="margin-left: 5px;" value="Node 1" />
+
+<button *ngIf="!this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px" mat-raised-button (click)="modoEditEdge();">Create Strategy</button>
+<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px" mat-raised-button (click)="modoEditEdge2();">Create Strategy</button>
+<input  #createSt style="margin-left: 5px;"  type="text" value="Strategy 1" />
+
+<br>
+
+<button *ngIf="!this.acceso" class="btn btn-primary" style="margin-top: 10px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName();">Update Element</button>
+<button *ngIf="this.acceso" class="btn btn-primary" style="margin-top: 10px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName2();">Update Element</button>
+<input  #updatename type="text" style="margin-left: 5px;" value="New Name" />
+
+<button *ngIf="!this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected();">Delete Element</button>
+<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected2();">Delete Element</button>
 
 
 
-<button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px" mat-raised-button (click)="modoEditEdge();">Create Strategy</button>
-<input #createSt type="text" value="Strategy 1" />
 
 
 
-<button class="btn btn-primary" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px" mat-raised-button (click)="changeName();">Update Element</button>
-<input #updatename type="text" value="New Name" />
 
 
 
-<button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected();">Delete Selected</button>
+
+
+
+
+
+
 
 
 
@@ -35,5 +52,5 @@
 </ng-container>
 
 <ng-container *ngIf="this.acceso"> <!-- Part de Editar-->
-    <button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="updateGraf()">Update Map</button>
+    <button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="updateGraf()">Save Map</button>
 </ng-container>
