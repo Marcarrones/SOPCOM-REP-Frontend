@@ -14,7 +14,7 @@ export class EndpointService {
   ) { }
 
   private URL = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
-  private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2;
+  private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
 
   public getAllMethodChunk() {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
@@ -121,10 +121,22 @@ export class EndpointService {
     return this.http.put<any>('http://localhost:1031/index.php/goal' + '/' + id, data)
   }
 
+  public updateStrategy(id, data) {
+    //const request = this.URL2 + Values.RESOURCES.GOAL;
+    return this.http.put<any>('http://localhost:1031/index.php/strategy' + '/' + id, data)
+  }
+
   public deleteMap(id) {
     const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
     return this.http.delete<any[]>('http://localhost:1031/index.php/maps' + '/' + id);
   }
+
+  
+  public deleteGoalfromMap(id) {
+    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.delete<any[]>('http://localhost:1031/index.php/goal' + '/' + id);
+  }
+  
 
   public getCriterionById(id) {
     const request = this.URL + Values.RESOURCES.CRITERION + '/' + id;
@@ -151,9 +163,19 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
+  public getGoalsWithoutMap() {
+    const request = this.URL + Values.RESOURCES.GOAL;
+    return this.http.get<any[]>('http://localhost:1031/index.php/goal/nomap');
+  }
+
   public getAllStrategies() {
     const request = this.URL2 + Values.RESOURCES.STRATEGY;   
     return this.http.get<any[]>('http://localhost:1031/index.php/strategy').pipe(map(response => response));
+  }
+
+  public getMapStrategies(id) {
+    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
+    return this.http.get<any[]>('http://localhost:1031/index.php/maps/' + id + '/strategies').pipe(map(response => response));
   }
 
   public addNewGoal(data) {
@@ -162,7 +184,7 @@ export class EndpointService {
   }
   public addNewStrategy(data) {
     const request = this.URL + Values.RESOURCES.STRATEGY;
-    return this.http.post<any[]>(request, data).pipe(map(response => response));
+    return this.http.post<any>('http://localhost:1031/index.php/strategy', data)
   }
 
   public addNewGoal2(data) {

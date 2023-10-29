@@ -9,7 +9,6 @@ import { NavigatorService } from 'src/app/services/navigator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-//declare var vis:any;
 
 
 
@@ -32,7 +31,10 @@ export class GrafComponent implements OnInit {
   public goals_de_map : any = [];
   public strategies_de_map : any = [];
   public llistat_goals : any = [];
+  public llistat_goals_sense_map : any = [];
+  public llistat_goals_del_map : any = [];
   public llistat_strategies : any = [];
+  public llistat_strategies_del_map : any = [];
   @Input() prueba_id: MapComponent;
   @Input() prueba_name: MapComponent;
   @Input() info_completa: string;
@@ -51,8 +53,8 @@ export class GrafComponent implements OnInit {
     console.log(this.acceso);
     if(this.acceso != true){ //Creació de Graf, Buit
     this.nodes = new DataSet([
-      { id: "Start", label: "Start", title: 1 },
-      { id: "Stop", label: "Stop", title: 2 }
+      //{ id: "Start", label: "Start", title: 1 },
+      //{ id: "Stop", label: "Stop", title: 2 }
     ]);
     this.edges = new DataSet([
     ]);
@@ -62,85 +64,194 @@ export class GrafComponent implements OnInit {
     //console.log('----------------------------------------');
     //const sleep = (ms) => new Promise(r => setTimeout(r, ms)); //funcio per esperar 1 segon (Millora a fer: Observables, Await, Async per solucionar-ho)
     //await sleep(1000);
+    var auxnodes : any = [];
+    var auxedges : any = [];
+    var info = JSON.parse(this.info_completa);
+
 
     await this.endpointService.getAllGoals().subscribe(data => {
       this.llistat_goals = data;
       console.log(data);
+    })
+
+    await this.endpointService.getGoalsWithoutMap().subscribe(data => {
+      this.llistat_goals_sense_map = data;
+      console.log(data);
+    })
+
+    await this.endpointService.getAllStrategies().subscribe(data => {
+      this.llistat_strategies = data;
+      console.log(data);
+    })
+
+    await this.endpointService.getMapStrategies(this.readMapid).subscribe(async datastrategies => {
+      this.llistat_strategies_del_map = datastrategies;
+      console.log('::::::')
+      console.log(datastrategies);
+    
+
+        await this.endpointService.getMapGoals(this.readMapid).subscribe(async data => {
+          this.llistat_goals_del_map = data;
+          console.log('llistat goals del mapa antes de los push: ', data);
+          console.log('llistat strategies del mapa antes de los push: ', this.llistat_strategies_del_map);
+          
+    /*Manera antigua pruebas[] no borrar
+          info.forEach(x => {
+            if(x.id.startsWith('S_')){
+              auxnodes.push({
+                id: x.id,
+                label: x.name,
+                x: x.x,
+                y: x.y,
+                shape: "box",
+                color: "#FB7E81",
+              });
+            }else if(x.id != 'Start' && x.id != 'Stop'){
+              console.log(x)
+              auxnodes.push({
+                id: x.id,
+                label: x.name,
+                x: x.x,
+                y: x.y,
+              });
+            }
+          });
+    */
+
+            //Crea els nodes basats en les llistes obtingudes de la BD
+            this.llistat_goals_del_map.forEach(x => {
+              if(x.id != 'Start' && x.id != 'Stop'){
+                auxnodes.push({
+                  id: x.id.toString(),
+                  label: x.name,
+                  x: x.x,
+                  y: x.y,
+                });
+              }
+            });
+            this.llistat_strategies_del_map.forEach(x => {
+              if(x.id != 'Start' && x.id != 'Stop'){
+                auxnodes.push({
+                  id: x.id,
+                  label: x.name,
+                  x: x.x,
+                  y: x.y,
+                  shape: "box",
+                  color: "#FB7E81",
+                });
+              }
+            });
+            
+          data.forEach(z => { 
+            if(z.name == 'Start' || z.name == 'Stop'){
+              auxnodes.push({
+                id: z.id,
+                label: z.name,
+                x: z.x,
+                y: z.y,
+              });
+            }
+          });
+/*manera antigua pruebas[]
+          info.forEach(x => {
+            if(x.id.startsWith('S_')){
+              console.log(x)
+              auxedges.push({
+                from: x.source,
+                to: x.id,
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+              auxedges.push({
+                from: x.id,
+                to: x.target,
+                color: "#2B7CE9",
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+            }
+          });
+          */
+          
+          this.llistat_strategies_del_map.forEach(x => {
+            console.log(x)
+              auxedges.push({
+                from: x.goal_src,
+                to: x.id,
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+              auxedges.push({
+                from: x.id,
+                to: x.goal_tgt,
+                color: "#2B7CE9",
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+            
+          });
+
+
+
+          
+          this.nodes = new DataSet(auxnodes);
+          this.edges = new DataSet(auxedges);
+
+          var treeData = {
+            nodes: this.nodes,
+            edges: this.edges
+          };
+      
+          this.loadVisTree(treeData);
+          console.log(this.network.body);
+          //this.network.moveNode(this.network.body.nodes[0]);
+
+          var c = this.networkContainer.nativeElement;
+        this.network.on("click",  (params) => {
+          params.event = "[original event]";
+          this.paramsauxiliar = params;
+          this.selected = this.network.getNodeAt(params.pointer.DOM);
+          console.log(
+            "ID de Nodo Seleccionado: " + this.network.getNodeAt(params.pointer.DOM)
+          );
+          console.log(this.selected);
+          console.log(params.pointer)
+    });
+
+    this.network.on("dragEnd", async (params) => {
+      params.event = "[original event]";
+      console.log('params: ', params);
+      this.selected = this.network.getNodeAt(params.pointer.DOM);
+          //console.log(
+            //'Selected:', this.selected
+          //);
+
+      if(params.nodes.length == 0){
+          console.log('Screen Dragging');
+      }else{
+          await this.updateGraf();
+          await this.update_posicio_goal_st();
+      }
+      
+      console.log(
+        "Node Release"
+      );
+    });
+        })
   })
 
-  await this.endpointService.getAllStrategies().subscribe(data => {
-    this.llistat_strategies = data;
-    console.log(data);
-})
-
-
-    console.log(this.goals_de_map);
-    console.log(this.strategies_de_map);
-
-    var info = JSON.parse(this.info_completa);
-    var auxnodes : any = [];
-    var auxedges : any = [];
-
-
-    /*
-    await this.goals_de_map.forEach(x => {
-      var nom_start_end;
-      if(x.name.startsWith('Start')){
-        nom_start_end = 'Start';
-      }else if(x.name.startsWith('Stop')){
-        nom_start_end = 'Stop';
-      }else{
-        nom_start_end = x.name;
-      }
-        auxnodes.push({
-          id: nom_start_end,
-          label: nom_start_end,
-          x: x.x,
-          y: x.y,
-          map: x.map
-        });
-      
-      
-    });
-    await this.strategies_de_map.forEach(x => {
-      var sta;
-      var sto;
-      if(x.goal_src.startsWith('Start')){
-        sta = 'Start';
-      }else{
-        sta = x.goal_src;
-      }
-
-      if(x.goal_tgt.startsWith('Stop')){
-        sto = 'Stop';
-      }else{
-        sto = x.goal_tgt;
-      }
-      auxnodes.push({
-        id: x.id,
-        label: x.name,
-        x: x.x,
-        y: x.y,
-        shape: "box",
-        color: "#FB7E81",
-      });
-      auxedges.push({
-        from: sta,
-        to: x.id,
-        arrows: "to",
-      smooth: {type: 'cubicBezier'},
-      });
-      auxedges.push({
-        from: x.id,
-        to: sto,
-        color: "#2B7CE9",
-        arrows: "to",
-      smooth: {type: 'cubicBezier'},
-      });
-    });
-    */
     
+
    
+
+    
+
+    console.log('llistat_goals_del_map:');
+    console.log(this.llistat_goals_del_map);
+    
+    
+    
+   /* Manera antigua de llegir grafs, NO BORRAR
     info.forEach(x => {
       if(x.id.startsWith('S_')){
         auxnodes.push({
@@ -151,7 +262,7 @@ export class GrafComponent implements OnInit {
           shape: "box",
           color: "#FB7E81",
         });
-      }else{
+      }else if(x.id != 'Start' && x.id != 'Stop'){
         auxnodes.push({
           id: x.id,
           label: x.name,
@@ -183,11 +294,13 @@ export class GrafComponent implements OnInit {
     
     this.nodes = new DataSet(auxnodes);
     this.edges = new DataSet(auxedges);
+
+    */
   }
 
     // create an array with edges
     
-
+/*
     var treeData = {
       nodes: this.nodes,
       edges: this.edges
@@ -195,17 +308,37 @@ export class GrafComponent implements OnInit {
 
     this.loadVisTree(treeData);
     console.log(this.network.body)
-
+*/
     //var selected;
+
+
+/*
     var c = this.networkContainer.nativeElement;
     this.network.on("click",  (params) => {
       params.event = "[original event]";
       this.paramsauxiliar = params;
-      this.selected = this.network.getNodeAt(params.pointer.DOM)
+      this.selected = this.network.getNodeAt(params.pointer.DOM);
       console.log(
         "ID de Nodo Seleccionado: " + this.network.getNodeAt(params.pointer.DOM)
       );
+      console.log(this.selected);
 });
+
+this.network.on("dragEnd",  (params) => {
+  params.event = "[original event]";
+
+  this.selected = this.network.getNodeAt(params.pointer.DOM);
+      console.log(
+        'Selected:', this.selected
+      );
+
+  this.updateGraf();
+  console.log(
+    "Node Release"
+  );
+});
+
+*/
 
 
   }
@@ -225,22 +358,47 @@ export class GrafComponent implements OnInit {
       manipulation: {
         enabled: false,
         addNode: (nodeData,callback) => {
-          nodeData.id = a.nodeLabel.nativeElement.value;
+          //nodeData.id = a.nodeLabel.nativeElement.value;
           nodeData.label = a.nodeLabel.nativeElement.value;
           nodeData.title = a.nodeLabel.nativeElement.value;
           console.log('acceso');
           console.log(this.acceso);
           if(this.acceso == true){
-            let dataN = {id: nodeData.id, name: nodeData.label, map: this.readMapid, x: nodeData.x, y: nodeData.y};
-            this.endpointService.addNewGoal(dataN).subscribe(data => {
-              this.updateGraf();
+            let dataN = { name: nodeData.label, map: this.readMapid, x: nodeData.x, y: nodeData.y};
+            this.endpointService.addNewGoal(dataN).subscribe(async data => {
+              console.log('id respuesta a creacion:');
+              console.log(data['id']);
+              nodeData.id = data['id'].toString();
+              console.log('llistat dels goals del mapa:',this.llistat_goals_del_map);
+              this.llistat_goals_del_map.push({'id': data['id'], 'name': nodeData.label})
+              callback(nodeData);
+              await this.updateGraf();
           })
           }
-          callback(nodeData);
+          
         },
         addEdge: (edgeData,callback) => {
+          console.log(edgeData);
+          console.log('edgedataaa: ', this.network.body.nodes[edgeData.from].options.label, this.network.body.nodes[edgeData.to].options.label);
           if(edgeData.from.startsWith('S_') || edgeData.to.startsWith('S_')){
-            alert('You have to choose two Goals to create a Strategy');
+            //alert('You have to choose two Goals to create a Strategy');
+            this._snackBar.open('You have to choose two Goals to create a Strategy', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.network.disableEditMode();
+          }else if (edgeData.from == edgeData.to){
+            //alert('You have to choose 2 different nodes');
+            this._snackBar.open('You have to choose 2 different nodes', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.network.disableEditMode();
+          }else if(this.network.body.nodes[edgeData.to].options.label == 'Start'){
+            //alert('You cannot choose Start as a target goal');
+            this._snackBar.open('You cannot choose Start as a target goal', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.network.disableEditMode();
+          }else if(this.network.body.nodes[edgeData.from].options.label == 'Stop'){
+            //alert('You cannot choose Stop as a source goal');
+            this._snackBar.open('You cannot choose Stop as a source goal', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+            this.network.disableEditMode();
+          }else if(this.network.body.nodes[edgeData.to].options.label == 'Stop' && this.network.body.nodes[edgeData.from].options.label == 'Start'){
+            //alert('You cannot connect Start & Stop directly');
+            this._snackBar.open('You cannot connect Start & Stop directly', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
             this.network.disableEditMode();
           }else{
             this.addStrategy_dos(edgeData.from, edgeData.to);
@@ -268,21 +426,51 @@ export class GrafComponent implements OnInit {
 
 
   public modoEditNode() {
+    /*
     var x = this.network.clustering.findNode(this.nodeLabel.nativeElement.value);
+    console.log('x:',x);
     if(this.nodeLabel.nativeElement.value != x){
     this.network.addNodeMode();
     }else{
       alert('Node name already exists');
     }
+    */
+   console.log('llistat:');
+   console.log(this.llistat_goals_del_map[0].name);
+   var trobat = false;
+   
+   for (let i = 0; i < this.llistat_goals_del_map.length; i++) {
+    console.log(this.llistat_goals_del_map[i].name);
+    if (this.llistat_goals_del_map[i].name == this.nodeLabel.nativeElement.value){
+      trobat = true;
+    }
+  }
+     
+    if(trobat == true){
+      //alert('Goal name already exists in the map');
+      this._snackBar.open('Goal name already exists in the map', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }else if(this.nodeLabel.nativeElement.value == "" || this.nodeLabel.nativeElement.value.trim().length == 0){
+      this._snackBar.open('Goal name can not be empty', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }else{
+      console.log('entra a addnodemode');
+      this.network.addNodeMode();
     }
 
+
+    }
+
+
+
   public modoEditEdge() {
+    console.log('modo edit edge');
     var x = this.network.clustering.findNode('S_' + this.createSt.nativeElement.value);
     console.log(x);
     if('S_' + this.createSt.nativeElement.value != x){
+    this.network.eableEditMode();
     this.network.addEdgeMode();
     }else{
-      alert('Strategy name already exists');
+      //alert('Strategy name already exists');
+      this._snackBar.open('Strategy name already exists', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     }
     }
 
@@ -302,7 +490,8 @@ export class GrafComponent implements OnInit {
       if(this.paramsauxiliar.edges.length == 0 || es_st == true){
         this.network.deleteSelected();
       }else{
-        alert('Delete Strategies before deleting Node');
+        //alert('Delete Strategies before deleting Node');
+        this._snackBar.open('Delete Strategies before deleting Node', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       }
     }
 
@@ -327,7 +516,8 @@ export class GrafComponent implements OnInit {
 
   public addStrategy_dos(a, b) {
     if(a.startsWith('S_') || b.startsWith('S_')){
-      alert('You have to choose two Goals to create a Strategy');
+      //alert('You have to choose two Goals to create a Strategy');
+      this._snackBar.open('You have to choose two Goals to create a Strategy', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     }else{
 
 
@@ -335,6 +525,8 @@ export class GrafComponent implements OnInit {
         var pos1 = this.network.getPosition(a);
         var pos2 = this.network.getPosition(b);
         console.log(pos1.x, pos2.x);
+
+        console.log('Ids de los dos nodes:');
         console.log(a, b);
         
           this.nodes.add({
@@ -375,6 +567,15 @@ export class GrafComponent implements OnInit {
       } catch (err) {
         alert(err);
       }
+
+      var pos1 = this.network.getPosition(a);
+      var pos2 = this.network.getPosition(b);
+      let dataSt = { id: 'S_' + this.createSt.nativeElement.value, x: ((pos1.x + pos2.x) / 2), y: ((pos1.y + pos2.y) / 2), name: this.createSt.nativeElement.value, goal_tgt: b, goal_src: a};
+      this.endpointService.addNewStrategy(dataSt).subscribe(async data => {
+        await this.updateGraf();
+        this.llistat_strategies_del_map.push(dataSt);
+    })
+    
 
 
 
@@ -458,19 +659,8 @@ export class GrafComponent implements OnInit {
     });
     
 
-
-
-
-
     this.router.navigate(['/map', this.prueba_id]);
     
-      
-    
-
-
-    //console.log(this.network.params);
-    //console.log(this.prueba_id);
-    //console.log(this.prueba_name);
   }
 
   public objectToArray(obj) {
@@ -511,7 +701,7 @@ export class GrafComponent implements OnInit {
       console.log('entraaaa');
     }
     console.log(typeof(numerito));*/
-  if(this.prueba_id != undefined && this.prueba_name != undefined){
+  if(this.prueba_id != undefined && this.prueba_name != undefined ){
     if(!Number.isNaN(numerito)){
     await this.endpointService.addMap(body).subscribe(data => {
           console.log("data", data);
@@ -532,10 +722,10 @@ export class GrafComponent implements OnInit {
           //if(!this.dialog)this.router.navigate(['/map', this.map.id]);
       })
     }else{
-      this._snackBar.open("Error! ID ha de ser numèrica", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+      this._snackBar.open("Error! ID ha de ser numèrica", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }
     }else{
-      this._snackBar.open("Error! Introdueix ID i Nom", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+      this._snackBar.open("Error! Introdueix ID i Nom", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
 
     }
           //this.navigatorService.refreshMapList();
@@ -620,12 +810,12 @@ export class GrafComponent implements OnInit {
 
 
 
-  public updateGraf(){
+  public async updateGraf(){
     let body = this.stringifyMap();
 
     console.log(body);
     console.log(this.readMapid);
-    this.endpointService.updateMap(this.readMapid, body).subscribe(data => {
+    await this.endpointService.updateMap(this.readMapid, body).subscribe(data => {
       console.log('data de updatemap:');
       console.log(data);
       if(data.length > 0){
@@ -636,7 +826,10 @@ export class GrafComponent implements OnInit {
       }
       console.log('ha entrado en updatemap');
       
+      
     });
+    //this._snackBar.open('Graph Updated!', 'X', {duration: 1500, panelClass: ['green-snackbar']});
+    console.log('GRAPH UPDATED!');
   }
 
 
@@ -799,9 +992,11 @@ public async modoEditNode2(){
       if(this.nodeLabel.nativeElement.value != x && existeix == false){
       await this.network.addNodeMode();
       }else if(existeix == true){
-        alert('Node name already exists in DataBase');
+        //alert('Node name already exists in DataBase');
+        this._snackBar.open('Node name already exists in DataBase', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       }else{
-        alert('Node name already exists');
+        //alert('Node name already exists');
+        this._snackBar.open('Node name already exists', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
       }
 
 }
@@ -827,9 +1022,18 @@ changeName2() {
       }
       }
 
+      console.log('ELEGIDOOO:');
+      console.log(this.selected);
 
 
-  if(this.selected != undefined && existeix_goal == false && existeix_st == false && this.updateName.nativeElement.value != 'Start' && this.updateName.nativeElement.value != 'Stop'){
+  if(this.network.body.nodes[this.selected].options.label == 'Start'){
+    console.log('Es UN START');
+  }else{
+    console.log('NOO ees un start');
+  }
+
+
+  if(this.selected != undefined && existeix_goal == false && existeix_st == false && this.updateName.nativeElement.value != 'Start' && this.updateName.nativeElement.value != 'Stop' && this.network.body.nodes[this.selected].options.label != 'Start' && this.network.body.nodes[this.selected].options.label != 'Stop'){
     console.log(this.updateName.nativeElement.value);
   try {
     this.nodes.update({
@@ -839,27 +1043,42 @@ changeName2() {
 
     if(this.selected.startsWith('S_')){
       console.log('st');
+      console.log(this.selected);
+      let bodyst = {name: this.updateName.nativeElement.value};
+      console.log(bodyst);
+      this.endpointService.updateStrategy(this.selected, bodyst).subscribe(data => {  
+        console.log('data de updateStratgy:');    
+        console.log(data);  
+      });
     }else{
       console.log('node');
-      let body = {name: this.updateName.nativeElement.value};
-      console.log(body);
+
+      let body = {name: this.updateName.nativeElement.value, x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
+      console.log('booooody:', body);
+      console.log("this.selected:")
       console.log(this.selected);
       this.endpointService.updateGoal(this.selected, body).subscribe(data => {      
         console.log(data);  
       });
     }
+    this.updateGraf();
   } catch (err) {
     alert(err);
   }
 }else if(existeix_goal == true){
-  alert('A Goal already uses this name');
+  //alert('A Goal already uses this name');
+  this._snackBar.open('A Goal already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
 }else if(existeix_st == true){
-  alert('A Strategy already uses this name');
+  //alert('A Strategy already uses this name');
+  this._snackBar.open('A Strategy already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+}else if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
+  //alert('You cannot modify the names of Start and Stop goals');
+  this._snackBar.open('You cannot modify the names of Start and Stop goals', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
 }else{
   alert('Error');
 }
 
-this.updateGraf();
+//this.updateGraf();
 }
 
 
@@ -877,23 +1096,128 @@ public deleteSelected2() {
   }else{
     es_st = this.paramsauxiliar.nodes[0].startsWith(starts);
   }
-  //console.log(JSON.stringify(this.paramsauxiliar.nodes[0]).startsWith(starts));
-  if(this.paramsauxiliar.edges.length == 0 || es_st == true){
-    this.network.deleteSelected();
+
+  console.log('dadeeeeeees:');
+  console.log(this.selected);
+
+  if(this.selected == 'Start' || this.selected == 'Stop'){
+    alert('You cannot delete Start or Stop goals');
   }else{
-    alert('Delete Strategies before deleting Node');
+    if(this.paramsauxiliar.edges.length == 0 || es_st == true){
+      console.log(this.paramsauxiliar);
+      console.log(this.paramsauxiliar.nodes[0]);
+      var dataEliminar = {nameG: this.paramsauxiliar.nodes[0], idM: this.readMapid};
+      console.log("Node data:");
+      console.log(this.selected);
+      console.log(this.llistat_goals);
+      this.endpointService.deleteGoalfromMap(this.selected).subscribe(async data => {
+        //this.updateGraf();
+        console.log(data);
+        await this.network.deleteSelected();
+        console.log('Network:::::');
+        console.log(this.network);
+        this.updateGraf();
+
+        var found = this.llistat_goals_del_map.find((element) => element.id == this.selected);
+        console.log(found);
+
+        console.log('Node deleted');
+        this.network.canvas.redraw();
+    })
+    
+      //this.network.deleteSelected();
+      
+      
+    
+    }else{
+      alert('Delete Strategies before deleting Node :)');
+    }
+
   }
+
+  
 }
 
 
-public modoEditEdge2() {
+public async modoEditEdge2() {
+  await this.updateGraf();
+  console.log('Modo edit edge 2');
   var x = this.network.clustering.findNode('S_' + this.createSt.nativeElement.value);
   console.log(x);
+  console.log(this.createSt.nativeElement.value.trim().length == 0)
   if('S_' + this.createSt.nativeElement.value != x){
-  this.network.addEdgeMode();
+    if(this.createSt.nativeElement.value != "" && this.createSt.nativeElement.value.trim().length != 0){
+      this.network.addEdgeMode();
+    }else{
+      alert('Strategy name can not be empty');
+    }
   }else{
     alert('Strategy name already exists');
   }
   }
 
+
+  public esborraMapa(){
+    if(confirm("Are you sure you want to delete this map?")) {
+    console.log(this.readMapid);
+    this.navigatorService.allowChange = false;
+    this.endpointService.deleteMap(this.readMapid).subscribe( data => {
+        this.navigatorService.refreshMapList();
+        this.router.navigate(['/map']);
+        this._snackBar.open("Map deleted!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+      })
+      this.navigatorService.refreshMapList();
+      return true;
+    }
+  }
+
+
+
+ 
+
+  public async update_posicio_goal_st(){
+    console.log('entra a updatepos_goal_st');
+    console.log('la info es: ', this.selected);
+    
+    if(((this.selected).toString()).startsWith("S_")){
+      console.log('entra al if');
+      let body = {x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
+      await this.endpointService.updateStrategy(this.selected, body).subscribe(data => {      
+        console.log(data);  
+      });
+      
+      //this.network.disableEditMode();
+    }else{
+      console.log('entra al else');
+      console.log('el body es: ', this.network.getPosition(this.selected).x, this.network.getPosition(this.selected).y)
+      let body = {x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
+      await this.endpointService.updateGoal(this.selected, body).subscribe(data => {      
+        console.log(data);  
+      });
+      //this.network.disableEditMode();
+    }
+
+    console.log('fora de updateposgoal')
+    
+   }
+   
+
+
+
+
+
+
+  public funcio_auxiliar(){
+    console.log('aux:')
+    console.log(this.llistat_goals_del_map)   
+    console.log(this.llistat_strategies); 
+    console.log(this.llistat_strategies_del_map); 
+  }
+
+
+
+
+
 }
+
+

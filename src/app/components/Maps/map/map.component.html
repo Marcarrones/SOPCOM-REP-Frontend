@@ -6,6 +6,7 @@
       }
     </style>
 
+<!--Si entra a map per EDITAR:-->
 
 <ng-container *ngIf="!this.edit">
   <h1 style="text-transform: capitalize;"> Map </h1>
@@ -23,40 +24,13 @@
   <mat-label> Name </mat-label>
   <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
 </mat-form-field>
+<button *ngIf="!this.edit" mat-icon-button (click)="openEditMapDialog()"> <mat-icon> edit </mat-icon> </button>
 </form>
 
-<!--
-<mat-divider style="margin-top: 10px;"></mat-divider>
-<h2>Figure / Table</h2>
-    <table style= "border: 1px solid black;">
-        <tr>
-          <th>Goal</th>
-          <th>Strategy</th>
-          <th>Target</th>
-        </tr>
-        <tbody>
-          <tr *ngFor="let m of this.map.Rows; let i = index; let l = last">
-            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
-              {{m.Goal}}
-            </td>
-            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
-                {{m.Strategy}}
-            </td>
-            <td style="padding-right:10px; border: 1px solid black; padding-left:3px;">
-                {{m.Target}}
-            </td>
-            
-        </tr>
-        </tbody>
-      </table>
-    
-<br>
-    -->
-<!--<button mat-raised-button class="button-custom"  *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="nada()"> Save </button>-->
-<button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="borraMap()"> Delete Map</button>
 
-<br>
-<br>
+<mat-divider style="margin-top: 10px;"></mat-divider>
+<h2>Graph</h2>
+
 
 <app-graf [info_completa]="this.map.pruebas" [readMapid]="this.map.id" [acceso]="true"></app-graf>
 </ng-container>
@@ -64,6 +38,20 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Si entra a map per CREAR:-->
 
 
 <ng-container *ngIf="this.edit;">
@@ -80,8 +68,10 @@
         <mat-label> Name </mat-label>
         <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
     </mat-form-field>
+    <br>
+    <button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="submitMap()">Submit Map</button>
     
-   
+
 
 
 
@@ -162,14 +152,10 @@
 
 
 <br>
-<mat-divider style="margin-top: 10px;"></mat-divider>
-
-<h2>Graf</h2>
 
 
 
-<app-graf #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
-
+<app-graf style="display: none;" #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
 
 
 <!--

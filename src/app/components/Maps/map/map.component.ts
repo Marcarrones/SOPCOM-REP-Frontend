@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Inject} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormControl, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogClose } from '@angular/material/dialog';
+import { MatDialog, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { GoalComponent } from '../../goal/goal.component';
 import { GrafComponent } from '../graf/graf.component';
 import { Goal } from 'src/app/models/goal';
@@ -13,6 +13,9 @@ import { Observable } from 'rxjs';
 import {distinct, map, startWith} from 'rxjs/operators';
 import { DataSet } from "vis-data/peer/esm/vis-data";
 import { Network } from "vis-network/peer/esm/vis-network";
+import {MatFormFieldModule} from '@angular/material/form-field'; 
+import { MatInputModule } from '@angular/material/input';
+
 //import * as vis from 'visjs';
 //import * as vis from 'dist/vis-network.min.js';
 //import { Network, DataSet } from "vis-network";
@@ -73,7 +76,8 @@ export class MapComponent implements OnInit {
     private endpointService: EndpointService,
     private http: HttpClient,
     private _snackBar: MatSnackBar,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    public dialogs: MatDialog
   ) {  }
 
 
@@ -256,7 +260,7 @@ public async submitFinal(){
 
 
 public stringifyMap() {
-  let body = {name: this.map.name, id: this.map.id};
+  let body = {name: this.map.name, id: this.map.id, pruebas: '[{"x": -100.0, "y": 0.0, "id": "Start", "name": "Start"}, {"x": 200.0, "y": 0.0, "id": "Stop", "name": "Stop"}]'};
   return JSON.stringify(body);
 }
 
@@ -283,4 +287,183 @@ public intentionSelected(event) {
  
 
 
+
+
+
+
+
+public openEditMapDialog() {
+  const dialogRef = this.dialogs.open(UpdateMapDialog, {
+    width: '500px',
+    data: {id: this.map.id}
+  })
+  dialogRef.afterClosed().subscribe(result => {
+    
+  })
+} 
+
+
+
+
+public async submitMap(){
+
+  let body = this.stringifyMap();
+  console.log('Datos del mapaaaaa:')
+  console.log(!isNaN(this.map.id));
+  
+if(this.map.id != undefined && this.map.name != undefined ){
+  if(!isNaN(this.map.id)){
+  await this.endpointService.addMap(body).subscribe(data => {
+        console.log("data", data);
+        console.log(data);
+        console.log('id del mapa:');
+        console.log(this.map.id);
+        if(data.id == 0){
+          this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+          this.navigatorService.refreshMapList();
+          this.crea_elements_map();
+          
+        }else{
+          console.log('creacio mapa retorna error');
+          this._snackBar.open("ID del map ja existeix", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+        }
+        console.log('creacio map completa') 
+        
+    })
+  }else{
+    this._snackBar.open("Error! ID ha de ser numèrica", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+  }
+  }else{
+    this._snackBar.open("Error! Introdueix ID i Nom", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+
+  }
+
+           
 }
+
+
+
+
+
+
+
+/*Intento de asignar ID de pruebas (start i stop) en creacion de map
+public async crea_elements_map(){
+  var real_elements : any = [];
+  console.log('entra a crear_elements');
+  let data1 = {id: this.map.id, name: 'Start', map: this.map.id, x: '-100', y: '0'};
+  await this.endpointService.addNewGoal(data1).subscribe(async data => {
+    console.log('arriba a goal1');
+    console.log(data['id']);
+
+
+    let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200', y: '0'};
+    await this.endpointService.addNewGoal(data2).subscribe(dataa => {
+      console.log(dataa['id']);
+      let e = {id: data['id'], name: 'Start', map: this.map.id, x: '-100', y: '0'};
+      real_elements.push(e);
+      e = {id: dataa['id'], name: 'Stop', map: this.map.id, x: '200', y: '0'};
+      real_elements.push(e);
+      let body = {pruebas: JSON.stringify(real_elements)}
+      this.endpointService.updateMap(this.map.id, JSON.stringify(body)).subscribe(dataaaa => {
+        console.log('ha entrado en updatemap');
+      });
+    
+    });
+
+  });
+
+  
+
+  this.router.navigate(['/map', this.map.id]);
+  
+}
+
+*/
+
+
+
+
+public async crea_elements_map(){
+  var real_elements : any = [];
+  console.log('entra a crear_elements');
+  let data1 = {id: this.map.id, name: 'Start', map: this.map.id, x: '-100.0', y: '0.0'};
+  await this.endpointService.addNewGoal(data1).subscribe(async data => {
+    console.log('arriba a goal1');
+    console.log(data['id']);
+
+    let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200.0', y: '0.0'};
+    await this.endpointService.addNewGoal(data2).subscribe(dataa => {
+    console.log(dataa['id']);
+    this.router.navigate(['/map', this.map.id]);
+  });
+  });
+
+  
+
+  //this.router.navigate(['/map', this.map.id]);
+  
+}
+
+
+
+
+}
+
+
+
+
+@Component({
+  selector: 'update-map-dialog',
+  templateUrl: './update-map-dialog.html',
+  styleUrls: ['./update-map-dialog.html']
+})
+export class UpdateMapDialog {
+  @ViewChild("noumap_name", { static: true }) noumapname: ElementRef;
+  constructor(
+    public dialogRef: MatDialogRef<UpdateMapDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar,
+    
+  ) {}
+
+  public name: String = '';
+
+  public updateMapName() {
+    /*
+    if(this.name.length > 0) {
+      if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.name) !== -1) {
+        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
+      } else {
+        let body = {name: this.name}
+        this.endpointService.updateCriterion(this.data.id, body).subscribe(data => {
+          if(data === null) {
+            this.closeDialog(true)
+          } else {
+            this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
+          }
+        })
+      }
+    } else {
+      this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
+    }
+    */
+    if(this.noumapname.nativeElement.value.trim().length > 0){
+      console.log('El map a modificar es el: ');
+      console.log(this.data.id);
+      console.log('El nou nom es: ');
+      console.log(this.noumapname.nativeElement.value);
+    }else{
+      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+    }
+    this.closeDialog(true)
+  }
+
+  closeDialog(reload = false): void {
+    this.dialogRef.close(reload ? 1 : 2);
+  }
+}
+
+

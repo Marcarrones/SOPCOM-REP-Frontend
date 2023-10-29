@@ -62,7 +62,8 @@ import { GrafComponent } from './components/Maps/graf/graf.component';
     RemoveValueDialog,
     MapComponent,
     MapDetailComponent,
-    GrafComponent
+    GrafComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -86,9 +87,11 @@ import { GrafComponent } from './components/Maps/graf/graf.component';
     MatSelectModule,
     MatSnackBarModule,
     MatAutocompleteModule,
-    MatTooltipModule
+    MatTooltipModule,
+    
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  
 })
 export class AppModule { }

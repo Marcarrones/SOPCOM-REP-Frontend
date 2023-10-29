@@ -36,6 +36,7 @@ export class GoalComponent implements OnInit {
         this.endpointService.addNewGoal(JSON.stringify(data)).subscribe(data => {
           this.closeDialog()
         })
+        this.closeDialog();
       }
     } else {
       this._snackBar.open("Name is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
