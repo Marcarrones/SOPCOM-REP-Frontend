@@ -426,31 +426,19 @@ export class UpdateMapDialog {
     public endpointService: EndpointService,
     public navigatorService: NavigatorService,
     private _snackBar: MatSnackBar,
+    private router: Router,
     
   ) {}
 
   public name: String = '';
 
   public updateMapName() {
-    /*
-    if(this.name.length > 0) {
-      if(this.navigatorService.criterionList.findIndex(c => c.criterionName == this.name) !== -1) {
-        this._snackBar.open("Duplicate name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
-      } else {
-        let body = {name: this.name}
-        this.endpointService.updateCriterion(this.data.id, body).subscribe(data => {
-          if(data === null) {
-            this.closeDialog(true)
-          } else {
-            this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
-          }
-        })
-      }
-    } else {
-      this._snackBar.open("Invalid name", 'X', {duration: 3000, panelClass: ['red-snackbar']});
-    }
-    */
     if(this.noumapname.nativeElement.value.trim().length > 0){
+      let body = {name: this.noumapname.nativeElement.value}
+      this.endpointService.updateMap(this.data.id, body).subscribe(data => {
+        this.navigatorService.refreshMapList();
+        this.router.navigate(['/map/' + this.data.id]);
+      })
       console.log('El map a modificar es el: ');
       console.log(this.data.id);
       console.log('El nou nom es: ');

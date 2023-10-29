@@ -85,14 +85,21 @@ export class GrafComponent implements OnInit {
     })
 
     await this.endpointService.getMapStrategies(this.readMapid).subscribe(async datastrategies => {
-      this.llistat_strategies_del_map = datastrategies;
-      console.log('::::::')
-      console.log(datastrategies);
+      //si no hi ha cap strategy al map, activa flag per no crear cap Strategy malament al graf
+      let flag = 0;
+      if(datastrategies.length != undefined){
+        this.llistat_strategies_del_map = datastrategies;
+      }else{
+        flag = 1;
+      }
+      
+      
     
 
         await this.endpointService.getMapGoals(this.readMapid).subscribe(async data => {
           this.llistat_goals_del_map = data;
-          console.log('llistat goals del mapa antes de los push: ', data);
+          console.log('llistat goals del mapa antes de los push: ', this.llistat_goals_del_map);
+          console.log('------------')
           console.log('llistat strategies del mapa antes de los push: ', this.llistat_strategies_del_map);
           
     /*Manera antigua pruebas[] no borrar
@@ -129,6 +136,8 @@ export class GrafComponent implements OnInit {
                 });
               }
             });
+
+            if(flag == 0){
             this.llistat_strategies_del_map.forEach(x => {
               if(x.id != 'Start' && x.id != 'Stop'){
                 auxnodes.push({
@@ -140,7 +149,23 @@ export class GrafComponent implements OnInit {
                   color: "#FB7E81",
                 });
               }
+              auxedges.push({
+                from: x.goal_src,
+                to: x.id,
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+              auxedges.push({
+                from: x.id,
+                to: x.goal_tgt,
+                color: "#2B7CE9",
+                arrows: "to",
+              smooth: {type: 'cubicBezier'},
+              });
+
             });
+          }
+            
             
           data.forEach(z => { 
             if(z.name == 'Start' || z.name == 'Stop'){
@@ -172,7 +197,8 @@ export class GrafComponent implements OnInit {
             }
           });
           */
-          
+          /*prueba
+          if(flag == 0){
           this.llistat_strategies_del_map.forEach(x => {
             console.log(x)
               auxedges.push({
@@ -190,6 +216,8 @@ export class GrafComponent implements OnInit {
               });
             
           });
+          }
+          */
 
 
 
@@ -246,8 +274,7 @@ export class GrafComponent implements OnInit {
 
     
 
-    console.log('llistat_goals_del_map:');
-    console.log(this.llistat_goals_del_map);
+    
     
     
     
@@ -297,50 +324,6 @@ export class GrafComponent implements OnInit {
 
     */
   }
-
-    // create an array with edges
-    
-/*
-    var treeData = {
-      nodes: this.nodes,
-      edges: this.edges
-    };
-
-    this.loadVisTree(treeData);
-    console.log(this.network.body)
-*/
-    //var selected;
-
-
-/*
-    var c = this.networkContainer.nativeElement;
-    this.network.on("click",  (params) => {
-      params.event = "[original event]";
-      this.paramsauxiliar = params;
-      this.selected = this.network.getNodeAt(params.pointer.DOM);
-      console.log(
-        "ID de Nodo Seleccionado: " + this.network.getNodeAt(params.pointer.DOM)
-      );
-      console.log(this.selected);
-});
-
-this.network.on("dragEnd",  (params) => {
-  params.event = "[original event]";
-
-  this.selected = this.network.getNodeAt(params.pointer.DOM);
-      console.log(
-        'Selected:', this.selected
-      );
-
-  this.updateGraf();
-  console.log(
-    "Node Release"
-  );
-});
-
-*/
-
-
   }
 
   
