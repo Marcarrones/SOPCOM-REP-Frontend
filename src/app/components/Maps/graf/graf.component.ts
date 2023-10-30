@@ -133,6 +133,7 @@ export class GrafComponent implements OnInit {
                   label: x.name,
                   x: x.x,
                   y: x.y,
+                  font: { size: 20 },
                 });
               }
             });
@@ -146,7 +147,9 @@ export class GrafComponent implements OnInit {
                   x: x.x,
                   y: x.y,
                   shape: "box",
-                  color: "#FB7E81",
+                  //color: "#FB7E81",
+                  color: "white",
+                  shapeProperties: { borderDashes: [5, 5] },
                 });
               }
               auxedges.push({
@@ -174,6 +177,7 @@ export class GrafComponent implements OnInit {
                 label: z.name,
                 x: z.x,
                 y: z.y,
+                font: { size: 20 },
               });
             }
           });
@@ -344,6 +348,7 @@ export class GrafComponent implements OnInit {
           //nodeData.id = a.nodeLabel.nativeElement.value;
           nodeData.label = a.nodeLabel.nativeElement.value;
           nodeData.title = a.nodeLabel.nativeElement.value;
+          nodeData.font = {size: 20};
           console.log('acceso');
           console.log(this.acceso);
           if(this.acceso == true){
@@ -383,6 +388,8 @@ export class GrafComponent implements OnInit {
             //alert('You cannot connect Start & Stop directly');
             this._snackBar.open('You cannot connect Start & Stop directly', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
             this.network.disableEditMode();
+          }else if(this.llistat_strategies_del_map.find((element) => element.goal_src == edgeData.from && element.goal_tgt == edgeData.to && element.name == this.createSt.nativeElement.value)){
+              alert('ya te Mateixa strategy');
           }else{
             this.addStrategy_dos(edgeData.from, edgeData.to);
             callback(edgeData);
@@ -523,18 +530,22 @@ export class GrafComponent implements OnInit {
             id: 'S_' + this.createSt.nativeElement.value + '_',
             label: this.createSt.nativeElement.value,
             shape: "box",
-            color: "#FB7E81",
+            //color: "#FB7E81",
+            color: "white",
             x: ((pos1.x + pos2.x) / 2),
-            y: ((pos1.y + pos2.y) / 2)
+            y: ((pos1.y + pos2.y) / 2),
+            font: { size: 20 }
           });
         }else{
           this.nodes.add({
             id: 'S_' + this.createSt.nativeElement.value + '_' + count,
             label: this.createSt.nativeElement.value,
             shape: "box",
-            color: "#FB7E81",
+            //color: "#FB7E81",
+            color: "white",
             x: ((pos1.x + pos2.x) / 2),
-            y: ((pos1.y + pos2.y) / 2)
+            y: ((pos1.y + pos2.y) / 2),
+            font: { size: 20 }
           });
         }
           
@@ -774,7 +785,8 @@ export class GrafComponent implements OnInit {
     let jsontesting =this.objectToArray(this.network.body.nodes);
     var real : any = [];
     jsontesting.forEach(x => {
-      if(x._localColor == "#FB7E81"){
+      //if(x._localColor == "#FB7E81"){
+      if(x._localColor == "white"){
         let d = {id: x.id, name: x.options.label, x: x.x, y: x.y, source: x.edges[0].fromId, target: x.edges[1].toId};
         real.push(d);
       }else{
@@ -1013,19 +1025,21 @@ changeName2() {
   var existeix_goal = false;
   var existeix_st = false;
 
-  for (var i = 0, len = this.llistat_goals.length; i < len; i++) {
-    if(this.updateName.nativeElement.value == this.llistat_goals[i].name){
+  for (var i = 0, len = this.llistat_goals_del_map.length; i < len; i++) {
+    if(this.updateName.nativeElement.value == this.llistat_goals_del_map[i].name){
       existeix_goal = true;
       break;
     }
     }
 
-    for (var i = 0, len = this.llistat_strategies.length; i < len; i++) {
-      if(this.updateName.nativeElement.value == this.llistat_strategies[i].name){
+    /*provisional
+    for (var i = 0, len = this.llistat_strategies_del_map.length; i < len; i++) {
+      if(this.updateName.nativeElement.value == this.llistat_strategies_del_map[i].name){
         existeix_st = true;
         break;
       }
       }
+      */
 
       console.log('ELEGIDOOO:');
       console.log(this.selected);
@@ -1073,7 +1087,7 @@ changeName2() {
 }else if(existeix_goal == true){
   //alert('A Goal already uses this name');
   this._snackBar.open('A Goal already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
-}else if(existeix_st == true){
+}else if(existeix_st != false){
   //alert('A Strategy already uses this name');
   this._snackBar.open('A Strategy already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
 }else if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
@@ -1185,7 +1199,8 @@ public async modoEditEdge2() {
     console.log('la info es: ', this.network.body.nodes[this.selected].options.color.background);
     
     //Si es de color vermell (strategy), llavors UpdateStrategy, si no, fa UpdateGoal
-    if(this.network.body.nodes[this.selected].options.color.background == '#FB7E81'){
+    //if(this.network.body.nodes[this.selected].options.color.background == '#FB7E81'){
+    if(this.network.body.nodes[this.selected].options.color.background == 'white'){
       console.log('entra al if');
       let body = {x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
       await this.endpointService.updateStrategy(this.selected, body).subscribe(data => {      
@@ -1215,11 +1230,9 @@ public async modoEditEdge2() {
 
   public funcio_auxiliar(){
     console.log('TestButton:')
-    console.log(this.llistat_strategies);
     console.log(this.llistat_strategies_del_map);
 
-    console.log(this.llistat_strategies.filter((v) => (v.id.startsWith('S_' + this.createSt.nativeElement.value + '_'))).length);
-    //this.llistat_strategies_del_map.find((element) => (element.id).startsWith('S_B_'));
+    //console.log(this.llistat_strategies_del_map.find((element) => element.goal_src == this.selected));
 
     
   
