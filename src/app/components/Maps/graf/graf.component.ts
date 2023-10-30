@@ -502,7 +502,14 @@ export class GrafComponent implements OnInit {
       //alert('You have to choose two Goals to create a Strategy');
       this._snackBar.open('You have to choose two Goals to create a Strategy', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     }else{
-
+      let count = this.llistat_strategies.filter((v) => (v.id.startsWith('S_' + this.createSt.nativeElement.value + '_'))).length;
+      let flag = 0; //0 = unico
+      if(count == 0){
+        console.log('unico');
+      }else{
+        flag = 1;
+        console.log('existen ' + count);
+      }
 
       try {
         var pos1 = this.network.getPosition(a);
@@ -511,15 +518,26 @@ export class GrafComponent implements OnInit {
 
         console.log('Ids de los dos nodes:');
         console.log(a, b);
-        
+        if(flag == 0){
           this.nodes.add({
-            id: 'S_' + this.createSt.nativeElement.value,
+            id: 'S_' + this.createSt.nativeElement.value + '_',
             label: this.createSt.nativeElement.value,
             shape: "box",
             color: "#FB7E81",
             x: ((pos1.x + pos2.x) / 2),
             y: ((pos1.y + pos2.y) / 2)
           });
+        }else{
+          this.nodes.add({
+            id: 'S_' + this.createSt.nativeElement.value + '_' + count,
+            label: this.createSt.nativeElement.value,
+            shape: "box",
+            color: "#FB7E81",
+            x: ((pos1.x + pos2.x) / 2),
+            y: ((pos1.y + pos2.y) / 2)
+          });
+        }
+          
         
         
       } catch (err) {
@@ -527,36 +545,65 @@ export class GrafComponent implements OnInit {
       }
     
       try {
-        this.edges.add({
-          //id: document.getElementById("edge-id").value,
-          from: a,
-          to: 'S_' + this.createSt.nativeElement.value,
-          arrows: "to",
-          smooth: {type: 'cubicBezier'},
-        });
+        if(flag == 0){
+          this.edges.add({
+            from: a,
+            to: 'S_' + this.createSt.nativeElement.value + '_',
+            arrows: "to",
+            smooth: {type: 'cubicBezier'},
+          });
+        }else{
+          this.edges.add({
+            from: a,
+            to: 'S_' + this.createSt.nativeElement.value + '_' + count,
+            arrows: "to",
+            smooth: {type: 'cubicBezier'},
+          });
+        }
+        
       } catch (err) {
         alert(err);
       }
     
       try {
-        this.edges.add({
-          //id: document.getElementById("edge-id").value + 1,
-          from: 'S_' + this.createSt.nativeElement.value,
-          to: b,
-          arrows: "to",
-          color: "#2B7CE9",
-          smooth: {type: 'cubicBezier'},
-        });
+        if(flag == 0){
+          this.edges.add({
+            //id: document.getElementById("edge-id").value + 1,
+            from: 'S_' + this.createSt.nativeElement.value + '_',
+            to: b,
+            arrows: "to",
+            color: "#2B7CE9",
+            smooth: {type: 'cubicBezier'},
+          });
+        }else{
+          this.edges.add({
+            //id: document.getElementById("edge-id").value + 1,
+            from: 'S_' + this.createSt.nativeElement.value + '_' + count,
+            to: b,
+            arrows: "to",
+            color: "#2B7CE9",
+            smooth: {type: 'cubicBezier'},
+          });
+        }
+        
       } catch (err) {
         alert(err);
       }
 
       var pos1 = this.network.getPosition(a);
       var pos2 = this.network.getPosition(b);
-      let dataSt = { id: 'S_' + this.createSt.nativeElement.value, x: ((pos1.x + pos2.x) / 2), y: ((pos1.y + pos2.y) / 2), name: this.createSt.nativeElement.value, goal_tgt: b, goal_src: a};
+      let dataSt;
+
+      if(flag == 0){
+        dataSt = { id: 'S_' + this.createSt.nativeElement.value + '_', x: ((pos1.x + pos2.x) / 2), y: ((pos1.y + pos2.y) / 2), name: this.createSt.nativeElement.value, goal_tgt: b, goal_src: a};
+      }else{
+        dataSt = { id: 'S_' + this.createSt.nativeElement.value + '_' + count, x: ((pos1.x + pos2.x) / 2), y: ((pos1.y + pos2.y) / 2), name: this.createSt.nativeElement.value, goal_tgt: b, goal_src: a};
+
+      }
       this.endpointService.addNewStrategy(dataSt).subscribe(async data => {
         await this.updateGraf();
         this.llistat_strategies_del_map.push(dataSt);
+        this.llistat_strategies.push(dataSt);
     })
     
 
@@ -879,37 +926,12 @@ public async getInfoFromMap(){
       if(res.length > 0){
         await res.forEach(async z => {
           this.strategies_de_map.push(z);
-        });
+          });
       }
       
-        });
-      }
-
-     
-
-      /*
-    await this.goals_de_map.forEach(async x => {
-      var nombre = x.name;
-      console.log(nombre);
-
-        this.endpointService.goalStrategies(nombre).subscribe(async res => {
-          console.log('iter:');
-          console.log(res);
-        if(res.length > 0){
-          await res.forEach(async z => {
-            this.strategies_de_map.push(z);
           });
         }
-        
       });
-
-      });
-      */
-      
-    
-  });
-  
-
 }
 
 
@@ -1125,18 +1147,18 @@ public deleteSelected2() {
 public async modoEditEdge2() {
   await this.updateGraf();
   console.log('Modo edit edge 2');
-  var x = this.network.clustering.findNode('S_' + this.createSt.nativeElement.value);
+  var x = this.network.clustering.findNode('S_' + this.createSt.nativeElement.value + '_');
   console.log(x);
   console.log(this.createSt.nativeElement.value.trim().length == 0)
-  if('S_' + this.createSt.nativeElement.value != x){
+  //if(('S_' + this.createSt.nativeElement.value + '_') != x){
     if(this.createSt.nativeElement.value != "" && this.createSt.nativeElement.value.trim().length != 0){
       this.network.addEdgeMode();
     }else{
       alert('Strategy name can not be empty');
     }
-  }else{
-    alert('Strategy name already exists');
-  }
+ // }else{
+   // alert('Strategy name already exists');
+  //}
   }
 
 
@@ -1160,9 +1182,10 @@ public async modoEditEdge2() {
 
   public async update_posicio_goal_st(){
     console.log('entra a updatepos_goal_st');
-    console.log('la info es: ', this.selected);
+    console.log('la info es: ', this.network.body.nodes[this.selected].options.color.background);
     
-    if(((this.selected).toString()).startsWith("S_")){
+    //Si es de color vermell (strategy), llavors UpdateStrategy, si no, fa UpdateGoal
+    if(this.network.body.nodes[this.selected].options.color.background == '#FB7E81'){
       console.log('entra al if');
       let body = {x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
       await this.endpointService.updateStrategy(this.selected, body).subscribe(data => {      
@@ -1191,10 +1214,15 @@ public async modoEditEdge2() {
 
 
   public funcio_auxiliar(){
-    console.log('aux:')
-    console.log(this.llistat_goals_del_map)   
-    console.log(this.llistat_strategies); 
-    console.log(this.llistat_strategies_del_map); 
+    console.log('TestButton:')
+    console.log(this.llistat_strategies);
+    console.log(this.llistat_strategies_del_map);
+
+    console.log(this.llistat_strategies.filter((v) => (v.id.startsWith('S_' + this.createSt.nativeElement.value + '_'))).length);
+    //this.llistat_strategies_del_map.find((element) => (element.id).startsWith('S_B_'));
+
+    
+  
   }
 
 
