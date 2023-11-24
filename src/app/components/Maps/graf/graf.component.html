@@ -15,13 +15,13 @@
 <br>
 
 <button *ngIf="!this.acceso" class="btn btn-primary" style="margin-top: 10px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName();">Update Element</button>
-<button *ngIf="this.acceso" class="btn btn-primary" style="margin-top: 20px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName2();">Update Selected Element</button>
-<input  #updatename placeholder="New Name" type="text" style="margin-left: 5px; border-radius:5px;" value="" />
+<button *ngIf="this.acceso" class="btn btn-primary" style="margin-top: 20px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeDialog();">Update Selected Element</button>
+<!--<input  #updatename placeholder="New Name" type="text" style="margin-left: 5px; border-radius:5px;" value="" /> Comentat Provisional-->
 
-<br>
 
-<button *ngIf="!this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected();">Delete Element</button>
-<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-top: 10px;" mat-raised-button (click)="deleteSelected2();">Delete Selected Element</button>
+
+<button *ngIf="!this.acceso" style="margin-top: 5px; margin-left: 20px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected();">Delete Element</button>
+<button *ngIf="this.acceso" style="margin-top: 5px; margin-left: 20px; color: #656565; background-color: #ffe066; margin-top: 10px;" mat-raised-button (click)="deleteSelected2();">Delete Selected Element</button>
 
 
 

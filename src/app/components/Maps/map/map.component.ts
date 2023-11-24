@@ -342,48 +342,6 @@ if(this.map.id != undefined && this.map.name != undefined ){
 }
 
 
-
-
-
-
-
-/*Intento de asignar ID de pruebas (start i stop) en creacion de map
-public async crea_elements_map(){
-  var real_elements : any = [];
-  console.log('entra a crear_elements');
-  let data1 = {id: this.map.id, name: 'Start', map: this.map.id, x: '-100', y: '0'};
-  await this.endpointService.addNewGoal(data1).subscribe(async data => {
-    console.log('arriba a goal1');
-    console.log(data['id']);
-
-
-    let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200', y: '0'};
-    await this.endpointService.addNewGoal(data2).subscribe(dataa => {
-      console.log(dataa['id']);
-      let e = {id: data['id'], name: 'Start', map: this.map.id, x: '-100', y: '0'};
-      real_elements.push(e);
-      e = {id: dataa['id'], name: 'Stop', map: this.map.id, x: '200', y: '0'};
-      real_elements.push(e);
-      let body = {pruebas: JSON.stringify(real_elements)}
-      this.endpointService.updateMap(this.map.id, JSON.stringify(body)).subscribe(dataaaa => {
-        console.log('ha entrado en updatemap');
-      });
-    
-    });
-
-  });
-
-  
-
-  this.router.navigate(['/map', this.map.id]);
-  
-}
-
-*/
-
-
-
-
 public async crea_elements_map(){
   var real_elements : any = [];
   console.log('entra a crear_elements');

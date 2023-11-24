@@ -7,6 +7,8 @@ import { MapComponent } from '../map/map.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 
 
 
@@ -46,6 +48,7 @@ export class GrafComponent implements OnInit {
     private _snackBar: MatSnackBar,
     public navigatorService: NavigatorService,
     private router: Router,
+    public dialogs: MatDialog,
   ) {  }
 
    async ngOnInit() {
@@ -133,7 +136,7 @@ export class GrafComponent implements OnInit {
                   label: x.name,
                   x: x.x,
                   y: x.y,
-                  font: { size: 20 },
+                  font: { size: 15 },
                 });
               }
             });
@@ -177,7 +180,7 @@ export class GrafComponent implements OnInit {
                 label: z.name,
                 x: z.x,
                 y: z.y,
-                font: { size: 20 },
+                font: { size: 15 },
               });
             }
           });
@@ -348,7 +351,7 @@ export class GrafComponent implements OnInit {
           //nodeData.id = a.nodeLabel.nativeElement.value;
           nodeData.label = a.nodeLabel.nativeElement.value;
           nodeData.title = a.nodeLabel.nativeElement.value;
-          nodeData.font = {size: 20};
+          nodeData.font = {size: 15};
           console.log('acceso');
           console.log(this.acceso);
           if(this.acceso == true){
@@ -534,7 +537,7 @@ export class GrafComponent implements OnInit {
             color: "white",
             x: ((pos1.x + pos2.x) / 2),
             y: ((pos1.y + pos2.y) / 2),
-            font: { size: 20 }
+            font: { size: 15 }
           });
         }else{
           this.nodes.add({
@@ -545,7 +548,7 @@ export class GrafComponent implements OnInit {
             color: "white",
             x: ((pos1.x + pos2.x) / 2),
             y: ((pos1.y + pos2.y) / 2),
-            font: { size: 20 }
+            font: { size: 15 }
           });
         }
           
@@ -1019,7 +1022,7 @@ public async modoEditNode2(){
 }
 
 
-
+/* NO BORRAR, VERSION ANTIGUA DE UPDATE ELEMENT
 changeName2() {
 
   var existeix_goal = false;
@@ -1031,20 +1034,7 @@ changeName2() {
       break;
     }
     }
-
-    /*provisional
-    for (var i = 0, len = this.llistat_strategies_del_map.length; i < len; i++) {
-      if(this.updateName.nativeElement.value == this.llistat_strategies_del_map[i].name){
-        existeix_st = true;
-        break;
-      }
-      }
-      */
-
-      console.log('ELEGIDOOO:');
-      console.log(this.selected);
-
-
+    
   if(this.network.body.nodes[this.selected].options.label == 'Start'){
     console.log('Es UN START');
   }else{
@@ -1084,23 +1074,22 @@ changeName2() {
   } catch (err) {
     alert(err);
   }
-}else if(existeix_goal == true){
-  //alert('A Goal already uses this name');
-  this._snackBar.open('A Goal already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
-}else if(existeix_st != false){
-  //alert('A Strategy already uses this name');
-  this._snackBar.open('A Strategy already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
-}else if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
-  //alert('You cannot modify the names of Start and Stop goals');
-  this._snackBar.open('You cannot modify the names of Start and Stop goals', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
-}else{
-  alert('Error');
+  }else if(existeix_goal == true){
+    //alert('A Goal already uses this name');
+    this._snackBar.open('A Goal already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else if(existeix_st != false){
+    //alert('A Strategy already uses this name');
+    this._snackBar.open('A Strategy already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
+    //alert('You cannot modify the names of Start and Stop goals');
+    this._snackBar.open('You cannot modify the names of Start and Stop goals', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else{
+    alert('Error');
+  }
+
 }
 
-//this.updateGraf();
-}
-
-
+*/
 
 
 public deleteSelected2() {
@@ -1119,7 +1108,9 @@ public deleteSelected2() {
   console.log('dadeeeeeees:');
   console.log(this.selected);
 
-  if(this.selected == 'Start' || this.selected == 'Stop'){
+  
+
+  if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
     alert('You cannot delete Start or Stop goals');
   }else{
     if(this.paramsauxiliar.edges.length == 0 || es_st == true){
@@ -1225,17 +1216,116 @@ public async modoEditEdge2() {
 
 
 
+   public changeDialog() {
+    console.log(this.selected);
+    if(this.selected != undefined){
+
+    
+    const dialogRef = this.dialogs.open(ChangeNameDialog, {
+      width: '500px',
+      //data: {id: this.map.id}
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != 0){
+        console.log('entra a 1')
+        console.log(result)
+        var existeix_goal = false;
+  var existeix_st = false;
+
+  for (var i = 0, len = this.llistat_goals_del_map.length; i < len; i++) {
+    if(result.nativeElement.value == this.llistat_goals_del_map[i].name){
+      existeix_goal = true;
+      break;
+    }
+    }
+    /*provisional
+    for (var i = 0, len = this.llistat_strategies_del_map.length; i < len; i++) {
+      if(this.updateName.nativeElement.value == this.llistat_strategies_del_map[i].name){
+        existeix_st = true;
+        break;
+      }
+      }
+      */
+  if(this.network.body.nodes[this.selected].options.label == 'Start'){
+    console.log('Es UN START');
+  }else{
+    console.log('NOO ees un start');
+  }
+
+
+  if(this.selected != undefined && existeix_goal == false && existeix_st == false && result.nativeElement.value != 'Start' && result.nativeElement.value != 'Stop' && this.network.body.nodes[this.selected].options.label != 'Start' && this.network.body.nodes[this.selected].options.label != 'Stop'){
+    console.log(result.nativeElement.value);
+  try {
+    this.nodes.update({
+      id:this.selected,
+      label: result.nativeElement.value,
+    });
+
+    if(this.selected.startsWith('S_')){
+      console.log('st');
+      console.log(this.selected);
+      let bodyst = {name: result.nativeElement.value};
+      console.log(bodyst);
+      this.endpointService.updateStrategy(this.selected, bodyst).subscribe(data => {  
+        console.log('data de updateStratgy:');    
+        console.log(data);  
+      });
+    }else{
+      console.log('node');
+
+      let body = {name: result.nativeElement.value, x: this.network.getPosition(this.selected).x, y: this.network.getPosition(this.selected).y };
+      console.log('booooody:', body);
+      console.log("this.selected:")
+      console.log(this.selected);
+      this.endpointService.updateGoal(this.selected, body).subscribe(data => {      
+        console.log(data);  
+      });
+    }
+    this.updateGraf();
+  } catch (err) {
+    alert(err);
+  }
+  }else if(existeix_goal == true){
+    //alert('A Goal already uses this name');
+    this._snackBar.open('A Goal already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else if(existeix_st != false){
+    //alert('A Strategy already uses this name');
+    this._snackBar.open('A Strategy already uses this name', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
+    //alert('You cannot modify the names of Start and Stop goals');
+    this._snackBar.open('You cannot modify the names of Start and Stop goals', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }else{
+    alert('Error');
+  }
+      }else{
+        console.log('CANCEL');
+      }
+
+    })
+  }else{
+    this._snackBar.open('You have not selected any element', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+  }
+  } 
+
+
+
 
 
 
   public funcio_auxiliar(){
     console.log('TestButton:')
     console.log(this.llistat_strategies_del_map);
+    var starts = "S_";
+    var es_st;
+    if(typeof this.paramsauxiliar.nodes[0] == 'number'){
+      es_st = JSON.stringify(this.paramsauxiliar.nodes[0]).startsWith(starts);
+     }else{
+       es_st = this.paramsauxiliar.nodes[0].startsWith(starts);
+     }
 
+     console.log(es_st);
     //console.log(this.llistat_strategies_del_map.find((element) => element.goal_src == this.selected));
 
-    
-  
   }
 
 
@@ -1243,5 +1333,54 @@ public async modoEditEdge2() {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Component({
+  selector: 'change-map-dialog',
+  templateUrl: './change-name-dialog.html',
+  styleUrls: ['./change-name-dialog.html']
+})
+export class ChangeNameDialog {
+  @ViewChild("changename", { static: true }) changename: ElementRef;
+  constructor(
+    public dialogRef: MatDialogRef<ChangeNameDialog>,
+    //@Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    
+  ) {}
+
+  public name: String = '';
+
+  public ChangeName() {
+    this.dialogRef.close(this.changename);
+    //this.closeDialog(true)
+  }
+
+  closeDialog(reload = false): void {
+    this.dialogRef.close(0);
+  }
+}
+
 
 
