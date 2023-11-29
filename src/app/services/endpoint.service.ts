@@ -136,6 +136,11 @@ export class EndpointService {
     const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
     return this.http.delete<any[]>('http://localhost:1031/index.php/goal' + '/' + id);
   }
+
+  public deleteStrategyfromMap(id) {
+    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.delete<any[]>('http://localhost:1031/index.php/strategy' + '/' + id);
+  }
   
 
   public getCriterionById(id) {

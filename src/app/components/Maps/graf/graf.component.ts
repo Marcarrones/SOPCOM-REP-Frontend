@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
 import { ElementRef, Renderer2 } from '@angular/core';
 import { Network } from "vis-network/peer/esm/vis-network";
 import { DataSet } from "vis-data/peer/esm/vis-data";
@@ -8,6 +8,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+
 
 
 
@@ -37,6 +42,8 @@ export class GrafComponent implements OnInit {
   public llistat_goals_del_map : any = [];
   public llistat_strategies : any = [];
   public llistat_strategies_del_map : any = [];
+  public ExistentGoalFormControl: FormControl;
+  public filteredGoalsBuits: Observable<any[]>;
   @Input() prueba_id: MapComponent;
   @Input() prueba_name: MapComponent;
   @Input() info_completa: string;
@@ -49,9 +56,9 @@ export class GrafComponent implements OnInit {
     public navigatorService: NavigatorService,
     private router: Router,
     public dialogs: MatDialog,
-  ) {  }
+  ) {   }
 
-   async ngOnInit() {
+async ngOnInit() {
     console.log("acceso:");
     console.log(this.acceso);
     if(this.acceso != true){ //Creació de Graf, Buit
@@ -331,9 +338,8 @@ export class GrafComponent implements OnInit {
 
     */
   }
-  }
+}
 
-  
 
 
 
@@ -953,7 +959,9 @@ public async getInfoFromMap(){
 
 
 
-
+public intentionSelected(event) {
+  let index = this.llistat_goals_sense_map.findIndex(goal => goal.name == event.option.value);
+}
 
 
 
@@ -1093,8 +1101,8 @@ changeName2() {
 
 
 public deleteSelected2() {
-  //this.nodes.remove({ id: this.selected });
-  var tipo = typeof this.paramsauxiliar.nodes[0];
+  if(this.selected != undefined){
+  console.log('eeeeeeeee', typeof(this.selected))
   console.log(this.paramsauxiliar.nodes[0]);
   console.log(typeof this.paramsauxiliar.nodes[0]);
   var starts = "S_";
@@ -1107,42 +1115,45 @@ public deleteSelected2() {
 
   console.log('dadeeeeeees:');
   console.log(this.selected);
+  console.log('es strategy: ', es_st);
 
   
 
   if(this.network.body.nodes[this.selected].options.label == 'Start' || this.network.body.nodes[this.selected].options.label == 'Stop'){
-    alert('You cannot delete Start or Stop goals');
+    this._snackBar.open('You cannot delete Start or Stop goals', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
   }else{
-    if(this.paramsauxiliar.edges.length == 0 || es_st == true){
-      console.log(this.paramsauxiliar);
-      console.log(this.paramsauxiliar.nodes[0]);
-      var dataEliminar = {nameG: this.paramsauxiliar.nodes[0], idM: this.readMapid};
-      console.log("Node data:");
-      console.log(this.selected);
-      console.log(this.llistat_goals);
-      this.endpointService.deleteGoalfromMap(this.selected).subscribe(async data => {
-        //this.updateGraf();
-        console.log(data);
+    if(es_st == true){
+      console.log('this.selected: ', this.selected);
+      this.endpointService.deleteStrategyfromMap(this.selected).subscribe(async data => {
+        console.log('retorna de la funcio');
         await this.network.deleteSelected();
-        console.log('Network:::::');
-        console.log(this.network);
         this.updateGraf();
-
-        var found = this.llistat_goals_del_map.find((element) => element.id == this.selected);
+        var found = this.llistat_strategies_del_map.find((element) => element.id == this.selected);
         console.log(found);
 
         console.log('Node deleted');
         this.network.canvas.redraw();
     })
-    
-      //this.network.deleteSelected();
-      
-      
-    
-    }else{
-      alert('Delete Strategies before deleting Node :)');
-    }
+    }else if(this.paramsauxiliar.edges.length == 0){
+      this.endpointService.deleteGoalfromMap(this.selected).subscribe(async data => {
+        await this.network.deleteSelected();
+        this.updateGraf();
 
+        //var found = this.llistat_goals_del_map.filter((element) => element.id != this.selected);
+        this.llistat_goals_del_map = this.llistat_goals_del_map.filter((element) => element.id != this.selected);
+        //console.log('found: ',found);
+
+        console.log('Node deleted');
+        this.network.canvas.redraw();
+    })
+    }else{
+      this._snackBar.open('Delete Strategies before deleting Node', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+    }
+  }
+    
+  }else{
+    console.log('es undefined')
+    this._snackBar.open('Select the element you want to delete', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
   }
 
   
@@ -1159,7 +1170,7 @@ public async modoEditEdge2() {
     if(this.createSt.nativeElement.value != "" && this.createSt.nativeElement.value.trim().length != 0){
       this.network.addEdgeMode();
     }else{
-      alert('Strategy name can not be empty');
+      this._snackBar.open('Strategy name can not be empty', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     }
  // }else{
    // alert('Strategy name already exists');
@@ -1223,7 +1234,7 @@ public async modoEditEdge2() {
     
     const dialogRef = this.dialogs.open(ChangeNameDialog, {
       width: '500px',
-      //data: {id: this.map.id}
+      data: {name: this.network.body.nodes[this.selected].options.label}
     })
     dialogRef.afterClosed().subscribe(result => {
       if(result != 0){
@@ -1279,6 +1290,9 @@ public async modoEditEdge2() {
       console.log(this.selected);
       this.endpointService.updateGoal(this.selected, body).subscribe(data => {      
         console.log(data);  
+        this.llistat_goals_del_map = this.llistat_goals_del_map.filter((element) => element.id != this.selected);
+        let d = {id: Number(this.selected), name: body.name};
+        this.llistat_goals_del_map.push(d);
       });
     }
     this.updateGraf();
@@ -1315,16 +1329,9 @@ public async modoEditEdge2() {
   public funcio_auxiliar(){
     console.log('TestButton:')
     console.log(this.llistat_strategies_del_map);
-    var starts = "S_";
-    var es_st;
-    if(typeof this.paramsauxiliar.nodes[0] == 'number'){
-      es_st = JSON.stringify(this.paramsauxiliar.nodes[0]).startsWith(starts);
-     }else{
-       es_st = this.paramsauxiliar.nodes[0].startsWith(starts);
-     }
 
-     console.log(es_st);
-    //console.log(this.llistat_strategies_del_map.find((element) => element.goal_src == this.selected));
+    console.log('llistat de goals sense map:', this.llistat_goals_del_map);
+    
 
   }
 
@@ -1362,7 +1369,7 @@ export class ChangeNameDialog {
   @ViewChild("changename", { static: true }) changename: ElementRef;
   constructor(
     public dialogRef: MatDialogRef<ChangeNameDialog>,
-    //@Inject(MAT_DIALOG_DATA) public data,
+    @Inject(MAT_DIALOG_DATA) public data,
     public endpointService: EndpointService,
     public navigatorService: NavigatorService,
     private _snackBar: MatSnackBar,
@@ -1378,6 +1385,7 @@ export class ChangeNameDialog {
   }
 
   closeDialog(reload = false): void {
+    console.log('data: ', this.data.name);
     this.dialogRef.close(0);
   }
 }

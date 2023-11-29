@@ -4,8 +4,9 @@
 <button *ngIf="this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create New Goal</button>
 <input  #nodelabel type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
 
+
 <button *ngIf="this.acceso" id="node-add" (click)="funcio_auxiliar()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px;" class="btn btn-primary">Create Existent Goal</button>
-<input  #nodelabel type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
+<input  #nodelabel2 type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
 
 
 <button *ngIf="!this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px" mat-raised-button (click)="modoEditEdge();">Create Strategy</button>
@@ -67,4 +68,6 @@
 -->
 
 
-<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="funcio_auxiliar();"> Test Button</button>
+<!--<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="funcio_auxiliar();"> Test Button</button>
+NO BORRAR
+-->
