@@ -313,7 +313,8 @@ public async submitMap(){
   
 if(this.map.id != undefined && this.map.name != undefined ){
   if(!isNaN(this.map.id)){
-  await this.endpointService.addMap(body).subscribe(data => {
+    if(this.map.id.trim().length != 0 && this.map.name.trim().length != 0 ){
+      await this.endpointService.addMap(body).subscribe(data => {
         console.log("data", data);
         console.log(data);
         console.log('id del mapa:');
@@ -325,17 +326,19 @@ if(this.map.id != undefined && this.map.name != undefined ){
           
         }else{
           console.log('creacio mapa retorna error');
-          this._snackBar.open("ID del map ja existeix", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+          this._snackBar.open("Map ID already exists", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         }
         console.log('creacio map completa') 
         
     })
+    }else{
+      this._snackBar.open("Error! ID and Name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    }
   }else{
-    this._snackBar.open("Error! ID ha de ser numèrica", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    this._snackBar.open("Error! ID has to be numerical", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
   }
   }else{
-    this._snackBar.open("Error! Introdueix ID i Nom", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-
+    this._snackBar.open("Error! Introduce ID and Name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
   }
 
            

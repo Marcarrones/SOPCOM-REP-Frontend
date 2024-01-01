@@ -398,7 +398,8 @@ async ngOnInit() {
             this._snackBar.open('You cannot connect Start & Stop directly', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
             this.network.disableEditMode();
           }else if(this.llistat_strategies_del_map.find((element) => element.goal_src == edgeData.from && element.goal_tgt == edgeData.to && element.name == this.createSt.nativeElement.value)){
-              alert('ya te Mateixa strategy');
+              //alert('ya te Mateixa strategy');
+              this._snackBar.open('Strategy with the same name is already assigned', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
           }else{
             this.addStrategy_dos(edgeData.from, edgeData.to);
             callback(edgeData);
@@ -425,16 +426,7 @@ async ngOnInit() {
 
 
   public modoEditNode() {
-    /*
-    var x = this.network.clustering.findNode(this.nodeLabel.nativeElement.value);
-    console.log('x:',x);
-    if(this.nodeLabel.nativeElement.value != x){
-    this.network.addNodeMode();
-    }else{
-      alert('Node name already exists');
-    }
-    */
-   console.log('llistat:');
+  console.log('llistat:');
    console.log(this.llistat_goals_del_map[0].name);
    var trobat = false;
    
