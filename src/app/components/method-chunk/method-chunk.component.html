@@ -20,11 +20,12 @@
             </mat-form-field>
         </form>
         <mat-divider style="margin-top: 10px;"></mat-divider>
-        <h2>Intention</h2>
+        <!--
+        <h2>Strategy</h2>
         <form>
             <ng-container style="display: table;">
-                <mat-form-field style="width: 95%;">
-                    <mat-label>Goal</mat-label>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Intention</mat-label>
                         <input matInput type="text" aria-label="intention" [value]="this.methodChunk.intention !== null ? this.methodChunk.intention.name : null" [formControl]="intentionFormControl" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="intentionSelected($event)" >
                             <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
@@ -32,10 +33,57 @@
                             </mat-option>
                         </mat-autocomplete>
                 </mat-form-field>
-                <a style="width: 5%;" mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
             </ng-container>
         </form>
         <mat-divider style="margin-top: 10px;"></mat-divider>
+        <h2>Strategy Version Prueba</h2>
+        <form>
+            <ng-container style="display: table;">
+                <mat-form-field style="width: 100%;">
+                    <mat-label>Strategy</mat-label>
+                        <input matInput type="text" aria-label="strategy" [value]="this.strategy !== null ? this.strategy : null" [formControl]="strategyFormControl" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="strategySelected($event)" >
+                            <mat-option *ngFor="let x of strategyFilter | async" [value]="x['name']">
+                            {{x['name']}}
+                            </mat-option>
+                        </mat-autocomplete>
+                </mat-form-field>
+            </ng-container>
+        </form>
+    -->
+        <mat-divider style="margin-top: 10px;"></mat-divider>
+        <h2>Prueba 3 Stackblitz</h2>
+        <form class="form">
+            <mat-form-field style="width: 100%">
+              <input
+                matInput
+                placeholder="Strategy"
+                aria-label="Strategy"
+                [matAutocomplete]="auto"
+                [formControl]="strategyFormControl"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let st of strategyFilter | async"
+                  [value]="st.name"
+                >
+                  <span>{{ st.id }} | {{ st.name }}</span>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+
+
+
+
+
+
+
+
+
+        <br>
+        <br>
+        <br>
         <h2>Process part</h2>
         <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
             <div class="drop-div" style="justify-content: center;">

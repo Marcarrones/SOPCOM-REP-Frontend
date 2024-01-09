@@ -48,6 +48,7 @@ export class NavigatorComponent implements OnInit {
     this.navigatorService.getAllMethodElementRelationTypes();
 
     this.navigatorService.refreshGoalList();
+    this.navigatorService.refreshStrategyList();
   }
 
   public tabChanged(event) {

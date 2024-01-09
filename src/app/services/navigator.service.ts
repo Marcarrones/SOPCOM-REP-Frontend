@@ -24,6 +24,7 @@ export class NavigatorService {
   public criterionList: any[] = []
   public criterionFilteredList: any[] = []
   public goalList: any[] = []
+  public strategyList: any[] = []
 
   public structRelTypes = []
   public activityRelTypes = []
@@ -90,6 +91,12 @@ export class NavigatorService {
   public refreshGoalList() {
     this.endpointService.getAllGoals().subscribe(data => {
       this.goalList = data;
+    })
+  }
+
+  public refreshStrategyList() {
+    this.endpointService.getAllStrategies().subscribe(data => {
+      this.strategyList = data;
     })
   }
 }

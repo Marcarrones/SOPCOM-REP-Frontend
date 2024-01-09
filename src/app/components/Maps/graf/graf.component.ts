@@ -616,6 +616,7 @@ async ngOnInit() {
         await this.updateGraf();
         this.llistat_strategies_del_map.push(dataSt);
         this.llistat_strategies.push(dataSt);
+        this.navigatorService.refreshStrategyList();
     })
     
 

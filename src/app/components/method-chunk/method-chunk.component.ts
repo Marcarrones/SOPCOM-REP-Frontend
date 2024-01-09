@@ -5,7 +5,7 @@ import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
 import { Criterion } from 'src/app/models/criterion';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogClose } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +19,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { CriterionComponent } from '../criterion/criterion.component';
 import { CriterionDialogComponent } from '../criterion/criterion-dialog/criterion-dialog.component';
+
 
 @Component({
   selector: 'app-method-chunk',
@@ -34,7 +35,9 @@ export class MethodChunkComponent implements OnInit {
   public methodChunk;
   public params;
   public id;
+  public strategy;
   public goalsFilter: Observable<string[]>;
+  public strategyFilter: Observable<any[]>;
 
   public showPlaceHolderActivity = true;
   public showPlaceHolderTool = true;
@@ -45,6 +48,10 @@ export class MethodChunkComponent implements OnInit {
 
   public methodChunkFormGroup: FormGroup;
   public intentionFormControl: FormControl;
+  public strategyFormControl: FormControl;
+  custonDropdown = new FormControl();
+  filterControl = new FormControl();
+
 
   @ViewChild(MethodElementComponent) activity: MethodElementComponent;
 
@@ -58,6 +65,9 @@ export class MethodChunkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.navigatorService.refreshGoalList();
+    this.navigatorService.refreshStrategyList();
+    console.log('La LLISTA: ', this.navigatorService.strategyList)
     this.navigatorService.allowChange = false;
     this.id = this.route.snapshot.paramMap.get('id')!;
     if(this.id !== undefined && this.id !== null && this.id !== "") {
@@ -99,6 +109,15 @@ export class MethodChunkComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '')),
     );
+
+    if(this.strategy !== undefined && this.strategy !== null)
+      this.strategyFormControl = new FormControl(this.strategy, Validators.required)
+    else this.strategyFormControl = new FormControl('', Validators.required)
+    this.strategyFilter = this.strategyFormControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter2(value || '')),
+    );
+    console.log("El Filter: ", this.strategyFilter)
   }
 
   public intentionSelected(event) {
@@ -107,8 +126,18 @@ export class MethodChunkComponent implements OnInit {
     if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
   }
 
+  public strategySelected(event) {
+    this.hasChanges = true;
+    let index = this.navigatorService.strategyList.findIndex(goal => goal.name == event.option.value)
+    if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.strategyList[index]['id'], event.option.value)
+  }
+
   private _filter(value) {
     return this.navigatorService.goalList.filter(goal => goal.name.toLowerCase().includes(value.toLowerCase()))
+  }
+
+  private _filter2(value) {
+    return this.navigatorService.strategyList.filter(strategy => strategy.name.toLowerCase().includes(value.toLowerCase()))
   }
 
   private parseMethodChunk(data) {
@@ -156,10 +185,12 @@ export class MethodChunkComponent implements OnInit {
       this._snackBar.open("Missing ID or name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
     }
+    /*
     if(this.methodChunk.intention === null || this.methodChunk.intention === undefined) {
       this._snackBar.open("An intention is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
     }
+    */
     if(this.methodChunk.processPart === null || this.methodChunk.processPart === undefined) {
       this._snackBar.open("An activity is required", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
@@ -209,7 +240,7 @@ export class MethodChunkComponent implements OnInit {
       name: this.methodChunk.name,
       description: this.methodChunk.description,
       activity: this.methodChunk.processPart.id,
-      intention: this.methodChunk.intention.id
+      //intention: this.methodChunk.intention.id
     }
     let tools = this.methodChunk.tools.map(t => t.id);
     body['tools'] = tools;
@@ -260,6 +291,7 @@ export class MethodChunkComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.navigatorService.refreshGoalList();
+      this.navigatorService.refreshStrategyList();
     });
   }
 
@@ -388,6 +420,13 @@ export class MethodChunkComponent implements OnInit {
     let jspdf = new jsPDF('p','pt', 'a4');
     autoTable(jspdf, {html: '#table'})
     jspdf.save(this.methodChunk.id + '.pdf');
+  }
+
+
+
+
+  onPanelClose() {
+    this.filterControl.setValue('');
   }
 
 }

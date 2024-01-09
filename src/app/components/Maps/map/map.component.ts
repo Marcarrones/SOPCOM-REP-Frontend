@@ -260,7 +260,7 @@ public async submitFinal(){
 
 
 public stringifyMap() {
-  let body = {name: this.map.name, id: this.map.id, pruebas: '[{"x": -100.0, "y": 0.0, "id": "Start", "name": "Start"}, {"x": 200.0, "y": 0.0, "id": "Stop", "name": "Stop"}]'};
+  let body = {name: this.map.name, id: this.map.id.trim(), pruebas: '[{"x": -100.0, "y": 0.0, "id": "Start", "name": "Start"}, {"x": 200.0, "y": 0.0, "id": "Stop", "name": "Stop"}]'};
   return JSON.stringify(body);
 }
 
@@ -356,7 +356,7 @@ public async crea_elements_map(){
     let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200.0', y: '0.0'};
     await this.endpointService.addNewGoal(data2).subscribe(dataa => {
     console.log(dataa['id']);
-    this.router.navigate(['/map', this.map.id]);
+    this.router.navigate(['/map', this.map.id.trim()]);
   });
   });
 
