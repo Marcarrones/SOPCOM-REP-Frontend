@@ -74,8 +74,8 @@ export class NavigatorComponent implements OnInit {
         this.navigatorService.methodChunkList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
         this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
       } else if(this.filterChunk == 'map') {
-        this.navigatorService.methodChunkList.sort((a, b) => a.map.toLowerCase() > b.map.toLowerCase() ? 1 : a.map.toLowerCase() < b.map.toLowerCase() ? -1 : 0)
-        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.map.toLowerCase().includes(value.toLowerCase()))
+        this.navigatorService.methodChunkListwithMap.sort((a, b) => a.map.toLowerCase() > b.map.toLowerCase() ? 1 : a.map.toLowerCase() < b.map.toLowerCase() ? -1 : 0)
+        this.navigatorService.methodChunkFilteredListwithMap = this.navigatorService.methodChunkListwithMap.filter(t => t.map.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlTool = new FormControl("");

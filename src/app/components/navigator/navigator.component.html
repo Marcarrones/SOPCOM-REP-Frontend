@@ -14,20 +14,31 @@
             </mat-form-field>
             <a mat-icon-button [routerLink]="['/method-chunk']" style="display: table-cell;"> <mat-icon> add </mat-icon> </a>
         </div>
+        
         <ng-container *ngIf="navigatorService.methodChunkFilteredList.length > 0; else noChunks">
-            <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList">
+            <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredList; let i =index">
                 <ng-container *ngIf="this.filterChunk == 'id'">
                     <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
                 <ng-container *ngIf="this.filterChunk == 'name'">
                     <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.name}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
+                <mat-divider *ngIf="this.filterChunk == 'name' || this.filterChunk == 'id'"></mat-divider>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="navigatorService.methodChunkFilteredListwithMap.length > 0; else noChunks">
+            <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredListwithMap">
                 <ng-container *ngIf="this.filterChunk == 'map'">
                     <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
-                <mat-divider></mat-divider>
+                <mat-divider *ngIf="this.filterChunk == 'map'"></mat-divider>
             </ng-container>
         </ng-container>
+        
+
+            
+        
         <ng-template #noChunks>
             No chunks found with {{ filterChunk }}: {{ filterControlChunk.value }}
         </ng-template>

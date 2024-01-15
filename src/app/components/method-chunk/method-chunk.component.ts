@@ -162,7 +162,12 @@ export class MethodChunkComponent implements OnInit {
     }*/
     console.log('Strategy del Chunk: ', this.strategy);
     console.log('MC: ', this.methodChunk);
-    console.log('Lista de ST con Map: ', this.navigatorService.methodChunkListwithMap);
+    console.log('Lista de MC con Map: ', this.navigatorService.methodChunkListwithMap);
+    console.log('Lista de MC sin Map: ', this.navigatorService.methodChunkList);
+  }
+
+  public click(selected) {
+    console.log(selected)
   }
 
   private parseMethodChunk(data) {
@@ -243,6 +248,7 @@ export class MethodChunkComponent implements OnInit {
         this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
           if(response === null) {
             this.navigatorService.refreshMethodChunkList();
+            this.navigatorService.refreshMethodChunkListwithMap();
             this._snackBar.open("Chunk updated successfully", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
             this.router.navigate(['/method-chunk', this.id])
           } else {
@@ -254,6 +260,7 @@ export class MethodChunkComponent implements OnInit {
           console.log('bodyy: ', body);
           if(response['error'] === undefined) {
             this.navigatorService.refreshMethodChunkList();
+            this.navigatorService.refreshMethodChunkListwithMap();
             this._snackBar.open("Chunk added successfully", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
             this.router.navigate(['/method-chunk', response['id']])
           } else {
@@ -351,7 +358,7 @@ export class MethodChunkComponent implements OnInit {
       if(this.navigatorService.abstract == true){
         this.strategyFormControl = new FormControl({value: '', disabled: true})
       }else{
-        this.strategyFormControl = new FormControl(this.strategy)
+        //this.strategyFormControl = new FormControl(this.strategyFormControl.value)
       }
     })
   }

@@ -49,8 +49,8 @@ export class NavigatorService {
   public refreshMethodChunkListwithMap() {
     this.endpointService.getAllMethodChunkwithMap().subscribe(chunkss => {
       chunkss.sort((a, b) => a.map.toLowerCase() > b.map.toLowerCase() ? 1 : a.map.toLowerCase() < b.map.toLowerCase() ? -1 : 0)
-      this.methodChunkList = chunkss;
-      this.methodChunkFilteredList = chunkss;
+      this.methodChunkListwithMap = chunkss;
+      this.methodChunkFilteredListwithMap = chunkss;
     })
   }
 

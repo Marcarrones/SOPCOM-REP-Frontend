@@ -52,6 +52,7 @@
                 <mat-option
                   *ngFor="let st of strategyFilter | async"
                   [value]="st.st_id.replace('S_', '')"
+                  #matOption (click)="click(st)"
                 >
                   <span>{{ st.st_name }} ( Map: {{ st.name }} )</span>
                 </mat-option>
