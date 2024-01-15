@@ -1,5 +1,12 @@
 <div id="mynetwork" #siteConfigNetwork></div>
-<p style="font-size: 12px; color: #808080; text-align: center;">Changes in the graphical map editor are saved automatically once done</p>
+<div>
+<p id="p1" style="font-size: 12px; color: #808080; text-align: center; justify-content: center;">Changes in the graphical map editor are saved automatically once done
+    <button mat-icon-button style="border-radius: 100px;" (click)="instructions_popup();"><mat-icon>help</mat-icon></button>
+</p>
+
+
+</div>
+
 <button *ngIf="!this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
 <button *ngIf="this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066; padding-left: 10px;" class="btn btn-primary"><mat-icon>add</mat-icon>Create New Goal</button>
 <input  #nodelabel type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
@@ -46,6 +53,7 @@
         height: 500px;
         border: 1px solid lightgray;
     }
+
 </style>
 
 <br><br>

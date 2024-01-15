@@ -1315,6 +1315,17 @@ public async modoEditEdge2() {
   } 
 
 
+  public instructions_popup() {    
+    const dialogRef = this.dialogs.open(InstructionsDialog, {
+      width: '500px',
+      data: {}
+    })
+    /*dialogRef.afterClosed().subscribe(result => {
+    })*/
+  
+  } 
+
+
 
 
 
@@ -1379,6 +1390,35 @@ export class ChangeNameDialog {
 
   closeDialog(reload = false): void {
     console.log('data: ', this.data.name);
+    this.dialogRef.close(0);
+  }
+}
+
+@Component({
+  selector: 'instructions-dialog',
+  templateUrl: './instructions-dialog.html',
+  styleUrls: ['./instructions-dialog.html']
+})
+export class InstructionsDialog {
+  @ViewChild("instructions", { static: true }) changename: ElementRef;
+  constructor(
+    public dialogRef: MatDialogRef<InstructionsDialog>,
+    @Inject(MAT_DIALOG_DATA) public data,
+    public endpointService: EndpointService,
+    public navigatorService: NavigatorService,
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    
+  ) {}
+
+  public name: String = '';
+
+  public ChangeName() {
+    this.dialogRef.close(this.changename);
+    //this.closeDialog(true)
+  }
+
+  closeDialog(reload = false): void {
     this.dialogRef.close(0);
   }
 }
