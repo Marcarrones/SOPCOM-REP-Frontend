@@ -39,6 +39,7 @@ export class MethodChunkComponent implements OnInit {
   public intention_target;
   public goalsFilter: Observable<string[]>;
   public strategyFilter: Observable<any[]>;
+  public map_id;
 
   public showPlaceHolderActivity = true;
   public showPlaceHolderTool = true;
@@ -76,6 +77,12 @@ export class MethodChunkComponent implements OnInit {
       this.endpointService.getMethodChunkById(this.id).subscribe(data => {
         console.log('DATA: ',data)
         if(data['error']  === undefined) {
+          var found;
+          if(data['strategy'] != undefined){
+            found = this.navigatorService.strategyList.find((element) => element.st_id == data['strategy']);
+            this.map_id = found.id;
+          } 
+          console.log('FOUND: ', found);
           this.methodChunk = this.parseMethodChunk(data)
           this.initializeFormControls()
           this.loaded = true
@@ -150,20 +157,7 @@ export class MethodChunkComponent implements OnInit {
     return this.navigatorService.strategyList.filter(strategy => strategy.st_name.toLowerCase().includes(value.toLowerCase()))
   }
   public testing() {
-    /*console.log(this.methodChunk);
-    console.log(this.activity);
-    console.log('Activity: ', this.activity.methodElement.abstract);
-    console.log('Strategy: ', this.strategyFormControl.value);
-    console.log('abstract de navigator: ', this.navigatorService.abstract);
-    if(this.navigatorService.abstract == true && this.strategyFormControl.value != ''){
-      console.log('NO POT FER EL CANVI');
-    }else{
-      console.log('CANVI CORRECTO');
-    }*/
-    console.log('Strategy del Chunk: ', this.strategy);
-    console.log('MC: ', this.methodChunk);
-    console.log('Lista de MC con Map: ', this.navigatorService.methodChunkListwithMap);
-    console.log('Lista de MC sin Map: ', this.navigatorService.methodChunkList);
+    console.log(this.map_id);
   }
 
   public click(selected) {
