@@ -9,6 +9,8 @@ export class NavigatorService {
   public allowChange = true;
   public tableView = false;
   
+  public methodChunkListwithMap: any[] = []
+  public methodChunkFilteredListwithMap: any[] = []
   public methodChunkList: any[] = []
   public methodChunkFilteredList: any[] = []
   public toolList: any[] = []
@@ -30,6 +32,8 @@ export class NavigatorService {
   public activityRelTypes = []
   public artefactRelTypes = []
 
+  public abstract = false;
+
   constructor(
     private endpointService: EndpointService
   ) { }
@@ -39,6 +43,14 @@ export class NavigatorService {
       chunks.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
       this.methodChunkList = chunks;
       this.methodChunkFilteredList = chunks;
+    })
+  }
+
+  public refreshMethodChunkListwithMap() {
+    this.endpointService.getAllMethodChunkwithMap().subscribe(chunkss => {
+      chunkss.sort((a, b) => a.map.toLowerCase() > b.map.toLowerCase() ? 1 : a.map.toLowerCase() < b.map.toLowerCase() ? -1 : 0)
+      this.methodChunkList = chunkss;
+      this.methodChunkFilteredList = chunkss;
     })
   }
 
@@ -95,7 +107,7 @@ export class NavigatorService {
   }
 
   public refreshStrategyList() {
-    this.endpointService.getAllStrategies().subscribe(data => {
+    this.endpointService.getAllStrategieswithMaps().subscribe(data => {
       this.strategyList = data;
     })
   }

@@ -6,7 +6,7 @@
                     <mat-select-trigger>
                         <mat-icon>filter_alt</mat-icon>
                     </mat-select-trigger>
-                    <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option>
+                    <mat-option value="id">id</mat-option> <mat-option value="name"> Name </mat-option> <mat-option value="map"> Map </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="filter-input">
@@ -21,6 +21,9 @@
                 </ng-container>
                 <ng-container *ngIf="this.filterChunk == 'name'">
                     <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.name}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
+                </ng-container>
+                <ng-container *ngIf="this.filterChunk == 'map'">
+                    <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
                 </ng-container>
                 <mat-divider></mat-divider>
             </ng-container>

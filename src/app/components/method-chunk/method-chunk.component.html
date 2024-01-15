@@ -19,9 +19,8 @@
                 <input matInput formControlName="description" type="text" autocomplete="off">
             </mat-form-field>
         </form>
-        <mat-divider style="margin-top: 10px;"></mat-divider>
-        <!--
-        <h2>Strategy</h2>
+        <!-- SOPCOM.V1 fent servir Intention en comptes de Strategy
+        <h2>Intention</h2>
         <form>
             <ng-container style="display: table;">
                 <mat-form-field style="width: 100%;">
@@ -36,23 +35,9 @@
             </ng-container>
         </form>
         <mat-divider style="margin-top: 10px;"></mat-divider>
-        <h2>Strategy Version Prueba</h2>
-        <form>
-            <ng-container style="display: table;">
-                <mat-form-field style="width: 100%;">
-                    <mat-label>Strategy</mat-label>
-                        <input matInput type="text" aria-label="strategy" [value]="this.strategy !== null ? this.strategy : null" [formControl]="strategyFormControl" [matAutocomplete]="auto">
-                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="strategySelected($event)" >
-                            <mat-option *ngFor="let x of strategyFilter | async" [value]="x['name']">
-                            {{x['name']}}
-                            </mat-option>
-                        </mat-autocomplete>
-                </mat-form-field>
-            </ng-container>
-        </form>
     -->
         <mat-divider style="margin-top: 10px;"></mat-divider>
-        <h2>Prueba 3 Stackblitz</h2>
+        <h2>Strategy</h2>
         <form class="form">
             <mat-form-field style="width: 100%">
               <input
@@ -61,29 +46,32 @@
                 aria-label="Strategy"
                 [matAutocomplete]="auto"
                 [formControl]="strategyFormControl"
+                [value]="this.strategy !== null ? this.strategy : null"
               />
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option
                   *ngFor="let st of strategyFilter | async"
-                  [value]="st.name"
+                  [value]="st.st_id.replace('S_', '')"
                 >
-                  <span>{{ st.id }} | {{ st.name }}</span>
+                  <span>{{ st.st_name }} ( Map: {{ st.name }} )</span>
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
           </form>
 
+        <!--<ng-container *ngIf="this.strategy !== null && this.id !== null && this.id !== undefined && this.id !== ''">-->
+        <mat-divider style="margin-top: 10px;"></mat-divider>
+        <h2>Intention</h2>
+        <form class="form">
+            <mat-form-field style="width: 100%;">
+                <mat-label>Intention</mat-label>
+                <input [formControl]="intention2FormControl" matInput formControlName="intention" type="text" autocomplete="off">
+            </mat-form-field>
+          </form>
+       <!--</ng-container>-->
 
 
-
-
-
-
-
-
-        <br>
-        <br>
-        <br>
+        <mat-divider style="margin-top: 10px;"></mat-divider>
         <h2>Process part</h2>
         <ng-container *ngIf="this.methodChunk.processPart !== null; else noActivity">
             <div class="drop-div" style="justify-content: center;">
@@ -202,6 +190,7 @@
         </div>
         <div style="margin-top: 10px;">
             <button mat-raised-button class="button-custom" (click)="saveMethodChunk()"> Save </button>
+            <button mat-raised-button class="button-custom" (click)="testing()"> Test </button>
             <button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
         </div>
     </ng-container>
@@ -271,7 +260,11 @@
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Intention </th>
-                    <th class="table-elements"> {{ this.methodChunk.intention.name }} </th>
+                    <th class="table-elements"> {{ this.intention_target }} </th>
+                </tr>
+                <tr class="table-elements">
+                    <th class="table-elements"> Strategy </th>
+                    <th class="table-elements"> {{ this.strategy }} </th>
                 </tr>
                 <tr class="table-elements">
                     <th class="table-elements"> Situation </th>

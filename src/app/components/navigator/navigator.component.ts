@@ -35,6 +35,7 @@ export class NavigatorComponent implements OnInit {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
     this.navigatorService.refreshMethodChunkList();
+    this.navigatorService.refreshMethodChunkListwithMap();
 
     this.navigatorService.refreshMethodElementList(1);
     this.navigatorService.refreshMethodElementList(2);
@@ -72,6 +73,9 @@ export class NavigatorComponent implements OnInit {
       } else if(this.filterChunk == 'name') {
         this.navigatorService.methodChunkList.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0)
         this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.name.toLowerCase().includes(value.toLowerCase()))
+      } else if(this.filterChunk == 'map') {
+        this.navigatorService.methodChunkList.sort((a, b) => a.map.toLowerCase() > b.map.toLowerCase() ? 1 : a.map.toLowerCase() < b.map.toLowerCase() ? -1 : 0)
+        this.navigatorService.methodChunkFilteredList = this.navigatorService.methodChunkList.filter(t => t.map.toLowerCase().includes(value.toLowerCase()))
       }
     })
     this.filterControlTool = new FormControl("");

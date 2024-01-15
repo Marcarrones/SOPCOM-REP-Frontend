@@ -21,6 +21,11 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
+  public getAllMethodChunkwithMap() {
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + 'maps';
+    return this.http.get<any[]>(request).pipe(map(response => response));
+  }
+
   public getMethodChunkById(id) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     return this.http.get<any[]>(request).pipe(map(response => response));
@@ -30,6 +35,7 @@ export class EndpointService {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
     return this.http.post<any[]>(request, data).pipe(map(response => response));
   }
+
 
   public updateMethodChunk(id, data) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
@@ -176,6 +182,11 @@ export class EndpointService {
   public getAllStrategies() {
     const request = this.URL2 + Values.RESOURCES.STRATEGY;   
     return this.http.get<any[]>('http://localhost:1031/index.php/strategy').pipe(map(response => response));
+  }
+
+  public getAllStrategieswithMaps() {
+    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
+    return this.http.get<any[]>('http://localhost:1031/index.php/strategy/maps');
   }
 
   public getMapStrategies(id) {
