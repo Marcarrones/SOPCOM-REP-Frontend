@@ -174,7 +174,7 @@ export class MethodChunkComponent implements OnInit {
   public click(selected) {
     this.strategy_id = selected.st_id;
     this.strategy = selected.st_name;
-    this.flag_alerta == false;
+    this.flag_alerta = false;
     this.intention2FormControl = new FormControl({value: selected.g_name, disabled: true});
     
   }
