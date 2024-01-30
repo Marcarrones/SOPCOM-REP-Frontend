@@ -16,11 +16,6 @@ import { Network } from "vis-network/peer/esm/vis-network";
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input';
 
-//import * as vis from 'visjs';
-//import * as vis from 'dist/vis-network.min.js';
-//import { Network, DataSet } from "vis-network";
-//import * as vis  from "vis-network";
-//import * as vis from 'vis-network';
 
 @Component({
   selector: 'app-map',
@@ -85,11 +80,9 @@ export class MapComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
-    //this.iniciar_test();
     this.createContactForm();
     this.sampleData();
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
-      console.log(this.id);
       this.endpointService.getMap(this.id).subscribe(data => {
         if(data['error'] === undefined) this.map = this.parseMap(data);
         else {
@@ -98,7 +91,6 @@ export class MapComponent implements OnInit {
           this.loadFormControls();
           this.navigatorService.allowChange = false;
         }
-        console.log(this.map);
         this.loadFormControls();
         this.loaded = true;
         
@@ -112,11 +104,6 @@ export class MapComponent implements OnInit {
       
 
     }
-
-    
-
-
-
   }
 
 
@@ -205,69 +192,23 @@ addRow(obj) {
 
 
   public stringifyName() {
-
     let body = {id: this.map.id, name: this.map.name, author:'felix'};
-    console.log(body);
-    
     return body;
   }
 
 
 
-  public borraMap(){
-  if(confirm("Are you sure you want to delete this map?")) {
-  console.log(this.id);
-  this.navigatorService.allowChange = false;
-  this.endpointService.deleteMap(this.id).subscribe( data => {
-      this.navigatorService.refreshMapList();
-      this.router.navigate(['/map']);
-      this._snackBar.open("Map deleted!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-    })
-    this.navigatorService.refreshMapList();
-    return true;
-  }
-}
 
-
-public async submitFinal(){
-
-
-  var tamany = this.FeedBack.value.Rows.length;
-
-  this.FeedBack.value.id = this.map.id;
-  this.FeedBack.value.name = this.map.name;
-  this.FeedBack.value.author = 'felix';
-
-
-  //this.navigatorService.allowChange = true;
-  let body = this.stringifyMap();
-    
-   this.endpointService.addMap(body).subscribe(async data => {
-        //console.log("data", data)
-        //this.map.id = data.id;
-        //console.log(this.map)
-        this.navigatorService.refreshMapList();
-        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-        console.log(data.id);
-        this.router.navigate(['/map', data.id]);
-    })
-        //this.navigatorService.refreshMapList();
-        //this.router.navigate(['/map', this.map.id]);  
-        console.log('creacio map completa')    
-    //return true;
-  
-}
 
 
 public stringifyMap() {
-  let body = {name: this.map.name, id: this.map.id.trim(), pruebas: '[{"x": -100.0, "y": 0.0, "id": "Start", "name": "Start"}, {"x": 200.0, "y": 0.0, "id": "Stop", "name": "Stop"}]'};
+  let body = {name: this.map.name, id: this.map.id.trim()};
   return JSON.stringify(body);
 }
 
 
 
 public nada(){
-console.log('aaa');
 }
 
 public openGoalDialog() {
@@ -308,27 +249,21 @@ public openEditMapDialog() {
 public async submitMap(){
 
   let body = this.stringifyMap();
-  console.log('Datos del mapaaaaa:')
-  console.log(!isNaN(this.map.id));
+
   
 if(this.map.id != undefined && this.map.name != undefined ){
   if(!isNaN(this.map.id)){
     if(this.map.id.trim().length != 0 && this.map.name.trim().length != 0 ){
       await this.endpointService.addMap(body).subscribe(data => {
-        console.log("data", data);
-        console.log(data);
-        console.log('id del mapa:');
-        console.log(this.map.id);
+      
         if(data.id == 0){
           this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
           this.navigatorService.refreshMapList();
-          this.crea_elements_map();
+          this.crea_elements_map(); //crea start i stop base
           
         }else{
-          console.log('creacio mapa retorna error');
           this._snackBar.open("Map ID already exists", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         }
-        console.log('creacio map completa') 
         
     })
     }else{
@@ -346,24 +281,15 @@ if(this.map.id != undefined && this.map.name != undefined ){
 
 
 public async crea_elements_map(){
-  var real_elements : any = [];
-  console.log('entra a crear_elements');
   let data1 = {id: this.map.id, name: 'Start', map: this.map.id, x: '-100.0', y: '0.0'};
   await this.endpointService.addNewGoal(data1).subscribe(async data => {
-    console.log('arriba a goal1');
-    console.log(data['id']);
+
 
     let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200.0', y: '0.0'};
     await this.endpointService.addNewGoal(data2).subscribe(dataa => {
-    console.log(dataa['id']);
     this.router.navigate(['/map', this.map.id.trim()]);
   });
-  });
-
-  
-
-  //this.router.navigate(['/map', this.map.id]);
-  
+  });  
 }
 
 
@@ -400,10 +326,7 @@ export class UpdateMapDialog {
         this.navigatorService.refreshMapList();
         this.router.navigate(['/map/' + this.data.id]);
       })
-      console.log('El map a modificar es el: ');
-      console.log(this.data.id);
-      console.log('El nou nom es: ');
-      console.log(this.noumapname.nativeElement.value);
+      
     }else{
       this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
     }

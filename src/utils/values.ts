@@ -8,6 +8,9 @@ export class Values {
     static SERVER_URL = "http://localhost"; //localhost
     static SERVER_URL2 = "http://localhost"; //localhost
 
+    static URL_V2 = "http://localhost:1031/index.php/"; //localhost
+    //static URL_V2 = "http://gessi3.essi.upc.edu:1031/index.php/"; //servidor
+
     static SERVER_PORT = ":1026";
     static SERVER_PORT2 = ":1031";
 

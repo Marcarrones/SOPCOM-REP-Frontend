@@ -7,42 +7,20 @@
 
 </div>
 
-<button *ngIf="!this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Create Goal</button>
 <button *ngIf="this.acceso" id="node-add" (click)="modoEditNode()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066; padding-left: 10px;" class="btn btn-primary"><mat-icon>add</mat-icon>Create New Goal</button>
 <input  #nodelabel type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
 
-<!--
-<button *ngIf="this.acceso" id="node-add" (click)="funcio_auxiliar()" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px;" class="btn btn-primary">Create Existent Goal</button>
-<input  #nodelabel2 type="text" placeholder="Goal Name" style="margin-left: 5px; border-radius:5px;" value="" />
--->
 
-<button *ngIf="!this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px" mat-raised-button (click)="modoEditEdge();"><mat-icon>add</mat-icon>Create Strategy</button>
 <button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 45px; padding-left: 10px;" mat-raised-button (click)="modoEditEdge2();"><mat-icon>add</mat-icon>Create Strategy</button>
 <input   #createSt  placeholder="Strategy Name" style="margin-left: 5px; border-radius:5px;"  type="text" value="" />
 
 <br>
 
-<button *ngIf="!this.acceso" class="btn btn-primary" style="margin-top: 10px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeName();">Update Element</button>
 <button *ngIf="this.acceso" class="btn btn-primary" style="margin-top: 20px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="changeDialog();">Update Selected Element</button>
-<!--<input  #updatename placeholder="New Name" type="text" style="margin-left: 5px; border-radius:5px;" value="" /> Comentat Provisional-->
 
 
 
-<button *ngIf="!this.acceso" style="margin-top: 5px; margin-left: 20px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="deleteSelected();">Delete Element</button>
 <button *ngIf="this.acceso" style="margin-top: 5px; margin-left: 20px; color: #656565; background-color: #ffe066; margin-top: 10px;" mat-raised-button (click)="deleteSelected2();">Delete Selected Element</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -53,29 +31,15 @@
         height: 500px;
         border: 1px solid lightgray;
     }
-
 </style>
 
 <br><br>
 
 
-
-
 <button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="esborraMapa();"><mat-icon> delete </mat-icon> Delete Map</button>
 
 
-<ng-container *ngIf="!this.acceso"> <!-- Part de crear-->
+<ng-container *ngIf="!this.acceso"> <!-- Part de creació de map-->
     <button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="submitFinal()">Submit Map</button>
 </ng-container>
 
-<!-- Part de Editar-->
-<!--
-<ng-container *ngIf="this.acceso"> 
-    <button style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="updateGraf()">Save Map</button>
-</ng-container>
--->
-
-
-<!--<button *ngIf="this.acceso" style="margin-top: 5px; color: #656565; background-color: #ffe066; margin-left: 20px;" mat-raised-button (click)="funcio_auxiliar();"> Test Button</button>
-NO BORRAR
--->

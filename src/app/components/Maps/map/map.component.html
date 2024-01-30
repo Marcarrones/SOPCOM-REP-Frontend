@@ -6,7 +6,7 @@
       }
     </style>
 
-<!--Si entra a map per EDITAR:-->
+<!--Si entra a map per EDITAR/VISUALITZAR ()-->
 
 <ng-container *ngIf="!this.edit">
   <h1 style="text-transform: capitalize;"> Map </h1>
@@ -32,7 +32,7 @@
 <h2>Graph</h2>
 
 
-<app-graf [info_completa]="this.map.pruebas" [readMapid]="this.map.id" [acceso]="true"></app-graf>
+<app-graf [readMapid]="this.map.id" [acceso]="true"></app-graf>
 </ng-container>
 
 
@@ -51,7 +51,7 @@
 
 
 
-<!--Si entra a map per CREAR:-->
+<!--Si entra a map per CREAR (+)-->
 
 
 <ng-container *ngIf="this.edit;">
@@ -70,96 +70,7 @@
     </mat-form-field>
     <br>
     <button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="submitMap()">Submit Map</button>
-    
 
-
-
-
-
-
-
-
-<br>
-<!--
-      <h2>Figure / Table</h2>
-        <form [formGroup]="FeedBack" (ngSubmit)="nada()">
-          <table class="form-group" style="width: 90%;">
-            <tr>
-              <th>Source Goal</th>
-              <th>Strategy</th>
-              <th>Target Goal</th>
-            </tr>
-            <tbody formArrayName="Rows">
-              <tr
-                *ngFor="let obj of formArr.controls; let i = index; let l = last"
-                [formGroupName]="i"
-              >
-                <td style="padding-right: 15px;">
-                  <ng-container style="display: table;">
-                    <mat-form-field style="width: 95%;">
-                      <mat-label>Source Goal</mat-label>
-                      <input matInput type="text" class="form-control" id="goal" formControlName="Goal" aria-label="intention" [value]="null" [formControl]="goalFormControl" [matAutocomplete]="auto">
-                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="intentionSelected($event)" >
-                          <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
-                          {{option['name']}}
-                          </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <a style="width: 5%;" mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
-                </ng-container>
-                </td>
-
-                <td style="padding-right: 15px;">
-                  <ng-container style="display: table;">
-                    <mat-form-field style="width: 95%;">
-                      <mat-label>Strategy</mat-label>
-                      <input matInput type="text" class="form-control" id="Strategy" formControlName="Strategy" aria-label="intention" [value]="null" autocomplete="off">
-                    </mat-form-field>
-                </ng-container>
-                </td>
-
-                <td>
-                  <ng-container style="display: table;">
-                    <mat-form-field style="width: 95%;">
-                      <mat-label>Target Goal</mat-label>
-                      <input matInput type="text" class="form-control" id="Target" formControlName="Target" aria-label="intention" [value]="null" [formControl]="goalFormControl" [matAutocomplete]="auto">
-                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="intentionSelected($event)" >
-                          <mat-option *ngFor="let option of goalsFilter | async" [value]="option['name']">
-                          {{option['name']}}
-                          </mat-option>
-                      </mat-autocomplete>
-                    </mat-form-field>
-                    <a style="width: 5%;" mat-icon-button (click)="openGoalDialog()"> <mat-icon> add </mat-icon> </a>
-                </ng-container>
-                </td>
-
-
-                <td>
-                  <button mat-icon-button (click)="deleteRow(i)"> <mat-icon> delete </mat-icon> </button>
-                </td>
-              </tr>
-            </tbody>
-        </table>
-
-        <button type="button" mat-raised-button style="margin-top: 5px; color: #656565; background-color: #ffe066;" (click)="addNewRow()" class="btn btn-dark">
-          Add new Row
-        </button>
-        <button type="submit" mat-raised-button style="margin-left: 5px; margin-top: 5px; color: #656565; background-color: #ffe066;" class="btn btn-primary">Save</button>
-
-        </form>
-
-      -->
-
-
-<br>
-
-
+<br><br>
 
 <app-graf style="display: none;" #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
-
-
-<!--
-<button (click)="submitFinal(); compGraf.nada();">Pruebas</button>
--->
-
-

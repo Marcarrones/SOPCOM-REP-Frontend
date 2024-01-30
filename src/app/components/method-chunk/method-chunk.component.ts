@@ -36,10 +36,13 @@ export class MethodChunkComponent implements OnInit {
   public params;
   public id;
   public strategy;
+  public strategy_id;
   public intention_target;
+  public intention_target_name;
   public goalsFilter: Observable<string[]>;
   public strategyFilter: Observable<any[]>;
   public map_id;
+  public flag_alerta = false;
 
   public showPlaceHolderActivity = true;
   public showPlaceHolderTool = true;
@@ -70,7 +73,7 @@ export class MethodChunkComponent implements OnInit {
   ngOnInit(): void {
     this.navigatorService.refreshGoalList();
     this.navigatorService.refreshStrategyList();
-    console.log('La LLISTA: ', this.navigatorService.strategyList)
+    console.log('La LLISTA: ', this.navigatorService.strategyList);
     this.navigatorService.allowChange = false;
     this.id = this.route.snapshot.paramMap.get('id')!;
     if(this.id !== undefined && this.id !== null && this.id !== "") {
@@ -78,11 +81,19 @@ export class MethodChunkComponent implements OnInit {
         console.log('DATA: ',data)
         if(data['error']  === undefined) {
           var found;
-          if(data['strategy'] != undefined){
+          if(data['strategy'] != undefined && data['strategy'] != null){
             found = this.navigatorService.strategyList.find((element) => element.st_id == data['strategy']);
             this.map_id = found.id;
+            this.strategy = found.st_name;
+            this.strategy_id = found.st_id;
           } 
           console.log('FOUND: ', found);
+          if(found != undefined){
+            this.intention_target_name = found['g_name'];
+          }else{
+            this.intention_target_name = null;
+          }
+          console.log('goal_name: ', this.intention_target_name);
           this.methodChunk = this.parseMethodChunk(data)
           this.initializeFormControls()
           this.loaded = true
@@ -122,7 +133,7 @@ export class MethodChunkComponent implements OnInit {
 
     if(this.strategy !== undefined && this.strategy !== null){
       this.strategyFormControl = new FormControl(this.strategy)
-      this.intention2FormControl = new FormControl({value: this.intention_target, disabled: true})
+      this.intention2FormControl = new FormControl({value: this.intention_target_name, disabled: true})
     }else if(this.methodChunk.abstract == 1){
       this.strategyFormControl = new FormControl({value: this.intention_target, disabled: true});
       this.intention2FormControl = new FormControl({value: '', disabled: true});
@@ -157,11 +168,24 @@ export class MethodChunkComponent implements OnInit {
     return this.navigatorService.strategyList.filter(strategy => strategy.st_name.toLowerCase().includes(value.toLowerCase()))
   }
   public testing() {
-    console.log(this.map_id);
+    console.log(this.activity.methodElement);
   }
 
   public click(selected) {
-    console.log(selected)
+    this.strategy_id = selected.st_id;
+    this.strategy = selected.st_name;
+    this.flag_alerta == false;
+    this.intention2FormControl = new FormControl({value: selected.g_name, disabled: true});
+    
+  }
+  public canvis() {
+    if(this.strategyFormControl.value == ''){
+      this.intention2FormControl = new FormControl({value: '', disabled: true})
+      this.flag_alerta = false;
+      this.strategy = '';
+    }else{
+      this.flag_alerta = true;
+    }
   }
 
   private parseMethodChunk(data) {
@@ -176,8 +200,8 @@ export class MethodChunkComponent implements OnInit {
     let activity_rel_to: any[];
     let activity_rel_from: any[];
     if(data['strategy'] != null){
-      this.strategy = data['strategy'].replace('S_', '');
       this.intention_target = data['intention'];
+      //this.intention_target_name = data['int_name'][0]['name'];
     }else{
       this.strategy = null;
     }
@@ -226,10 +250,10 @@ export class MethodChunkComponent implements OnInit {
       return false;
     }
 
-    /*if(this.activity.methodElement.abstract == 1 && this.strategyFormControl.value != ''){
-      this._snackBar.open("A Method Chunk can not have a Strategy if the Process Part is abstract", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    if(this.activity.methodElement.abstract == 1 && this.strategy != '' && this.strategy != null && this.strategy != undefined){
+      this._snackBar.open("A Method Chunk can not have a Strategy if the Activity is abstract", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
       return false;
-    }*/
+    }
 
     return true;
   }
@@ -239,6 +263,8 @@ export class MethodChunkComponent implements OnInit {
       this.hasChanges = false;
       let body = this.stringifyMethodChunk();
       if(this.id !== undefined && this.id !== null && this.id !== "") {
+  
+        if(this.flag_alerta == false){
         this.endpointService.updateMethodChunk(this.id, body).subscribe(response => {
           if(response === null) {
             this.navigatorService.refreshMethodChunkList();
@@ -249,9 +275,11 @@ export class MethodChunkComponent implements OnInit {
             this._snackBar.open(response['error'], 'X', {duration: 3000, panelClass: ['blue-snackbar']});
           }
         })
+      }else{
+        this._snackBar.open('Select an Strategy from the list or leave an empty space', 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+      }
       } else {
         this.endpointService.addNewMethodChunk(body).subscribe(response => {
-          console.log('bodyy: ', body);
           if(response['error'] === undefined) {
             this.navigatorService.refreshMethodChunkList();
             this.navigatorService.refreshMethodChunkListwithMap();
@@ -280,14 +308,22 @@ export class MethodChunkComponent implements OnInit {
       name: this.methodChunk.name,
       description: this.methodChunk.description,
       activity: this.methodChunk.processPart.id,
-      strategy: this.strategyFormControl.value != '' ? 'S_' + this.strategyFormControl.value : null
+      //strategy: this.strategyFormControl.value != '' ? this.strategy_id : null
       //intention: this.methodChunk.intention.id
     }
+    if(this.strategyFormControl.value != '' && this.strategyFormControl.value != null){
+      body['strategy'] = this.strategy_id;
+    }else{
+      body['strategy'] = null;
+    }
+
+    if(this.strategyFormControl.status == "DISABLED" || this.strategyFormControl.value == null){
+      body['strategy'] = null;
+    }
+
     if(this.strategyFormControl.value != null && this.strategyFormControl.value != ''){
     for (let a of this.navigatorService.strategyList) {
-      console.log(a.st_id);
-      if (a.st_id == 'S_' + this.strategyFormControl.value) {
-         console.log("The goaltarget is: " + a.goal_tgt);
+      if (a.st_id == this.strategy_id) {
          body['target'] = a.goal_tgt;
       }
    }
@@ -326,9 +362,10 @@ export class MethodChunkComponent implements OnInit {
       data: {id: id, type: type, typeStr: typeStr, existeix_st: has_st },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('result: ', result);
-      if(this.navigatorService.abstract == true){
-        this.strategyFormControl = new FormControl({value: '', disabled: true})
+      if(this.navigatorService.abstract == true && result != 'error'){
+        this.strategyFormControl = new FormControl({value: '', disabled: true});
+        this.intention2FormControl = new FormControl({value: '', disabled: true});
+        this.strategy = null;
       }else{
         this.strategyFormControl = new FormControl(this.strategy)
       }
@@ -350,9 +387,11 @@ export class MethodChunkComponent implements OnInit {
         if(type == 5) this.methodChunk.productPart.push(new MethodElement(result, "", false, "", "", 2));
       }
       if(this.navigatorService.abstract == true){
-        this.strategyFormControl = new FormControl({value: '', disabled: true})
+        this.strategyFormControl = new FormControl({value: '', disabled: true});
+        this.intention2FormControl = new FormControl({value: '', disabled: true});
+        this.strategy = null;
       }else{
-        //this.strategyFormControl = new FormControl(this.strategyFormControl.value)
+        this.strategyFormControl = new FormControl(this.strategy)
       }
     })
   }
@@ -464,9 +503,7 @@ export class MethodChunkComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       this.hasChanges = true;
-      console.log(result)
       if(result !== null && result !== undefined) {
-        console.log(result)
         let index = this.navigatorService.criterionList.findIndex(element => element.criterionId == result)
         let criterion = this.navigatorService.criterionList[index]
         if(index !== -1) {

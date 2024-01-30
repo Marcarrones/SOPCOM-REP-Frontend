@@ -19,7 +19,8 @@ export class MethodElementComponent implements OnInit {
   @Input() edit = false;
   @Input() reduced = true;
 
-  public loaded
+  public loaded;
+  public error_abstract = false;
   
   public methodElement;
   public figureUrl = '';
@@ -94,12 +95,24 @@ export class MethodElementComponent implements OnInit {
   }
 
   public async saveMethodElement() {
+    if(this.typeStr == 'activity'){
+      var found = this.navigatorService.methodChunkList.findIndex((element) => element.activity == this.methodElement.id);
+      
+      if(found >= 0){
+      if(this.navigatorService.methodChunkList[found].strategy == null || this.methodElement.abstract == false){
+        this.error_abstract = false;
+      }else if(this.methodElement.abstract == 1){
+        this.error_abstract = true;
+      }
+    }
+    }
     if(this.methodElementFormGroup.valid) {
       this.navigatorService.allowChange = false;
       let data = this.stringifyMethodElement();
       if(this.id !== undefined && this.id !== null) {
+        if(this.error_abstract == false){
+
         this.endpointService.updateMethodElement(this.id, data).subscribe( data => {
-          console.log(data)
           if(data === null) {
             this.uploadFigure()
             this._snackBar.open(this.typeStr + " updated!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
@@ -115,6 +128,9 @@ export class MethodElementComponent implements OnInit {
           this._snackBar.open(err['error']['error'], 'X', {duration: 3000, panelClass: ['green-snackbar']});
           return false;
         })
+      }else{
+        this._snackBar.open('This Activity can not be abstract, it is assigned to a Method Chunk with an Strategy', 'X', {duration: 3000, panelClass: ['green-snackbar']});
+      }
       } else {
         this.endpointService.addMethodElement(data).subscribe( data => {
           if(data['error'] === undefined) {

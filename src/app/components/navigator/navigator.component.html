@@ -27,7 +27,7 @@
             </ng-container>
         </ng-container>
 
-        <ng-container *ngIf="navigatorService.methodChunkFilteredListwithMap.length > 0; else noChunks">
+        <ng-container *ngIf="navigatorService.methodChunkFilteredListwithMap.length > 0">
             <ng-container *ngFor="let mc of navigatorService.methodChunkFilteredListwithMap">
                 <ng-container *ngIf="this.filterChunk == 'map'">
                     <div style="width: 100%; font-size: large; display: table-cell;"> {{mc.id}} </div> <a style="display: table-cell;" [routerLink]="['/method-chunk', mc.id]"> <mat-icon class="mat-icon-vis"> visibility </mat-icon></a>
@@ -40,6 +40,9 @@
             
         
         <ng-template #noChunks>
+            No chunks found with {{ filterChunk }}: {{ filterControlChunk.value }}
+        </ng-template>
+        <ng-template #noChunksMap>
             No chunks found with {{ filterChunk }}: {{ filterControlChunk.value }}
         </ng-template>
     </mat-tab>

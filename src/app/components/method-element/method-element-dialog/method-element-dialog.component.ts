@@ -29,7 +29,7 @@ export class MethodElementDialogComponent implements OnInit {
     console.log('has_st: ', this.data.existeix_st);
     if(this.data.existeix_st == true && this.meComponent.methodElement.abstract == true){
       console.log('error');
-      this.closeDialog();
+      this.closeDialog('error');
       this._snackBar.open("An Activity can not be abstract if there is already a Strategy", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     }else{
     let correct = await this.meComponent.saveMethodElement();
