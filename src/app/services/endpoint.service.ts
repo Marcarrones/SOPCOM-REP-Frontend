@@ -13,40 +13,43 @@ export class EndpointService {
     private http: HttpClient
   ) { }
 
-  private URL = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
-  private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
+  private URL = Values.SERVER_URL + Values.SERVER_PORT_V3 + Values.ENTRY_FILE;
+  //private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
 
+// --------------- METHOD CHUNKS --------------- 
+
+  // GET /index.php/method-chunk
   public getAllMethodChunk() {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
-
+  // GET /index.php/method-chunk/maps
   public getAllMethodChunkwithMap() {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + 'maps';
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
-
+  // GET /index.php/:id
   public getMethodChunkById(id) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
-
+  // POST /index.php/method-chunk
   public addNewMethodChunk(data) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK;
     return this.http.post<any[]>(request, data).pipe(map(response => response));
   }
-
-
+  // PUT /index.php/method-chunk/:id
   public updateMethodChunk(id, data) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     return this.http.put<any[]>(request, data).pipe(map(response => response));
   }
-  
+  // DELETE /index.php/method-chunk/:id
   public deleteMethodChunk(id) {
     const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + id;
     return this.http.delete<any[]>(request).pipe(map(response => response));
   }
 
+// ---------------  METHOD ELEMENTS --------------- 
   public getAllMethodElementsByType(type) {
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '?type=' + type;
     return this.http.get<any[]>(request).pipe(map(response => response));
@@ -77,67 +80,70 @@ export class EndpointService {
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
+  // ---------------  CRITERIONS --------------- 
+  
   public getAllCriterions() {
     const request = this.URL + Values.RESOURCES.CRITERION;
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
+  // --------------- MAPS --------------- 
   public getAllMaps() {
-    const request = this.URL2 + Values.RESOURCES.MAPS;  
+    const request = this.URL + Values.RESOURCES.MAPS;  
     //return this.http.get<any[]>('http://localhost:1031/index.php/maps').pipe(map(response => response));
-    return this.http.get<any[]>(Values.URL_V2 + 'maps').pipe(map(response => response));
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getMap(id) {
-    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id;
     //return this.http.get<any[]>('http://gessi3.essi.upc.edu:1031/index.php/maps/' + id);
-    return this.http.get<any[]>(Values.URL_V2 + 'maps/' + id);
+    return this.http.get<any[]>(request);
   }
 
   public goalStrategies(name) {
-    const request = this.URL2 + Values.RESOURCES.GOAL + '/' + name;
-    return this.http.get<any[]>(Values.URL_V2 + 'goal/' + name + '/strategies').pipe(map(response => response));
+    const request = this.URL + Values.RESOURCES.GOAL + '/' + name;
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getMapGoals(id) {
-    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.get<any[]>(Values.URL_V2 + 'maps/' + id + '/goals');
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id + '/' + Values.RESOURCES.GOAL;
+    return this.http.get<any[]>(request);
   }
 
   public addMap(data) {
-    const request = this.URL2 + Values.RESOURCES.MAPS;
-    return this.http.post<any>(Values.URL_V2 + 'maps', data)
+    const request = this.URL + Values.RESOURCES.MAPS;
+    return this.http.post<any>(request, data)
   }
 
   public updateMap(id, data) {
-    const request = this.URL2 + Values.RESOURCES.MAPS;
-    return this.http.put<any>(Values.URL_V2 + 'maps' + '/' + id, data).pipe(map(response => response));
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.put<any>(request, data).pipe(map(response => response));
   }
 
   public updateGoal(id, data) {
-    const request = this.URL2 + Values.RESOURCES.GOAL;
-    return this.http.put<any>(Values.URL_V2 + 'goal' + '/' + id, data)
+    const request = this.URL + Values.RESOURCES.GOAL + '/' + id;
+    return this.http.put<any>(request, data)
   }
 
   public updateStrategy(id, data) {
-    //const request = this.URL2 + Values.RESOURCES.GOAL;
-    return this.http.put<any>(Values.URL_V2 + 'strategy' + '/' + id, data)
+    const request = this.URL + Values.RESOURCES.STRATEGY + '/' + id;
+    return this.http.put<any>(request, data)
   }
 
   public deleteMap(id) {
-    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.delete<any[]>(Values.URL_V2 + 'maps' + '/' + id);
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id;
+    return this.http.delete<any[]>(request);
   }
 
   
   public deleteGoalfromMap(id) {
-    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.delete<any[]>(Values.URL_V2 + 'goal' + '/' + id);
+    const request = this.URL + Values.RESOURCES.GOAL + '/' + id;
+    return this.http.delete<any[]>(request);
   }
 
   public deleteStrategyfromMap(id) {
-    const request = this.URL2 + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.delete<any[]>(Values.URL_V2 + 'strategy' + '/' + id);
+    const request = this.URL + Values.RESOURCES.STRATEGY + '/' + id;
+    return this.http.delete<any[]>(request);
   }
   
 
@@ -167,23 +173,23 @@ export class EndpointService {
   }
 
   public getGoalsWithoutMap() {
-    const request = this.URL + Values.RESOURCES.GOAL;
-    return this.http.get<any[]>(Values.URL_V2 + 'goal/nomap');
+    const request = this.URL + Values.RESOURCES.GOAL + '/nomap';
+    return this.http.get<any[]>(request);
   }
 
   public getAllStrategies() {
-    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
-    return this.http.get<any[]>(Values.URL_V2 + 'strategy').pipe(map(response => response));
+    const request = this.URL + Values.RESOURCES.STRATEGY;   
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public getAllStrategieswithMaps() {
-    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
-    return this.http.get<any[]>(Values.URL_V2 + 'strategy/maps');
+    const request = this.URL + Values.RESOURCES.STRATEGY + '/' + Values.RESOURCES.MAPS;   
+    return this.http.get<any[]>(request);
   }
 
   public getMapStrategies(id) {
-    const request = this.URL2 + Values.RESOURCES.STRATEGY;   
-    return this.http.get<any[]>(Values.URL_V2 + 'maps/' + id + '/strategies').pipe(map(response => response));
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id + '/' + Values.RESOURCES.STRATEGY;   
+    return this.http.get<any[]>(request).pipe(map(response => response));
   }
 
   public addNewGoal(data) {
@@ -192,7 +198,7 @@ export class EndpointService {
   }
   public addNewStrategy(data) {
     const request = this.URL + Values.RESOURCES.STRATEGY;
-    return this.http.post<any>(Values.URL_V2 + 'strategy', data)
+    return this.http.post<any>(request, data)
   }
 
   public addNewGoal2(data) {

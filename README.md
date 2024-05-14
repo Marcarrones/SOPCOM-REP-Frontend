@@ -25,3 +25,15 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+# Commands
+
+## Install packages
+`npm install -force` installs packages in the `node_module` directory
+
+## Run project node modules
+Using the `npx` command, it will run using local node_modules packages (including Angular CLI versions)
+
+## Development server
+Run `npx ng serve -o`, the `-o` options opens the app on a new tab
