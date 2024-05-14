@@ -61,8 +61,6 @@ export class MapComponent implements OnInit {
 
   FeedBack!: FormGroup;
 
-
-
   constructor(
     public navigatorService: NavigatorService,
     private router: Router,
