@@ -511,7 +511,7 @@ async ngOnInit() {
     });
     var tt = (JSON.stringify(real));
 
-    let body = {name: this.prueba_name, id: this.prueba_id};
+    let body = {name: this.prueba_name, id: this.prueba_id,};
     return JSON.stringify(body);
   }
   

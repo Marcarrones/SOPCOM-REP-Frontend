@@ -1,0 +1,17 @@
+ .form * {
+    width: 100%;
+ }
+
+.form-container {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+}
+
+.form-container mat-form-field {
+   flex: 1; 
+}
+
+.form-container button {
+   margin-left: 8px;
+}

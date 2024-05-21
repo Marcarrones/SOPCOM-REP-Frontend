@@ -308,6 +308,7 @@ export class MethodChunkComponent implements OnInit {
       name: this.methodChunk.name,
       description: this.methodChunk.description,
       activity: this.methodChunk.processPart.id,
+      repository: this.endpointService.selectedRepository.value?.id ?? 0,
       //strategy: this.strategyFormControl.value != '' ? this.strategy_id : null
       //intention: this.methodChunk.intention.id
     }

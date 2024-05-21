@@ -89,7 +89,8 @@ export class MethodElementComponent implements OnInit {
       type: this.methodElement.type,
       me_struct_rel: this.methodElement.me_struct_rel_from,
       activity_rel: this.methodElement.activity_rel_from,
-      artefact_rel: this.methodElement.artefact_rel_from
+      artefact_rel: this.methodElement.artefact_rel_from,
+      repository: this.endpointService.selectedRepository.value?.id ?? 0
     };
     return JSON.stringify(aux);
   }

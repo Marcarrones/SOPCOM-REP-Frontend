@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { FormControl } from '@angular/forms';
+import { EventEmitter } from 'stream';
 
 @Component({
   selector: 'app-navigator',
@@ -25,6 +26,8 @@ export class NavigatorComponent implements OnInit {
   public filterMap = "name";
   public filterControlMap: FormControl;
 
+
+
   constructor(
     private router: Router,
     public navigatorService: NavigatorService
@@ -34,22 +37,28 @@ export class NavigatorComponent implements OnInit {
     this.initializeFilters();
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
-    this.navigatorService.refreshMethodChunkList();
-    this.navigatorService.refreshMethodChunkListwithMap();
+    this.navigatorService.refreshRepositoryList();
+    this.navigatorService.refreshRepositoryStatusList();
 
-    this.navigatorService.refreshMethodElementList(1);
-    this.navigatorService.refreshMethodElementList(2);
-    this.navigatorService.refreshMethodElementList(3);
-    this.navigatorService.refreshMethodElementList(4);
-    this.navigatorService.refreshMethodElementList(6);
+    this.navigatorService.endpointService.selectedRepository.subscribe((_) => {
+      this.navigatorService.refreshMethodChunkList();
+      this.navigatorService.refreshMethodChunkListwithMap();
+  
+      this.navigatorService.refreshMethodElementList(1);
+      this.navigatorService.refreshMethodElementList(2);
+      this.navigatorService.refreshMethodElementList(3);
+      this.navigatorService.refreshMethodElementList(4);
+      this.navigatorService.refreshMethodElementList(6);
+  
+      this.navigatorService.refreshCriterionList();
+      this.navigatorService.refreshMapList();
+  
+      this.navigatorService.getAllMethodElementRelationTypes();
+  
+      this.navigatorService.refreshGoalList();
+      this.navigatorService.refreshStrategyList();
 
-    this.navigatorService.refreshCriterionList();
-    this.navigatorService.refreshMapList();
-
-    this.navigatorService.getAllMethodElementRelationTypes();
-
-    this.navigatorService.refreshGoalList();
-    this.navigatorService.refreshStrategyList();
+    });
   }
 
   public tabChanged(event) {

@@ -17,10 +17,11 @@ export class Values {
 
     static RESOURCES = {
         REPOSITORY: 'repository',
+        STATUS: "status",
         METHOD_CHUNK: 'method-chunk',
         METHOD_ELEMENT: 'method-element',
         CRITERION: 'criterion',
-        GOAL: 'goals',
+        GOAL: 'goal',
         STRATEGY: 'strategy',
         RELATIONS: 'relations',
         TYPES: 'types',

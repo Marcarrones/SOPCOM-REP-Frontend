@@ -200,7 +200,7 @@ addRow(obj) {
 
 
 public stringifyMap() {
-  let body = {name: this.map.name, id: this.map.id.trim()};
+  let body = {name: this.map.name, id: this.map.id.trim(), repository: this.endpointService.selectedRepository.value?.id ?? 0};
   return JSON.stringify(body);
 }
 
@@ -319,7 +319,7 @@ export class UpdateMapDialog {
 
   public updateMapName() {
     if(this.noumapname.nativeElement.value.trim().length > 0){
-      let body = {name: this.noumapname.nativeElement.value}
+      let body = {name: this.noumapname.nativeElement.value, repository: this.endpointService.selectedRepository.value?.id ?? 0}
       this.endpointService.updateMap(this.data.id, body).subscribe(data => {
         this.navigatorService.refreshMapList();
         this.router.navigate(['/map/' + this.data.id]);

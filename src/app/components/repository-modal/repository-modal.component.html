@@ -1,0 +1,39 @@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<div mat-dialog-content >
+    <form [formGroup]="repositoryForm" class="form" style="align-items: center;">
+        <h1 mat-dialog-title>Select repository</h1>
+        <div class="form-container">
+            <mat-form-field>
+                <mat-select [(value)]="selectRepositoryID" (valueChange)="selectRepository($event)">
+                    <mat-option *ngFor="let repository of repositoryList" [value]="repository.id">{{repository.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-raised-button style="width: auto;" (click)="deleteRepository()" ><mat-icon aria-hidden="true">delete</mat-icon></button>
+        </div>
+        <br>
+        <h1 mat-dialog-title>Create repository</h1>
+      <mat-form-field>
+          <mat-label> ID </mat-label>
+          <input matInput required="true" formControlName="id" maxlength="50">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label> Name </mat-label>
+            <input matInput required="true" formControlName="name" maxlength="100">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label> Description(optional) </mat-label>
+            <input matInput formControlName="description" maxlength="200">
+        </mat-form-field>
+        <mat-form-field *ngIf="this.showStatus">
+            <mat-select formControlName="status" >
+                <mat-option *ngFor="let repoStatus of navigatorService.repositoryStatusList" [value]="repoStatus.id">{{repoStatus.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+    </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button class="button-custom" (click)="closeDialog()"> Close </button>
+  <button mat-raised-button class="button-custom" (click)="saveDialog()" > Save </button>
+</div>

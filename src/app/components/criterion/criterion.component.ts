@@ -6,9 +6,6 @@ import { EndpointService } from 'src/app/services/endpoint.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { i18nMetaToJSDoc } from '@angular/compiler/src/render3/view/i18n/meta';
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
-import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-criterion',
@@ -68,7 +65,7 @@ export class CriterionComponent implements OnInit {
   }
 
   public stringifyCriterion() {
-    let body = {name: this.criterion.name};
+    let body = {name: this.criterion.name, repository: this.endpointService.selectedRepository.value?.id};
     body['values'] = [];
     for(let v in this.criterion.values) {
       body['values'].push(this.criterion.values[v]['name'])

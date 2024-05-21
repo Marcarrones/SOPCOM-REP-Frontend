@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { EndpointService } from './endpoint.service';
+import { Repository } from '../models/repository';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NavigatorService {
+export class NavigatorService{
 
   public allowChange = true;
   public tableView = false;
   
+  public repositoryList : Repository[]; 
+  public repositoryStatusList : any[];
+
   public methodChunkListwithMap: any[] = []
   public methodChunkFilteredListwithMap: any[] = []
   public methodChunkList: any[] = []
@@ -35,8 +39,22 @@ export class NavigatorService {
   public abstract = false;
 
   constructor(
-    private endpointService: EndpointService
+    public endpointService: EndpointService
   ) { }
+
+  public refreshRepositoryList(){
+    this.endpointService.getAllRepositories().subscribe(repositories => {
+        repositories.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
+        this.repositoryList = repositories;
+    });
+  }
+
+  public refreshRepositoryStatusList() {
+    this.endpointService.getRepositoryStatus().subscribe(status => {
+        status.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
+        this.repositoryStatusList = status;
+    });
+  }
 
   public refreshMethodChunkList() {
     this.endpointService.getAllMethodChunk().subscribe(chunks => {

@@ -39,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MapComponent } from './components/Maps/map/map.component';
 import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
 import { GrafComponent } from './components/Maps/graf/graf.component';
+import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { GrafComponent } from './components/Maps/graf/graf.component';
     MapComponent,
     MapDetailComponent,
     GrafComponent,
+    RepositoryModalComponent,
     
   ],
   imports: [
@@ -88,6 +90,7 @@ import { GrafComponent } from './components/Maps/graf/graf.component';
     MatSnackBarModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    MatIconModule,
     
   ],
   providers: [],

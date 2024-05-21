@@ -6,10 +6,13 @@
   <a style="height: inherit; right: 0; position: absolute;" href="https://gessi.upc.edu/en" target="_blank">
     <img style="height: inherit;" src="../assets/GESSI.jpg" alt="Software and Services Engineering Group">
   </a>
+  <mat-dialog-actions style="margin-left:auto; margin-right: 104px; padding:auto; margin-bottom: 0;">
+    <button mat-raised-button (click)="openRepositoryModal()"> {{this.selectedRepository?.name ?? "Select Repository"}} </button>
+  </mat-dialog-actions>
 </mat-toolbar>
 <div style="padding-top: 60px;">
   <div style="width: 30%; height: -webkit-fill-available; position: fixed; border-right: 2px solid #99cccc; z-index: 99; background-color: white;">
-    <app-navigator></app-navigator>
+    <app-navigator ></app-navigator>
   </div>
   <div style="width: 65%; padding: 2em; margin-left: 30%;">
     <router-outlet></router-outlet>
