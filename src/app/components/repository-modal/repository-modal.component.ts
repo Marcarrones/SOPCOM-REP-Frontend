@@ -13,11 +13,9 @@ import { NavigatorService } from 'src/app/services/navigator.service';
 
 export class RepositoryModalComponent implements OnInit {
   // Form
-
-  repositoryList : Repository[];
-  selectRepositoryID : string;
   showStatus = false;
-
+  
+  selectedRepository = new FormControl();
 
   repositoryForm = new FormGroup({
     id: new FormControl(''),
@@ -30,38 +28,40 @@ export class RepositoryModalComponent implements OnInit {
     public dialogRef: MatDialogRef<RepositoryModalComponent>,
     public navigatorService : NavigatorService,
     public endpointService : EndpointService
-  ) { }
+  ) {  }
 
   ngOnInit(): void {
     this.updateRepositoryList();
-    this.endpointService.selectedRepository.subscribe((value) => { this.loadRepository(value); });
+    this.endpointService.selectedRepository.subscribe((value) => { 
+      this.loadRepository(value);
+    });
   }
 
   public updateRepositoryList() {
     this.endpointService.getAllRepositories().subscribe(repositories => {
       repositories.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
-      this.repositoryList = repositories;
+      this.navigatorService.repositoryList.next(repositories); // Updates NavigatorService repositoryList -> triggers subscription in ngOnInit
     });
     this.navigatorService.refreshRepositoryList();
   }
   
-    public loadRepository(repository : Repository | null){
-      this.selectRepositoryID = repository?.id ?? "";
-      if (repository != null){
-        this.repositoryForm.setValue({id : repository!.id, name : repository!.name, description : repository!.description, status : repository.status})
-        this.showStatus=true;
-      } else {
-        this.showStatus = false;
-      }
+  public loadRepository(repository : Repository | null){
+    console.log("loading: " + repository?.id ?? "null");
+    this.selectedRepository.setValue(repository?.id ?? null);
+    if (repository != null){
+      this.repositoryForm.setValue({id : repository!.id, name : repository!.name, description : repository!.description, status : repository.status});
+      this.showStatus=true;
+    } else {
+      this.showStatus = false;
     }
+  }
 
   public closeDialog() {
     this.dialogRef.close();
   }
 
   public saveDialog() {
-    console.log(this.repositoryForm.controls['id'].value);
-    let repoWithSameID = this.navigatorService.repositoryList.find(r => r.id == this.repositoryForm.controls['id'].value) != undefined;
+    let repoWithSameID = this.navigatorService.repositoryList.value.find(r => r.id == this.repositoryForm.controls['id'].value) != undefined;
 
     if (repoWithSameID) {
       this.updateRepository();
@@ -72,7 +72,10 @@ export class RepositoryModalComponent implements OnInit {
   }
 
   public selectRepository(selectedRepositoryID) {
-    this.endpointService.selectedRepository.next(this.navigatorService.repositoryList.find(r => r.id == selectedRepositoryID) ?? null);
+    console.log("selectRepository");
+    this.selectedRepository.setValue(selectedRepositoryID);
+    var selectedRepository = this.navigatorService.repositoryList.value.find(r => r.id == selectedRepositoryID) ?? null;
+    this.endpointService.selectedRepository.next(selectedRepository);
   }
 
   public updateRepository() {
@@ -90,9 +93,13 @@ export class RepositoryModalComponent implements OnInit {
   }
 
   public deleteRepository() {
-    this.endpointService.deleteRepository(this.selectRepositoryID);
-    //this.endpointService.selectedRepository.next(null);
-    //this.updateRepositoryList();
+    this.endpointService.deleteRepository(this.selectedRepository.value);
+    this.endpointService.selectedRepository.next(null);
+    this.updateRepositoryList();
+  }
+
+  public identify(index, item) {
+    return item.id;
   }
 
   public formToJSON() {

@@ -5,8 +5,12 @@
         <h1 mat-dialog-title>Select repository</h1>
         <div class="form-container">
             <mat-form-field>
-                <mat-select [(value)]="selectRepositoryID" (valueChange)="selectRepository($event)">
-                    <mat-option *ngFor="let repository of repositoryList" [value]="repository.id">{{repository.name}}</mat-option>
+                <mat-label> Repository </mat-label>
+                <mat-select [formControl]="selectedRepository" (selectionChange)="selectRepository($event.value)">
+                    <mat-select-trigger>{{selectedRepository.value}}</mat-select-trigger>
+                    <mat-option *ngFor="let repository of navigatorService.repositoryList.value" [value]="repository.id">
+                        {{repository.name}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
             <button mat-raised-button style="width: auto;" (click)="deleteRepository()" ><mat-icon aria-hidden="true">delete</mat-icon></button>
@@ -17,15 +21,16 @@
           <mat-label> ID </mat-label>
           <input matInput required="true" formControlName="id" maxlength="50">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field >
             <mat-label> Name </mat-label>
             <input matInput required="true" formControlName="name" maxlength="100">
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field >
             <mat-label> Description(optional) </mat-label>
             <input matInput formControlName="description" maxlength="200">
         </mat-form-field>
-        <mat-form-field *ngIf="this.showStatus">
+        <mat-form-field *ngIf="this.showStatus" >
+            <mat-label> Status </mat-label>
             <mat-select formControlName="status" >
                 <mat-option *ngFor="let repoStatus of navigatorService.repositoryStatusList" [value]="repoStatus.id">{{repoStatus.name}}</mat-option>
             </mat-select>

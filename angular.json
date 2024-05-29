@@ -31,7 +31,20 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/components/criterion/criterion-detail/criterion-detail.component.css",
+              "src/app/components/criterion/criterion.component.css",
+              "src/app/components/goal/goal.component.css",
+              "src/app/components/home/home/home.component.css",
+              "src/app/components/Maps/map/map.component.css",
+              "src/app/components/Maps/map-detail/map-detail.component.css",
+              "src/app/components/method-chunk/method-chunk.component.css",
+              "src/app/components/method-element/method-element.component.css",
+              "src/app/components/method-element/method-element-detail/method-element-detail.component.css",
+              "src/app/components/method-element/method-element-dialog/method-element-dialog.component.css",
+              "src/app/components/method-element/method-element-list/method-element-list.component.css",
+              "src/app/components/navigator/navigator.component.css",
+              "src/app/components/repository-modal/repository-modal.component.css"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [

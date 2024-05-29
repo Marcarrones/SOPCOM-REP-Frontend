@@ -1,6 +1,6 @@
- .form * {
-    width: 100%;
- }
+.form mat-form-field {
+   width: 100%;
+}
 
 .form-container {
    display: flex;

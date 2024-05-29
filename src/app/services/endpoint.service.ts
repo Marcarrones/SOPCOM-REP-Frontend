@@ -13,11 +13,15 @@ export class EndpointService {
 
   public selectedRepository : BehaviorSubject<Repository | null> = new BehaviorSubject<Repository | null>(null);
 
-  private repositoryParam = [Values.RESOURCES.REPOSITORY,'=', (this.selectedRepository == undefined ? '1' : (this.selectedRepository.value?.id))].join(''); // puto js 
+  private repositoryParam : string = [Values.RESOURCES.REPOSITORY,'=', (this.selectedRepository == undefined ? '1' : (this.selectedRepository.value?.id))].join(''); // puto js 
 
   constructor(
     private http: HttpClient
-  ) { this.selectedRepository.subscribe((value) => { this.repositoryParam = [Values.RESOURCES.REPOSITORY,'=', (value == undefined ? '1' : value.id)].join(''); }); }
+  ) { 
+    this.selectedRepository.subscribe((value) => { // updates the repositoryParam when the selectedRepository changes
+      this.repositoryParam = [Values.RESOURCES.REPOSITORY,'=', (value == undefined ? '1' : value.id)].join(''); 
+    }); 
+  }
   private URL = Values.SERVER_URL + Values.SERVER_PORT_V3 + Values.ENTRY_FILE;
   //private URL2 = Values.SERVER_URL2 + Values.SERVER_PORT2 + Values.ENTRY_FILE;
 
@@ -52,7 +56,8 @@ export class EndpointService {
   // DELETE /index.php/repository/id
   public deleteRepository(id){
     const request = this.URL + Values.RESOURCES.REPOSITORY + '/' + id;
-    return this.http.delete<any[]>(request).pipe(map(response => response));
+    console.log(request);
+    return this.http.delete<any[]>(request).subscribe((x) => console.log(x)) //.pipe(map(response => response));
   }
 
 // --------------- METHOD CHUNKS --------------- 

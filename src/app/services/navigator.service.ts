@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { EndpointService } from './endpoint.service';
 import { Repository } from '../models/repository';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ export class NavigatorService{
   public allowChange = true;
   public tableView = false;
   
-  public repositoryList : Repository[]; 
   public repositoryStatusList : any[];
+  public repositoryList :  BehaviorSubject<Repository[]> = new BehaviorSubject<Repository[]>([]); 
 
   public methodChunkListwithMap: any[] = []
   public methodChunkFilteredListwithMap: any[] = []
@@ -45,7 +46,7 @@ export class NavigatorService{
   public refreshRepositoryList(){
     this.endpointService.getAllRepositories().subscribe(repositories => {
         repositories.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
-        this.repositoryList = repositories;
+        this.repositoryList.next(repositories);
     });
   }
 
