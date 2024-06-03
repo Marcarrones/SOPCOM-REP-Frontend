@@ -15,6 +15,7 @@
     <app-navigator ></app-navigator>
   </div>
   <div style="width: 65%; padding: 2em; margin-left: 30%;">
-    <router-outlet></router-outlet>
+      <app-no-repository-selected *ngIf="this.selectedRepository == null"></app-no-repository-selected>
+      <router-outlet *ngIf="this.selectedRepository != null"></router-outlet>
   </div>
 </div>

@@ -40,6 +40,8 @@ import { MapComponent } from './components/Maps/map/map.component';
 import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
 import { GrafComponent } from './components/Maps/graf/graf.component';
 import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
+import { NoRepositorySelectedComponent } from './no-repository-selected/no-repository-selected.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,7 @@ import { RepositoryModalComponent } from './components/repository-modal/reposito
     MapDetailComponent,
     GrafComponent,
     RepositoryModalComponent,
+    NoRepositorySelectedComponent,
     
   ],
   imports: [
@@ -91,7 +94,7 @@ import { RepositoryModalComponent } from './components/repository-modal/reposito
     MatAutocompleteModule,
     MatTooltipModule,
     MatIconModule,
-    
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent],

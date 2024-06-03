@@ -5,6 +5,7 @@ import { map } from 'rxjs/internal/operators/map';
 import { Repository } from '../models/repository';
 import { BehaviorSubject } from 'rxjs';
 import { __values } from 'tslib';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,12 @@ export class EndpointService {
   private repositoryParam : string = [Values.RESOURCES.REPOSITORY,'=', (this.selectedRepository == undefined ? '1' : (this.selectedRepository.value?.id))].join(''); // puto js 
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
   ) { 
     this.selectedRepository.subscribe((value) => { // updates the repositoryParam when the selectedRepository changes
       this.repositoryParam = [Values.RESOURCES.REPOSITORY,'=', (value == undefined ? '1' : value.id)].join(''); 
+      this.router.navigate(['/']);
     }); 
   }
   private URL = Values.SERVER_URL + Values.SERVER_PORT_V3 + Values.ENTRY_FILE;

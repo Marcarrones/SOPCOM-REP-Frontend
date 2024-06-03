@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Repository } from 'src/app/models/repository';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { NavigatorService } from 'src/app/services/navigator.service';
@@ -27,7 +29,8 @@ export class RepositoryModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<RepositoryModalComponent>,
     public navigatorService : NavigatorService,
-    public endpointService : EndpointService
+    public endpointService : EndpointService,
+    public _snackBar: MatSnackBar
   ) {  }
 
   ngOnInit(): void {
@@ -76,6 +79,7 @@ export class RepositoryModalComponent implements OnInit {
     this.selectedRepository.setValue(selectedRepositoryID);
     var selectedRepository = this.navigatorService.repositoryList.value.find(r => r.id == selectedRepositoryID) ?? null;
     this.endpointService.selectedRepository.next(selectedRepository);
+    this._snackBar.open("Repository " + (this.endpointService.selectedRepository.value?.name ?? "null") + " selected", "Close", {duration: 5000});
   }
 
   public updateRepository() {
