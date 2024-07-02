@@ -51,11 +51,13 @@ export class MethodChunkComponent implements OnInit {
   public showPlaceHolderRole = true;
   public showPlaceHolderCriterion = true;
 
+  public editable = true;
+
   public methodChunkFormGroup: FormGroup;
   public intentionFormControl: FormControl;
   public intention2FormControl: FormControl;
   public strategyFormControl: FormControl;
-  custonDropdown = new FormControl();
+  //custonDropdown = new FormControl();
   filterControl = new FormControl();
 
 
@@ -71,9 +73,10 @@ export class MethodChunkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.editable = !this.endpointService.isRepoPublic();
     this.navigatorService.refreshGoalList();
     this.navigatorService.refreshStrategyList();
-    console.log('La LLISTA: ', this.navigatorService.strategyList);
+    //console.log('La LLISTA: ', this.navigatorService.strategyList);
     this.navigatorService.allowChange = false;
     this.id = this.route.snapshot.paramMap.get('id')!;
     if(this.id !== undefined && this.id !== null && this.id !== "") {
@@ -111,12 +114,20 @@ export class MethodChunkComponent implements OnInit {
     }
   }
 
+ 
   private initializeFormControls() {
     this.methodChunkFormGroup = new FormGroup({
       id: new FormControl({value: this.methodChunk.id, disabled: (this.id !== null && this.id !== undefined && this.id !== '')}, Validators.required),
       name: new FormControl({value: this.methodChunk.name, disabled: false}, Validators.required),
       description: new FormControl({value: this.methodChunk.description, disabled: false})
     })
+
+    if (this.editable) {
+      this.methodChunkFormGroup.enable();
+    } else{
+      this.methodChunkFormGroup.disable();
+    }
+
     this.methodChunkFormGroup.valueChanges.subscribe(values => {
       this.hasChanges = true;
       if(this.id === null || this.id === undefined || this.id === '') this.methodChunk.id = values['id'];

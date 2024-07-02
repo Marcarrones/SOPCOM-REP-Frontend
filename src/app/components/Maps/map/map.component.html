@@ -17,14 +17,14 @@
 <form>
   <mat-form-field>
     <mat-label> ID </mat-label>
-    <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
+    <input matInput [disabled]="!this.editable" [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
   </mat-form-field>
 <br>
 <mat-form-field>
   <mat-label> Name </mat-label>
-  <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
+  <input matInput [disabled]="!this.editable" [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
 </mat-form-field>
-<button *ngIf="!this.edit" mat-icon-button (click)="openEditMapDialog()"> <mat-icon> edit </mat-icon> </button>
+<button *ngIf="!this.edit" [disabled]="!this.editable" mat-icon-button (click)="openEditMapDialog()"> <mat-icon> edit </mat-icon> </button>
 </form>
 
 

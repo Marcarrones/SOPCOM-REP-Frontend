@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CriterionComponent } from '../criterion.component';
+import { EndpointService } from 'src/app/services/endpoint.service';
 
 @Component({
   selector: 'app-criterion-dialog',
@@ -11,13 +12,16 @@ export class CriterionDialogComponent implements OnInit {
 
   @ViewChild(CriterionComponent) criterionComponent: CriterionComponent;
 
+  public editable = true;
+
   constructor(
     public dialogRef: MatDialogRef<CriterionComponent>,
+    public endpointService: EndpointService,
     @Inject(MAT_DIALOG_DATA) public data
   ) { }
 
   ngOnInit(): void {
-    
+    this.editable = !this.endpointService.isRepoPublic();
   }
 
   public async saveCriterion() {

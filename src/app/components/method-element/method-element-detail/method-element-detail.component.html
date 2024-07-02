@@ -1,5 +1,5 @@
 <app-method-element [id]="this.id" [type]="this.params.type" [typeStr]="this.params.typeStr" [edit]="true"></app-method-element>
 <div style="margin-top: 10px;">
-    <button mat-raised-button class="button-custom" (click)="saveMethodElement()"> Save </button>
-    <button style="margin-left: 5px;" mat-raised-button class="button-custom" (click)="deleteMethodElement()"> Delete </button>
+    <button [disabled]="!this.editable" mat-raised-button class="button-custom" (click)="saveMethodElement()"> Save </button>
+    <button [disabled]="!this.editable" style="margin-left: 5px;" mat-raised-button class="button-custom" (click)="deleteMethodElement()"> Delete </button>
 </div>

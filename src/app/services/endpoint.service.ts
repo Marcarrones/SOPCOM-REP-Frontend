@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 export class EndpointService {
 
   public selectedRepository : BehaviorSubject<Repository | null> = new BehaviorSubject<Repository | null>(null);
-
   private repositoryParam : string = [Values.RESOURCES.REPOSITORY,'=', (this.selectedRepository == undefined ? '1' : (this.selectedRepository.value?.id))].join(''); // puto js 
 
   constructor(
@@ -30,6 +29,11 @@ export class EndpointService {
 
 
 // --------------- REPOSITORIES --------------- 
+  public isRepoPublic() {
+    return this.selectedRepository.value?.status.name == 'Public' ?? false;
+  }
+
+
   // GET /index.php/repository/status
   public getRepositoryStatus() {
     const request = this.URL + Values.RESOURCES.REPOSITORY + '/' + Values.RESOURCES.STATUS;

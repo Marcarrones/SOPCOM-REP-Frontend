@@ -44,6 +44,7 @@ export class RepositoryModalComponent implements OnInit {
     this.endpointService.getAllRepositories().subscribe(repositories => {
       repositories.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
       this.navigatorService.repositoryList.next(repositories); // Updates NavigatorService repositoryList -> triggers subscription in ngOnInit
+      this.selectRepository(this.selectedRepository.value);
     });
     this.navigatorService.refreshRepositoryList();
   }
@@ -52,7 +53,7 @@ export class RepositoryModalComponent implements OnInit {
     console.log("loading: " + repository?.id ?? "null");
     this.selectedRepository.setValue(repository?.id ?? null);
     if (repository != null){
-      this.repositoryForm.setValue({id : repository!.id, name : repository!.name, description : repository!.description, status : repository.status});
+      this.repositoryForm.setValue({id : repository!.id, name : repository!.name, description : repository!.description, status : repository.status.id});
       this.showStatus=true;
     } else {
       this.showStatus = false;
@@ -78,6 +79,7 @@ export class RepositoryModalComponent implements OnInit {
     console.log("selectRepository");
     this.selectedRepository.setValue(selectedRepositoryID);
     var selectedRepository = this.navigatorService.repositoryList.value.find(r => r.id == selectedRepositoryID) ?? null;
+
     this.endpointService.selectedRepository.next(selectedRepository);
     this._snackBar.open("Repository " + (this.endpointService.selectedRepository.value?.name ?? "null") + " selected", "Close", {duration: 5000});
   }

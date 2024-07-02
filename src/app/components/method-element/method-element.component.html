@@ -18,7 +18,7 @@
             <input matInput formControlName="description" autocomplete="off">
         </mat-form-field>
         <mat-checkbox formControlName="abstract" matInput> Abstract </mat-checkbox>
-        <ng-container *ngIf="this.reduced">
+        <ng-container *ngIf="this.reduced && this.editable">
             <mat-divider style="margin-top: 10px;"></mat-divider>
             <h2> Figure </h2>
             <a href="{{this.figureUrl}}" target="_blank"><img *ngIf="this.reduced && this.figureUrl !== ''" class="figure" [src]="this.figureUrl"></a>
@@ -30,11 +30,11 @@
         <div style="display: table;">
             <h2 style="display: table-cell;"> Relations </h2> 
             <mat-icon style="display: table-cell; padding-left: 10px;" matTooltip="Invalid relations will not be added" matTooltipPosition="right"> info </mat-icon></div>
-        <div>
+        <div *ngIf="this.editable">
             <h3> Structural relations: </h3>
             <div class="relations-div"
             cdkDropList 
-            id="structList"
+            id="structList",
             [cdkDropListData]="this.methodElement.me_struct_rel_to" 
             [cdkDropListConnectedTo]="['toolList', 'artefactList', 'activityList', 'roleList', 'mapList']"
             (cdkDropListDropped)="droppedStructRel($event)"
@@ -45,7 +45,7 @@
                             {{ srelfrom.id }}
                             <mat-form-field>
                             <mat-label>Relation type</mat-label>
-                                <mat-select [disabled]="!this.edit" [value]="srelfrom.rel" [required]="true" style="text-transform: Capitalize;" (valueChange)="selectedStructRel(i, $event)">
+                                <mat-select [disabled]="!this.edit" [disabled]="!this.editable" [value]="srelfrom.rel" [required]="true" style="text-transform: Capitalize;" (valueChange)="selectedStructRel(i, $event)">
                                     <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.structRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -69,7 +69,7 @@
                                 {{ actrelfrom.id }}
                                 <mat-form-field>
                                 <mat-label>Relation type</mat-label>
-                                    <mat-select [disabled]="!this.edit" [value]="actrelfrom.rel" [required]="true" style="text-transform: Capitalize;"  (valueChange)="selectedActRel(j, $event)">
+                                    <mat-select [disabled]="!this.edit" [disabled]="!this.editable" [value]="actrelfrom.rel" [required]="true" style="text-transform: Capitalize;"  (valueChange)="selectedActRel(j, $event)">
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.activityRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -93,7 +93,7 @@
                                 {{ artrelfrom.id }}
                                 <mat-form-field>
                                 <mat-label>Relation type</mat-label>
-                                    <mat-select [disabled]="!this.edit" [value]="artrelfrom.rel" [required]="true" placeholder="Relation type" style="text-transform: Capitalize;" (valueChange)="selectedArtRel(k, $event)">
+                                    <mat-select [disabled]="!this.edit" [disabled]="!this.editable" [value]="artrelfrom.rel" [required]="true" placeholder="Relation type" style="text-transform: Capitalize;" (valueChange)="selectedArtRel(k, $event)">
                                         <mat-option style="text-transform: Capitalize;" *ngFor="let opt of this.navigatorService.artefactRelTypes" [value]="opt['id']"> {{ opt['name'] }} </mat-option>
                                     </mat-select>
                                 </mat-form-field>

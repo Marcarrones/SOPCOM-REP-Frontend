@@ -43,7 +43,7 @@ export class MapComponent implements OnInit {
   public goalsFilter: Observable<string[]>;
   public pruebas;
 
-
+  public editable  = true;
 
 
 
@@ -77,12 +77,14 @@ export class MapComponent implements OnInit {
  
 
   ngOnInit(): void {
+    this.editable = !this.endpointService.isRepoPublic();
     this.id = this.route.snapshot.paramMap.get('id')!;
     this.createContactForm();
     this.sampleData();
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
       this.endpointService.getMap(this.id).subscribe(data => {
-        if(data['error'] === undefined) this.map = this.parseMap(data);
+        if(data['error'] === undefined) 
+          this.map = this.parseMap(data);
         else {
           this.edit = true;
           this.map = new Map(null);

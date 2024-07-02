@@ -10,14 +10,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-
-
-
-
-
-
-
 
 @Component({
   selector: 'app-graf',
@@ -49,6 +41,8 @@ export class GrafComponent implements OnInit {
   @Input() acceso: boolean;
   @Input() readMapid: string;
 
+  public editable = true;
+
   constructor(
     private endpointService: EndpointService,
     private _snackBar: MatSnackBar,
@@ -58,15 +52,14 @@ export class GrafComponent implements OnInit {
   ) {   }
 
 async ngOnInit() {
-    if(this.acceso != true){ //Creació de Graf, Buit (no existent)
-    this.nodes = new DataSet([
-    ]);
-    this.edges = new DataSet([
-    ]);
-  }else{ //Creació Graf, Lectura de Graf Existent
+  this.editable = !this.endpointService.isRepoPublic();
+  // TODO: Disable editing graph if the repository is public
+  if(this.acceso != true){ //Creació de Graf, Buit (no existent)
+    this.nodes = new DataSet([]);
+    this.edges = new DataSet([]);
+  } else { //Creació Graf, Lectura de Graf Existent
     var auxnodes : any = [];
     var auxedges : any = [];
-
 
     await this.endpointService.getAllGoals().subscribe(data => {
       this.llistat_goals = data;
@@ -91,8 +84,6 @@ async ngOnInit() {
       }else{
         flag = 1;
       }
-
-
         await this.endpointService.getMapGoals(this.readMapid).subscribe(async data => {
           this.llistat_goals_del_map = data;
           
@@ -552,7 +543,9 @@ async ngOnInit() {
 
   public async updateGraf(){
     let body = this.stringifyMap();
-
+    if (!this.editable)
+      return;
+    
     await this.endpointService.updateMap(this.readMapid, body).subscribe(data => {
       if(data.length > 0){
         data.forEach(async x => {

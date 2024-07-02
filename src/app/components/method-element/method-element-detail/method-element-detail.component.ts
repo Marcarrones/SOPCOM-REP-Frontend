@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { MethodElementComponent } from '../method-element.component';
+import { EndpointService } from 'src/app/services/endpoint.service';
 
 @Component({
   selector: 'app-method-element-detail',
@@ -13,12 +14,14 @@ export class MethodElementDetailComponent implements OnInit {
   public params;
   public id;
   public edit = false;
+  public editable = true;
 
   @ViewChild(MethodElementComponent) meComponent: MethodElementComponent;
 
   constructor(
     private route: ActivatedRoute,
-    public navigatorService: NavigatorService
+    public navigatorService: NavigatorService,
+    public endpointService: EndpointService
   ) {
     this.route.data.subscribe(params => {
       this.params = params;
@@ -26,6 +29,7 @@ export class MethodElementDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.editable = !this.endpointService.isRepoPublic();
     this.id = this.route.snapshot.paramMap.get('id')!;
   }
 

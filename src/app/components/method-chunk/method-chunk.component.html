@@ -47,8 +47,9 @@
                 [matAutocomplete]="auto"
                 [formControl]="strategyFormControl"
                 [value]="this.strategy !== null ? this.strategy : null"
+                [disabled]="!this.editable"
               />
-              <mat-autocomplete #auto="matAutocomplete">
+              <mat-autocomplete #auto="matAutocomplete" >
                
                 <mat-option
                   *ngFor="let st of strategyFilter | async"
@@ -66,7 +67,7 @@
         <form class="form">
             <mat-form-field style="width: 100%;">
                 <mat-label>Intention</mat-label>
-                <input [formControl]="intention2FormControl" matInput type="text" autocomplete="off">
+                <input [formControl]="intention2FormControl" matInput type="text" autocomplete="off" [disabled]="!this.editable">
             </mat-form-field>
           </form>
 
@@ -77,8 +78,8 @@
             <div class="drop-div" style="justify-content: center;">
                 <div class="activity-div">
                     <app-method-element [id]="this.methodChunk.processPart.id" [reduced]="false"></app-method-element>
-                    <button mat-icon-button (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
-                    <button mat-icon-button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> <mat-icon> edit </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeActivity()"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 3, 'Activity')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </div>
         </ng-container>
@@ -87,7 +88,7 @@
             (cdkDropListEntered)="this.showPlaceHolderActivity = false" (cdkDropListExited)="this.showPlaceHolderActivity = true">
                 <div *ngIf="this.showPlaceHolderActivity" class="method-element-div">
                     <h4 style="text-align: center;"> Drag here an activity or add </h4>
-                    <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 3, 'Activity')"> <mat-icon> add </mat-icon> </button> </h4>
+                    <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openMethodElementDialogNew(null, 3, 'Activity')"> <mat-icon> add </mat-icon> </button> </h4>
                     <h4 style="text-align: center;"> a new one </h4>
                 </div>
             </div>
@@ -100,13 +101,13 @@
             <ng-container *ngFor="let t of this.methodChunk.tools; let i = index" style="width: 100px;">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button mat-icon-button (click)="removeTool(i)"> <mat-icon> delete </mat-icon> </button>
-                    <button mat-icon-button (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> <mat-icon> edit </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeTool(i)"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="openMethodElementDialogEdit(this.methodChunk.processPart.id, 1, 'Tool')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
             <div *ngIf="this.showPlaceHolderTool" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a tool or add </h4>
-                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 1, 'Tool')"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openMethodElementDialogNew(null, 1, 'Tool')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
@@ -118,13 +119,13 @@
             <ng-container *ngFor="let t of this.methodChunk.situation; let j = index">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button mat-icon-button (click)="removeConsumedArtefact(j)"> <mat-icon> delete </mat-icon> </button>
-                    <button mat-icon-button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeConsumedArtefact(j)"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
             <div *ngIf="this.showPlaceHolderSituation" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here an artefact or add </h4>
-                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 2, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openMethodElementDialogNew(null, 2, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
@@ -136,13 +137,13 @@
             <ng-container *ngFor="let t of this.methodChunk.productPart; let k = index">
                 <div class="method-element-div">
                     <app-method-element [id]="t.id" [reduced]="false"></app-method-element>
-                    <button mat-icon-button (click)="removeProducedArtefact(k)"> <mat-icon> delete </mat-icon> </button>
-                    <button mat-icon-button (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeProducedArtefact(k)"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="openMethodElementDialogEdit(t.id, 2, 'Artefact')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
             <div *ngIf="this.showPlaceHolderProductPart" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here an artefact or add </h4>
-                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 5, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openMethodElementDialogNew(null, 5, 'Artefact')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
@@ -155,13 +156,13 @@
                 <div class="method-element-div">
                     <app-method-element [id]="t.me.id" [reduced]="false"></app-method-element>
                     <mat-checkbox [(ngModel)]="t.isSet"> Is set </mat-checkbox>
-                    <button mat-icon-button (click)="removeRole(h)"> <mat-icon> delete </mat-icon> </button>
-                    <button mat-icon-button (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> <mat-icon> edit </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeRole(h)"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="openMethodElementDialogEdit(t.me.id, 4, 'Role')"> <mat-icon> edit </mat-icon> </button>
                 </div>
             </ng-container>
             <div *ngIf="this.showPlaceHolderRole" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a role or add </h4>
-                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openMethodElementDialogNew(null, 4, 'Role')"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openMethodElementDialogNew(null, 4, 'Role')"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
@@ -175,26 +176,26 @@
                     <h4> {{t.criterionName}} </h4>
                     <mat-form-field>
                         <mat-label> Values </mat-label>
-                        <mat-select multiple [(value)]="t.valuesNamesArray" (valueChange)="criterionValueChanges(t, $event)">
+                        <mat-select [disabled]="!this.editable" multiple [(value)]="t.valuesNamesArray" (valueChange)="criterionValueChanges(t, $event)">
                             <mat-option *ngFor="let v of t.allValues" [value]="v.name"> {{v.name}} </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <button mat-icon-button (click)="removeCriterion(l)"> <mat-icon> delete </mat-icon> </button>
+                    <button mat-icon-button [disabled]="!this.editable" (click)="removeCriterion(l)"> <mat-icon> delete </mat-icon> </button>
                 </div>
             </ng-container>
             <div *ngIf="this.showPlaceHolderCriterion" class="method-element-div">
                 <h4 style="text-align: center;"> Drag here a criterion </h4>
-                <h4 style="text-align: center;"> <button mat-icon-button class="add-button" (click)="openCriterionDialog()"> <mat-icon> add </mat-icon> </button> </h4>
+                <h4 style="text-align: center;"> <button mat-icon-button [disabled]="!this.editable" class="add-button" (click)="openCriterionDialog()"> <mat-icon> add </mat-icon> </button> </h4>
                 <h4 style="text-align: center;"> a new one </h4>
             </div>
         </div>
         <div style="margin-top: 10px;">
-            <button mat-raised-button class="button-custom" (click)="saveMethodChunk()"> Save </button>
+            <button mat-raised-button [disabled]="!this.editable" class="button-custom" (click)="saveMethodChunk()"> Save </button>
            <!-- <button mat-raised-button class="button-custom" (click)="testing()"> Test </button>-->
-            <button mat-raised-button class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
+            <button mat-raised-button [disabled]="!this.editable" class="button-custom" style="margin-left: 5px;" *ngIf="this.id !== null && this.id !== undefined && this.id !== ''" (click)="deleteMethodChunk()"> Delete </button>
         </div>
     </ng-container>
-    <ng-template #tableBlock>
+<ng-template #tableBlock>
         <div style="margin-top: 10px;">
             <table id="table" style="border-collapse: collapse;">
                 <tr class="table-elements">
@@ -324,7 +325,7 @@
             </table>
         </div>
         <button mat-raised-button class="button-custom" style="margin-top: 10px;" (click)="exportPDF()"> Export to pdf </button>
-    </ng-template>
+</ng-template>
 </ng-container>
 <ng-template #loading>
     <mat-spinner></mat-spinner>

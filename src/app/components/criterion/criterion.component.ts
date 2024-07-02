@@ -19,18 +19,20 @@ export class CriterionComponent implements OnInit {
   public criterion;
   public loaded = false;
   public edit = false;
+  public editable = true;
 
   public nameFormControl: FormControl;
 
   constructor(
     public navigatorService: NavigatorService,
     private router: Router,
-    private endpointService: EndpointService,
+    public endpointService: EndpointService,
     private _snackBar: MatSnackBar,
     public dialogs: MatDialog
   ) { }
 
   ngOnInit(): void {
+    this.editable = !this.endpointService.isRepoPublic();
     if(this.id !== undefined && this.id !== null &&  this.id !== "") {
       this.endpointService.getCriterionById(this.id).subscribe(data => {
         if(data['error'] === undefined) this.criterion = this.parseCriterion(data);

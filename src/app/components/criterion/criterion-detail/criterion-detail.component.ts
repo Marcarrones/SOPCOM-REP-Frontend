@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { CriterionComponent } from '../criterion.component';
+import { EndpointService } from 'src/app/services/endpoint.service';
 
 @Component({
   selector: 'app-criterion-detail',
@@ -10,6 +11,7 @@ import { CriterionComponent } from '../criterion.component';
 })
 export class CriterionDetailComponent implements OnInit {
   
+  public editable = true;
   public id;
 
   @ViewChild(CriterionComponent) criterionComponent: CriterionComponent;
@@ -17,11 +19,13 @@ export class CriterionDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public navigatorService: NavigatorService
+    public navigatorService: NavigatorService,
+    public endpointService: EndpointService
   ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
+    this.editable = !this.endpointService.isRepoPublic();
   }
 
   public saveCriterion() {

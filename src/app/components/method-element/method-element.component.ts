@@ -26,7 +26,7 @@ export class MethodElementComponent implements OnInit {
   public figureUrl = '';
   public figure;
   public figureChanged = false;
-
+  public editable = true;
   public methodElementFormGroup: FormGroup = new FormGroup({});
 
   constructor(
@@ -38,6 +38,7 @@ export class MethodElementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.editable = !this.endpointService.isRepoPublic();
     if(this.id !== undefined && this.id !== null && this.id !== "") {
       this.endpointService.getMethodElement(this.id).subscribe(data => {
         if(data['error'] !== undefined) {
@@ -65,6 +66,13 @@ export class MethodElementComponent implements OnInit {
       description: new FormControl({value:this.methodElement.description, disabled: !this.edit}),
       abstract: new FormControl({value:this.methodElement.abstract, disabled: !this.edit})
     })
+
+    if (this.editable){
+      this.methodElementFormGroup.enable();
+    } else {
+      this.methodElementFormGroup.disable();
+    }
+
     this.methodElementFormGroup.valueChanges.subscribe(values => {
       this.navigatorService.allowChange = true;
       if(this.id === undefined || this.id === null) this.methodElement.id = values['id'];
