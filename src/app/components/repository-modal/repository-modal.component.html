@@ -1,44 +1,79 @@
-
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<div mat-dialog-content >
-    <form [formGroup]="repositoryForm" class="form" style="align-items: center;">
-        <h1 mat-dialog-title>Select repository</h1>
-        <div class="form-container">
-            <mat-form-field>
-                <mat-label> Repository </mat-label>
-                <mat-select [formControl]="selectedRepository" (selectionChange)="selectRepository($event.value)">
-                    <mat-select-trigger>{{selectedRepository.value}}</mat-select-trigger>
-                    <mat-option *ngFor="let repository of navigatorService.repositoryList.value" [value]="repository.id">
-                        {{repository.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <button mat-raised-button style="width: auto;" (click)="deleteRepository()" ><mat-icon aria-hidden="true">delete</mat-icon></button>
-        </div>
-        <br>
-        <h1 mat-dialog-title>Create repository</h1>
-      <mat-form-field>
-          <mat-label> ID </mat-label>
-          <input matInput required="true" formControlName="id" maxlength="50">
-        </mat-form-field>
-        <mat-form-field >
-            <mat-label> Name </mat-label>
-            <input matInput required="true" formControlName="name" maxlength="100">
-        </mat-form-field>
-        <mat-form-field >
-            <mat-label> Description(optional) </mat-label>
-            <input matInput formControlName="description" maxlength="200">
-        </mat-form-field>
-        <mat-form-field *ngIf="this.showStatus" >
-            <mat-label> Status </mat-label>
-            <mat-select formControlName="status" >
-                <mat-option *ngFor="let repoStatus of navigatorService.repositoryStatusList" [value]="repoStatus.id">{{repoStatus.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-    </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-raised-button class="button-custom" (click)="closeDialog()"> Close </button>
-  <button mat-raised-button class="button-custom" (click)="saveDialog()" > Save </button>
-</div>
+<h2  mat-dialog-title [innerHTML]="this.modalTitle">Repository</h2>
+<mat-dialog-content>
+    <mat-tab-group [selectedIndex]="selectedTabIndex"
+                    (selectedIndexChange)="changeTab($event)">
+        <mat-tab label="Select Repository"> 
+            <form [formGroup]="selectRepositoryForm" style="width: 100%; height: auto;">
+                <div class="row">
+                    <mat-form-field subscriptSizing="dynamic" appearance="outline" style="flex-grow: 1;">
+                        <mat-label>
+                            Select Repository
+                        </mat-label>
+                        <mat-select formControlName="selectedRepositoryControl"
+                            (selectionChange)="onSelectRepository($event.value)">
+                            <mat-option *ngFor="let repository of navigatorService.repositoryList.value" [value]="repository.id">{{repository.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div style="padding: 5px; align-content:center">
+                        <button mat-icon-button (click)="deleteSelectedRepository()"><mat-icon>delete</mat-icon></button>
+                    </div>
+                </div>
+            </form>
+        </mat-tab>
+        <mat-tab label="Update Repository" [disabled]="this.selectedRepository == null">
+            <form [formGroup]="updateRepositoryForm">
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label> Repository Id </mat-label>
+                    <input matInput formControlName="repositoryIdControl" placeholder="Repository Id" [value]="this.selectedRepository?.id">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label> Repository Name </mat-label>
+                    <input matInput formControlName="repositoryNameControl" placeholder="Repository Name"  [value]="this.selectedRepository?.name">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label> Repository Description </mat-label>
+                    <input matInput formControlName="repositoryDescriptionControl" placeholder="Repository Description (Optional)"  [value]="this.selectedRepository?.name">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label> Repository Status
+                    </mat-label>
+                    <mat-select formControlName="repositoryStatusSelectControl" placeholder="Repository Status" >
+                            <mat-option *ngFor="let repoStatus of navigatorService.repositoryStatusList" [value]="repoStatus.id">{{repoStatus.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </mat-tab>
+        <mat-tab label="Add Repository"> 
+            <form [formGroup]="createRepositoryForm">
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label>
+                        Repository Id
+                    </mat-label>
+                    <input matInput formControlName="repositoryIdControl" placeholder="Repository Id">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label>
+                        Repository Name
+                    </mat-label>
+                    <input matInput formControlName="repositoryNameControl" placeholder="Context Name">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" >
+                    <mat-label> Repository Description </mat-label>
+                    <input matInput formControlName="repositoryDescriptionControl" placeholder="Repository Description (Optional)"  [value]="this.selectedRepository?.name">
+                </mat-form-field>
+                <mat-form-field subscriptSizing="dynamic" appearance="outline" style="display: none;">
+                    <mat-label>
+                        Context Type
+                    </mat-label>
+                    <mat-select formControlName="repositoryStatusSelectControl" placeholder="Repository Status" >
+                        <mat-option *ngFor="let repoStatus of navigatorService.repositoryStatusList" [value]="repoStatus.id">{{repoStatus.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-flat-button mat-dialog-close>Close</button>
+    <button mat-flat-button *ngIf="selectedTabIndex != 0" (click)="onSubmit()">{{(selectedTabIndex == 1) ? "Update" : "Submit"}}</button>
+</mat-dialog-actions>

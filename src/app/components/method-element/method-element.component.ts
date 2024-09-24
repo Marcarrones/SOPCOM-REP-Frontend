@@ -108,12 +108,12 @@ export class MethodElementComponent implements OnInit {
       var found = this.navigatorService.methodChunkList.findIndex((element) => element.activity == this.methodElement.id);
       
       if(found >= 0){
-      if(this.navigatorService.methodChunkList[found].strategy == null || this.methodElement.abstract == false){
-        this.error_abstract = false;
-      }else if(this.methodElement.abstract == 1){
-        this.error_abstract = true;
+        if(this.navigatorService.methodChunkList[found].strategy == null || this.methodElement.abstract == false){
+          this.error_abstract = false;
+        }else if(this.methodElement.abstract == 1){
+          this.error_abstract = true;
+        }
       }
-    }
     }
     if(this.methodElementFormGroup.valid) {
       this.navigatorService.allowChange = false;

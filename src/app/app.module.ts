@@ -40,7 +40,7 @@ import { MapComponent } from './components/Maps/map/map.component';
 import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
 import { GrafComponent } from './components/Maps/graf/graf.component';
 import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
-import { NoRepositorySelectedComponent } from './no-repository-selected/no-repository-selected.component';
+import { NoRepositorySelectedComponent } from './components/no-repository-selected/no-repository-selected.component';
 import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
@@ -93,7 +93,6 @@ import { MatCardModule } from '@angular/material/card';
     MatSnackBarModule,
     MatAutocompleteModule,
     MatTooltipModule,
-    MatIconModule,
     MatCardModule
   ],
   providers: [],

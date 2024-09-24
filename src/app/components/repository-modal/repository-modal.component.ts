@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { Repository } from 'src/app/models/repository';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { NavigatorService } from 'src/app/services/navigator.service';
@@ -14,110 +13,129 @@ import { NavigatorService } from 'src/app/services/navigator.service';
 })
 
 export class RepositoryModalComponent implements OnInit {
+  modalTitle = "Select Repository";
+  selectedTabIndex = 0;
   // Form
   showStatus = false;
   
-  selectedRepository = new FormControl();
+  selectedRepository : Repository | null;
 
-  repositoryForm = new FormGroup({
-    id: new FormControl(''),
-    name: new FormControl(''),
-    description: new FormControl(),
-    status : new FormControl(1)
-  });
+  selectRepositoryForm : FormGroup;
+  updateRepositoryForm : FormGroup;
+  createRepositoryForm : FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<RepositoryModalComponent>,
     public navigatorService : NavigatorService,
     public endpointService : EndpointService,
     public _snackBar: MatSnackBar
-  ) {  }
+  ) {  
+    this.selectRepositoryForm = new FormGroup({
+      selectedRepositoryControl: new FormControl()
+    });
+
+    this.updateRepositoryForm = new FormGroup({
+      repositoryIdControl: new FormControl({value: '', disabled: true}),
+      repositoryNameControl: new FormControl(''),
+      repositoryDescriptionControl: new FormControl(),
+      repositoryStatusSelectControl: new FormControl(),
+    });
+
+    this.createRepositoryForm = new FormGroup({
+      repositoryIdControl: new FormControl(''),
+      repositoryNameControl: new FormControl(''),
+      repositoryDescriptionControl: new FormControl(''),
+      repositoryStatusSelectControl: new FormControl(navigatorService.repositoryStatusList.find(s => s.name === 'Draft')?.id ?? 1),
+    });
+
+    this.endpointService.selectedRepository.subscribe((value) => { this.setSelectedRepository(value) });
+  }
 
   ngOnInit(): void {
     this.updateRepositoryList();
     this.endpointService.selectedRepository.subscribe((value) => { 
-      this.loadRepository(value);
+      this.setSelectedRepository(value);
     });
   }
 
+  changeTab(tab: number){
+    this.selectedTabIndex = tab;
+    switch (tab) {
+      case 0:
+        this.modalTitle = 'Select Repository';
+        break;
+      case 1:
+        this.modalTitle = 'Update Repository';
+        break;
+      case 2:
+        this.modalTitle = 'Create Repository';
+        break;
+      default:
+    }
+  }
+
   public updateRepositoryList() {
-    this.endpointService.getAllRepositories().subscribe(repositories => {
-      repositories.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 0);
-      this.navigatorService.repositoryList.next(repositories); // Updates NavigatorService repositoryList -> triggers subscription in ngOnInit
-      this.selectRepository(this.selectedRepository.value);
-    });
     this.navigatorService.refreshRepositoryList();
   }
   
-  public loadRepository(repository : Repository | null){
-    console.log("loading: " + repository?.id ?? "null");
-    this.selectedRepository.setValue(repository?.id ?? null);
-    if (repository != null){
-      this.repositoryForm.setValue({id : repository!.id, name : repository!.name, description : repository!.description, status : repository.status.id});
-      this.showStatus=true;
-    } else {
-      this.showStatus = false;
-    }
+  public onSelectRepository(selectedRepositoryID) {
+    var repository = this.navigatorService.repositoryList.value.find(r => r.id === selectedRepositoryID) ?? null;
+    console.log("onSelectRepository", selectedRepositoryID, repository);
+    this.endpointService.selectedRepository.next(repository); // selectedRepository is set through subscription in ngOnInit
+    this._snackBar.open("Repository " + (repository?.name ?? "X") + " selected", "Close", {duration: 5000});
+  }
+  
+  public setSelectedRepository(repository : Repository | null){
+    this.selectedRepository = repository;
+    this.selectRepositoryForm.controls['selectedRepositoryControl'].setValue(repository?.id);
+
+    this.updateRepositoryForm.controls['repositoryIdControl'].setValue(repository?.id);
+    this.updateRepositoryForm.controls['repositoryNameControl'].setValue(repository?.name);
+    this.updateRepositoryForm.controls['repositoryDescriptionControl'].setValue(repository?.description);
+    this.updateRepositoryForm.controls['repositoryStatusSelectControl'].setValue(repository?.status.id);
   }
 
   public closeDialog() {
     this.dialogRef.close();
+    this.selectedTabIndex = 0;
   }
 
-  public saveDialog() {
-    let repoWithSameID = this.navigatorService.repositoryList.value.find(r => r.id == this.repositoryForm.controls['id'].value) != undefined;
-
-    if (repoWithSameID) {
-      this.updateRepository();
+  public onSubmit() {
+    if (this.selectedTabIndex == 1) {
+      this.endpointService.updateRepository(this.selectedRepository?.id, this.serializeRepositoryForm(this.updateRepositoryForm, this.selectedRepository)).subscribe(_ => this.updateRepositoryList());
     } else {
-      this.addRepository();
+      this.endpointService.addRepository(this.serializeRepositoryForm(this.createRepositoryForm)).subscribe(_ => {
+        this.updateRepositoryList();
+        this.navigatorService.repositoryList.subscribe((_) => {
+          this.setSelectedRepository(this.createRepositoryForm.controls['repositoryIdControl'].value);
+          this.changeTab(0);
+          this.navigatorService.repositoryList.unsubscribe();
+        });
+      });
     }
     this.closeDialog();
   }
 
-  public selectRepository(selectedRepositoryID) {
-    console.log("selectRepository");
-    this.selectedRepository.setValue(selectedRepositoryID);
-    var selectedRepository = this.navigatorService.repositoryList.value.find(r => r.id == selectedRepositoryID) ?? null;
-
-    this.endpointService.selectedRepository.next(selectedRepository);
-    this._snackBar.open("Repository " + (this.endpointService.selectedRepository.value?.name ?? "null") + " selected", "Close", {duration: 5000});
-  }
-
-  public updateRepository() {
-    let data = this.formToJSON();
-    this.endpointService.updateRepository(this.repositoryForm.controls['id'].value, data)
-      .subscribe(_ => {
-        this.updateRepositoryList();
-        this.endpointService.selectedRepository.next(this.formToRepository());
-      });
-  }
-
-  public addRepository(){
-    this.endpointService.addRepository(this.formToJSON())
-      .subscribe(_ => this.updateRepositoryList() );
-  }
-
-  public deleteRepository() {
-    this.endpointService.deleteRepository(this.selectedRepository.value);
-    this.endpointService.selectedRepository.next(null);
-    this.updateRepositoryList();
-  }
-
-  public identify(index, item) {
-    return item.id;
-  }
-
-  public formToJSON() {
-    return JSON.stringify(this.formToRepository());
-  }
-
-  public formToRepository() : Repository {
-      return {
-      id : this.repositoryForm.controls['id'].value,
-      name : this.repositoryForm.controls['name'].value,
-      description : this.repositoryForm.controls['description'].value,
-      status : this.repositoryForm.controls['status'].value ?? this.navigatorService.repositoryStatusList[0].id,
-      }
+  public deleteSelectedRepository() {
+    if (this.selectedRepository == null) {
+      this._snackBar.open("No repository selected", "Close", {duration: 2000});
+    } else {
+      this.endpointService.deleteRepository(this.selectedRepository.id);
+      this.endpointService.selectedRepository.next(null);
+      this.updateRepositoryList();
+      this._snackBar.open("Repository deleted successfully", "Close", {duration: 2000});
     }
+  }
+
+  private serializeRepositoryForm(formGroup: FormGroup, fallback : Repository | null = null): Repository {
+    var r = new Repository(
+      formGroup.controls['repositoryIdControl']?.value ?? fallback?.id,
+      formGroup.controls['repositoryNameControl']?.value ?? fallback?.name,
+      formGroup.controls['repositoryDescriptionControl']?.value ?? fallback?.description,
+      formGroup.controls['repositoryStatusSelectControl']?.value ?? fallback?.status,
+      fallback?.inUse ?? false // false upon creation
+    );
+    //console.log('Serialized context: ', c);
+    return r;
+  }
 }

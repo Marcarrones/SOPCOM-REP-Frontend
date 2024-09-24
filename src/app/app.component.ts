@@ -21,8 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.endpointSertvice.selectedRepository.subscribe((value) => {
       this.selectedRepository = value;
-      console.log("app.component");
-      console.log(value);
+      console.log("app.component", this.selectedRepository);
     });
   }
 
@@ -31,7 +30,7 @@ export class AppComponent implements OnInit {
 
   public openRepositoryModal() {
     this.matDialog.open(RepositoryModalComponent, {
-      width: '350px',
+      //width: '50%',
     });
   }
 }
