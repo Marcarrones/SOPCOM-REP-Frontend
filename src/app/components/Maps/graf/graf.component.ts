@@ -53,7 +53,7 @@ export class GrafComponent implements OnInit {
 
 async ngOnInit() {
   this.editable = !this.endpointService.isRepoPublic();
-  // TODO: Disable editing graph if the repository is public
+
   if(this.acceso != true){ //Creació de Graf, Buit (no existent)
     this.nodes = new DataSet([]);
     this.edges = new DataSet([]);
@@ -192,6 +192,8 @@ async ngOnInit() {
 
 
   loadVisTree(treedata) {
+    console.log('loadVisTree', treedata, treedata.nodes, treedata.edges);
+
     var a = this;
     var options = {
       physics: false,
@@ -281,6 +283,7 @@ async ngOnInit() {
       this._snackBar.open('You have to choose two Goals to create a Strategy', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
     }else{
       let count = this.llistat_strategies.filter((v) => (v.id.startsWith('S_' + this.createSt.nativeElement.value + '_'))).length;
+      console.log(this.createSt.nativeElement);
       let flag = 0; //0 = unico, ninguno con mismo nombre
       if(count == 0){
         //console.log('unico');
@@ -545,7 +548,7 @@ async ngOnInit() {
     let body = this.stringifyMap();
     if (!this.editable)
       return;
-    
+    /*
     await this.endpointService.updateMap(this.readMapid, body).subscribe(data => {
       if(data.length > 0){
         data.forEach(async x => {
@@ -554,6 +557,7 @@ async ngOnInit() {
       }      
       
     });
+    */
     //this._snackBar.open('Graph Updated!', 'X', {duration: 1500, panelClass: ['green-snackbar']});
     //console.log('GRAPH UPDATED!');
   }
@@ -652,7 +656,7 @@ public deleteSelected2() {
         var found = this.llistat_strategies_del_map.find((element) => element.id == this.selected);
 
         this.network.canvas.redraw();
-    })
+      })
     }
     }else if(this.paramsauxiliar.edges.length == 0){
       this.endpointService.deleteGoalfromMap(this.selected).subscribe(async data => {

@@ -3,9 +3,10 @@ import { Values } from 'src/utils/values';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
 import { Repository } from '../models/repository';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { __values } from 'tslib';
 import { Router } from '@angular/router';
+import { Map } from '../models/map';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,9 @@ export class EndpointService {
 
 
 // --------------- REPOSITORIES --------------- 
-  public isRepoPublic() {
-    return this.selectedRepository.value?.status.name == 'Public' ?? false;
+  public isRepoPublic() { 
+    console.log("isRepoPublic", this.selectedRepository.value);
+    return this.selectedRepository.value?.status.name == 'Public' ?? true;
   }
 
 
@@ -75,7 +77,7 @@ export class EndpointService {
   }
   // GET /index.php/method-chunk/maps
   public getAllMethodChunkwithMap() {
-    const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + 'maps' + '?' + this.repositoryParam;
+    const request = this.URL + Values.RESOURCES.METHOD_CHUNK + '/' + Values.RESOURCES.MAPS + '?' + this.repositoryParam;
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
   // GET /index.php/:id
@@ -112,6 +114,8 @@ export class EndpointService {
   }
   // PUT /index.php/method-elements/:id
   public updateMethodElement(id, data) {
+    console.log("updateMethodElement");
+    console.log(data);
     const request = this.URL + Values.RESOURCES.METHOD_ELEMENT + '/' + id;
     return this.http.put<any[]>(request, data).pipe(res => res);
   }
@@ -160,16 +164,14 @@ export class EndpointService {
 
   // --------------- MAPS --------------- 
   // GET /index.php/maps
-  public getAllMaps() {
+  public getAllMaps() : Observable<Map[]> {
     const request = this.URL + Values.RESOURCES.MAPS + '?' + this.repositoryParam;  
-    //return this.http.get<any[]>('http://localhost:1031/index.php/maps').pipe(map(response => response));
     return this.http.get<any[]>(request).pipe(map(response => response));
   }
   // GET /index.php/maps/:id
-  public getMap(id) {
-    const request = this.URL + Values.RESOURCES.MAPS + '/' + id;
-    //return this.http.get<any[]>('http://gessi3.essi.upc.edu:1031/index.php/maps/' + id);
-    return this.http.get<any[]>(request);
+  public getMap(id) : Observable<Map> {
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id + '?fullMap=true';
+    return this.http.get<any>(request).pipe(map(Map.fromJson));
   }
   // POST /index.php/maps
   public addMap(data) {
@@ -177,9 +179,14 @@ export class EndpointService {
     return this.http.post<any>(request, data)
   }
   // PUT /index.php/maps
-  public updateMap(id, data) {
-    const request = this.URL + Values.RESOURCES.MAPS + '/' + id;
-    return this.http.put<any>(request, data).pipe(map(response => response));
+  public updateMapName(id, name: string) {
+    const request = this.URL + Values.RESOURCES.MAPS + '/' + id + '?' + this.repositoryParam;
+    var response = new BehaviorSubject<any>(1); // this is needed to ensure updte is sent even if caller isn't subscribing
+    this.http.put<any>(request, { name: name }).subscribe((x) => { 
+      response.next(x); 
+      response.complete();
+    });
+    return response;
   }
   // DELETE /index.php/maps/:id
   public deleteMap(id) {

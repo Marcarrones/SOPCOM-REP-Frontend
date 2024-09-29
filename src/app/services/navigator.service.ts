@@ -41,7 +41,9 @@ export class NavigatorService{
 
   constructor(
     public endpointService: EndpointService
-  ) { }
+  ) { 
+   this.repositoryList.subscribe((value) => console.log("NavigatorService.repositoryList", value));
+  }
 
   public refreshRepositoryList(){
     this.endpointService.getAllRepositories().subscribe(repositories => {

@@ -1,341 +1,478 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit, Inject} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef, Inject} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
-import { FormControl, Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GoalComponent } from '../../goal/goal.component';
-import { GrafComponent } from '../graf/graf.component';
-import { Goal } from 'src/app/models/goal';
-import { Observable } from 'rxjs';
-import {distinct, map, startWith} from 'rxjs/operators';
 import { DataSet } from "vis-data/peer/esm/vis-data";
-import { Network } from "vis-network/peer/esm/vis-network";
-import {MatFormFieldModule} from '@angular/material/form-field'; 
-import { MatInputModule } from '@angular/material/input';
+import { Network, Node, Edge, Data, IdType } from "vis-network/peer/esm/vis-network";
+import { Map } from 'src/app/models/map';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Goal } from 'src/app/models/goal';
+import { Strategy } from 'src/app/models/strategy';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { v4 as uuidv4 } from 'uuid';
 
-
+enum EditMode {
+  None,
+  Goal,
+  Strategy,  
+}
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit {
-  public edit = false;
-  @ViewChild('treeContainer', { static: true }) treeContainer: ElementRef;
-  @ViewChild("compGraf", { static: true }) graf: ElementRef;
-
-  @Input() id;
-  public nooodes;
-  public edgeees;
-  public container;
-  public data;
-  public options;
-  public network;
-  public map;
-  public loaded = false;
-  public nameFormControl: FormControl;
-  public idFormControl: FormControl;
-  public goalFormControl: FormControl;
-  public intention;
-  public goalsFilter: Observable<string[]>;
-  public pruebas;
-
-  public editable  = true;
-
-
-
+  @ViewChild("map", {static: true}) networkContainer!: ElementRef;
+  get hasUnsavedChanges() { 
+    return this.mapFormGroup.controls['mapName'].dirty || this.mapFormGroup.controls['mapId'].dirty;
+  };
   
+  editable : boolean = true;
+  // Contains map name/id fields
+  mapFormGroup: FormGroup;
 
+  currentMap: Map | undefined;
+  
+  // Network Graph element
+  networkGraph: Network | undefined;
+  // Graph options
+  options: object = {
+    physics: false,
+    interaction: { 
+      hover: true, 
+      dragView: true,
+    },
+    manipulation: {
+      enabled: true,
+      addNode: (nodeData: Node, callback: any) => this.createNewGoal(nodeData, callback),
+      addEdge: (edgeData: Edge, callback: any) => this.createNewStrategy(edgeData, callback),  
+    },
+  }; 
+  // Id of selected node element
+  selectedId: IdType | undefined;
+  // Contains goal/strategy name fields
+  mapEditFormGroup: FormGroup;
+  // Graph edit mode
+  editMode: EditMode = EditMode.None;
+  EditMode = EditMode;
 
-  //Sample test data it can be dynamic as well.
-  QuestionsForSubmittedAnswersArray: any[] = [
-    {
-      Goal: '',
-      Strategy: '',
-      Target: 'Stop',
-    }
-  ];
-
-  FeedBack!: FormGroup;
 
   constructor(
-    public navigatorService: NavigatorService,
-    private router: Router,
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
+    private navigatorService: NavigatorService,
     private endpointService: EndpointService,
-    private http: HttpClient,
+    private route: ActivatedRoute,
+    private dialogs: MatDialog,
     private _snackBar: MatSnackBar,
-    public formBuilder: FormBuilder,
-    public dialogs: MatDialog
-  ) {  }
+  ) {
+      this.editable = !this.navigatorService.endpointService.isRepoPublic();
 
+      this.mapFormGroup = new FormGroup({
+        mapId: new FormControl({ value: '', disabled: !this.editable }, Validators.required),
+        mapName: new FormControl({ value: '', disabled: !this.editable }, Validators.required),
+      });
 
- 
+      this.mapEditFormGroup = new FormGroup({
+        goalName: new FormControl({ value: '', disabled: !this.editable }),
+        strategyName: new FormControl({ value: '', disabled: !this.editable }),
+        updateName: new FormControl({ value: '', disabled: !this.editable && this.selectedId == undefined }),
+      });
+     }
 
-  ngOnInit(): void {
-    this.editable = !this.endpointService.isRepoPublic();
-    this.id = this.route.snapshot.paramMap.get('id')!;
-    this.createContactForm();
-    this.sampleData();
-    if(this.id !== undefined && this.id !== null &&  this.id !== "") {
-      this.endpointService.getMap(this.id).subscribe(data => {
-        if(data['error'] === undefined) 
-          this.map = this.parseMap(data);
-        else {
-          this.edit = true;
-          this.map = new Map(null);
-          this.loadFormControls();
-          this.navigatorService.allowChange = false;
-        }
-        this.loadFormControls();
-        this.loaded = true;
-        
-      })
-    } else {
-      this.map = new Map(null);
-      this.edit = true;
-      this.loadFormControls();
-      this.loaded = true;
-      this.navigatorService.allowChange = false;
-      
-
+  ngOnInit(){
+    var id = this.route.snapshot.paramMap.get('id');
+    if(id != null) {
+      this.endpointService.getMap(id).subscribe((value) => {
+        this.currentMap = value;
+        this.mapFormGroup.controls['mapId'].setValue(this.currentMap.id);
+        this.mapFormGroup.controls['mapId'].disable();
+        this.mapFormGroup.controls['mapName'].setValue(this.currentMap.name);
+        this.buildNetworkGraph(this.currentMap);
+      });
     }
+    console.log("ngOnInit", this.currentMap, this.mapEditFormGroup, this.mapFormGroup);
   }
 
-
-  
-
-  createContactForm() {
-    this.FeedBack = this.formBuilder.group({
-      Rows: this.formBuilder.array([this.initRows()]),
-    });
-  }
-
-  initRows() {
-    return this.formBuilder.group({
-      Goal: ['Start'],
-      Strategy: [''],
-      Target: [''],
-    });
-  }
-
-  get formArr() {
-    return this.FeedBack.get('Rows') as FormArray;
-  }
-  
-  sampleData() {
-    this.QuestionsForSubmittedAnswersArray.forEach((row) => {
-      this.formArr.push(this.addRow(row));
-    });
-  }
-
-addRow(obj) {
-    return this.formBuilder.group({
-      Goal: [obj.Goal],
-      Strategy: [obj.Strategy],
-      Target: [obj.Target],
-    });
-  }
-
-  addNewRow() {
-    let obj1 = {
-      Goal: '',
-      Strategy: '',
-      Target: 'Stop',
-    };
-    this.formArr.push(this.addRow(obj1));
-  }
-
-
-  deleteRow(index: number) {
-    this.formArr.removeAt(index);
-  }
-
-
-  private parseMap(data) {
-    this.edit = false;
-    return data;
-  }
-
-  private loadFormControls() {
-    this.nameFormControl = new FormControl({value: this.map.name, disabled: !this.edit}, Validators.required);
-    this.nameFormControl.valueChanges.subscribe(value => {
-      this.navigatorService.allowChange = true;
-      this.map.name = value;
-    })
-    this.idFormControl = new FormControl({value: this.map.id, disabled: !this.edit}, Validators.required);
-    this.idFormControl.valueChanges.subscribe(value => {
-      this.navigatorService.allowChange = true;
-      this.map.id = value;
-    })
-    
-    
-    if(this.intention !== undefined && this.intention !== null)
-      this.goalFormControl = new FormControl(this.intention.name, Validators.required)
-    else this.goalFormControl = new FormControl('', Validators.required)
-    this.goalsFilter = this.goalFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
-    
-  }
-  
-  private _filter(value) {
-    return this.navigatorService.goalList.filter(goal => goal.name.toLowerCase().includes(value.toLowerCase()))
-  }
-
-
-
-
-  public stringifyName() {
-    let body = {id: this.map.id, name: this.map.name, author:'felix'};
-    return body;
-  }
-
-
-
-
-
-
-public stringifyMap() {
-  let body = {name: this.map.name, id: this.map.id.trim(), repository: this.endpointService.selectedRepository.value?.id ?? 0};
-  return JSON.stringify(body);
-}
-
-
-
-public nada(){
-}
-
-public openGoalDialog() {
-  const dialogRef = this.dialog.open(GoalComponent, {
-    width: '1000px',
-  });
-  dialogRef.afterClosed().subscribe(result => {
-    this.navigatorService.refreshGoalList();
-  });
-}
-
-public intentionSelected(event) {
-  this.edit = true;
-  let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
-  if(index !== -1) this.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
-}
- 
-
-
-
-
-
-
-
-public openEditMapDialog() {
-  const dialogRef = this.dialogs.open(UpdateMapDialog, {
-    width: '500px',
-    data: {id: this.map.id}
-  })
-  dialogRef.afterClosed().subscribe(result => {
-    
-  })
-} 
-
-
-
-
-public async submitMap(){
-
-  let body = this.stringifyMap();
-
-  
-if(this.map.id != undefined && this.map.name != undefined ){
-  if(!isNaN(this.map.id)){
-    if(this.map.id.trim().length != 0 && this.map.name.trim().length != 0 ){
-      await this.endpointService.addMap(body).subscribe(data => {
-      
-        if(data.id == 0){
-          this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-          this.navigatorService.refreshMapList();
-          this.crea_elements_map(); //crea start i stop base
-          
-        }else{
-          this._snackBar.open("Map ID already exists", 'X', {duration: 3000, panelClass: ['green-snackbar']});
-        }
-        
-    })
-    }else{
+  // Determines if can update, shows error message if not
+  evaluateCanSubmit(isUpdate = false) : boolean {
+    var id = this.mapFormGroup.controls['mapId'].value;
+    var name = this.mapFormGroup.controls['mapName'].value;
+    if (id == '' || name == ''){
       this._snackBar.open("Error! ID and Name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    } else if(this.navigatorService.mapList.find(map => map.id == id) != undefined && !isUpdate) {
+      this._snackBar.open("Error! ID already exists", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    } else {
+      return true;
     }
-  }else{
-    this._snackBar.open("Error! ID has to be numerical", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    return false;
   }
-  }else{
-    this._snackBar.open("Error! Introduce ID and Name", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-  }
+  
+  submitMap(){
+    if (!this.editable)
+      return; // Do nothing if not editable 
+    var canSubmit = this.evaluateCanSubmit(this.currentMap != undefined);
 
-           
-}
+    // Update
+    if (this.currentMap != undefined && canSubmit) { 
+        this.endpointService.updateMapName(this.currentMap.id, this.mapFormGroup.controls['mapName'].value).subscribe((_) => {
+          this._snackBar.open("Map name updated!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
+          this.currentMap = this.currentMap!.clone(this.mapFormGroup.controls['mapName'].value);
+          console.log("update", this.currentMap, _);
+          this.navigatorService.refreshMapList();
+      });
+    } 
+    // Add map
+    else if (canSubmit) { 
+      var body = {
+        id: this.mapFormGroup['mapId'].value,
+        name: this.mapFormGroup['mapName'].value,
+        repository: this.endpointService.selectedRepository.value!.id
+      };
 
-
-public async crea_elements_map(){
-  let data1 = {id: this.map.id, name: 'Start', map: this.map.id, x: '-100.0', y: '0.0'};
-  await this.endpointService.addNewGoal(data1).subscribe(async data => {
-
-
-    let data2 = {id: this.map.id, name: 'Stop', map: this.map.id, x: '200.0', y: '0.0'};
-    await this.endpointService.addNewGoal(data2).subscribe(dataa => {
-    this.router.navigate(['/map', this.map.id.trim()]);
-  });
-  });  
-}
-
-
-
-
-}
-
-
-
-
-@Component({
-  selector: 'update-map-dialog',
-  templateUrl: './update-map-dialog.html',
-  styleUrls: ['./update-map-dialog.html']
-})
-export class UpdateMapDialog {
-  @ViewChild("noumap_name", { static: true }) noumapname: ElementRef;
-  constructor(
-    public dialogRef: MatDialogRef<UpdateMapDialog>,
-    @Inject(MAT_DIALOG_DATA) public data,
-    public endpointService: EndpointService,
-    public navigatorService: NavigatorService,
-    private _snackBar: MatSnackBar,
-    private router: Router,
-    
-  ) {}
-
-  public name: String = '';
-
-  public updateMapName() {
-    if(this.noumapname.nativeElement.value.trim().length > 0){
-      let body = {name: this.noumapname.nativeElement.value, repository: this.endpointService.selectedRepository.value?.id ?? 0}
-      this.endpointService.updateMap(this.data.id, body).subscribe(data => {
+      this.endpointService.addMap(body).subscribe((_) => {
+        this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMapList();
-        this.router.navigate(['/map/' + this.data.id]);
-      })
-      
-    }else{
-      this._snackBar.open("Invalid name", 'X', {duration: 2000, panelClass: ['red-snackbar']});
+        this.currentMap = Map.fromJson(body);
+        console.log("create", this.currentMap);
+      });
     }
-    this.closeDialog(true)
   }
 
-  closeDialog(reload = false): void {
-    this.dialogRef.close(reload ? 1 : 2);
+  buildNetworkData(map: Map | undefined) : Data {
+    const nodes = new DataSet<Node>([]);
+    const edges = new DataSet<Edge>([]);
+    if (map != undefined) {
+      map.goals.forEach(g => nodes.add(g.asNode()));
+      map.strategies.forEach(s => {
+        nodes.add(s.asNode());
+        edges.add(s.asEdge());
+      });
+    }
+    return { nodes, edges };
+  }
+
+  buildNetworkGraph(map: Map | undefined) {
+    const data = this.buildNetworkData(map);
+    console.log("Build Network Graph", map, data, this.networkGraph);
+    this.networkGraph = new Network(this.networkContainer!.nativeElement, data, this.options);
+
+    this.networkGraph.on("select", (params) => this.onSelectNode(params));
+    this.networkGraph.on("dragEnd", (params) => this.onDragEnd(params));
+  }
+
+  instructions_popup() {    
+    this.dialogs.open(InstructionsDialog, { width: '50%' })  
+  } 
+
+  //#region Network Graph Events
+  onSelectNode(selectEvent: any) {
+    this.selectedId = selectEvent.nodes[0] ?? undefined;
+    const value = this.selectedId?.toString().startsWith('S_') ? 
+        this.currentMap!.strategies.find(Strategy.findByIdType)?.name : 
+        this.currentMap!.goals.find(g => g.id == this.selectedId)?.name ?? '';
+    this.mapEditFormGroup.controls['updateName'].setValue(value);
+    console.log("Select", this.selectedId, this);
+  }
+
+  onDragEnd(dragEndEvent: any) {
+    this.selectedId = dragEndEvent.nodes[0] ?? undefined;
+    if (this.selectedId != undefined) {
+      const isStrategy = this.selectedId.toString().startsWith('S_');
+      const node = isStrategy ? this.currentMap!.strategies.find(Strategy.findByIdType) : this.currentMap!.goals.find(g => g.id == this.selectedId);
+      console.log("DragEnd", dragEndEvent.pointer.canvas, this.selectedId, node);
+      if (node != undefined) {
+        const body = {
+          id: node.id,
+          x: dragEndEvent.pointer.canvas.x,
+          y: dragEndEvent.pointer.canvas.y,
+        };
+        if (isStrategy){
+          this.endpointService.updateStrategy(node.id, body).subscribe((_) => {
+            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
+            this.currentMap!.strategies.push(Strategy.fromJson(_));
+          });
+        } else {
+          this.endpointService.updateGoal(node.id, body).subscribe((_) => {
+            this.currentMap!.goals = this.currentMap!.goals.filter(g => g.id != this.selectedId);
+            this.currentMap!.goals.push(Goal.fromJson(_));
+          });
+        }
+      }
+    }
+  }
+  //#endregion
+
+  //#region Map Actions
+  toggleAddElement(editMode: EditMode){
+    console.log("Toggle Add Element", editMode, this.editable, this.selectedId);
+    if (!this.editable) {
+      this._snackBar.open("Error! Map is not editable", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+      editMode = EditMode.None;
+    }
+
+    switch (editMode) {
+      case EditMode.Goal:
+        if (this.mapEditFormGroup.controls['goalName'].value == '') 
+          this._snackBar.open("Error! Goal name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+        else
+          this.networkGraph!.addNodeMode();
+      break;
+      case EditMode.Strategy:
+        if (this.mapEditFormGroup.controls['strategyName'].value == '') 
+          this._snackBar.open("Error! Strategy name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+        else
+          this.networkGraph!.addEdgeMode();
+      break;
+      default:
+        this.networkGraph!.disableEditMode();
+      break;
+    }
+    // update edit mode
+    this.editMode = editMode;
+  }
+  //#endregion
+
+  createNewGoal(nodeData: Node, callback:(nodeData: Node)=> void) {
+    console.log("Create new goal", nodeData, this.mapFormGroup, this.mapEditFormGroup);
+    const body  = { 
+      name: this.mapEditFormGroup.controls['goalName'].value, 
+      x: nodeData.x,
+      y: nodeData.y,
+      map: this.currentMap!.id, 
+    };
+    this.endpointService.addNewGoal(body).subscribe( data => {
+      console.log("New Goal", data, Goal.fromJson(data), callback);
+      const newGoal = Goal.fromJson(data);
+      this.currentMap!.goals.push(newGoal);
+      this.networkGraph!.addNodeMode(); // call again to enable callback
+      callback(newGoal.asNode());
+      this.networkGraph!.disableEditMode(); // disable after adding node
+      this._snackBar.open("Goal added", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    });
+    this.toggleAddElement(EditMode.None);
+  }
+
+  // Evaluate if can create a new strategy and show error message if not
+  evaluateCanCreateNewStrategy(edge: Edge): boolean {
+    const from = this.currentMap!.goals.find(g => g.id == edge.from?.toString() ?? '');
+    const to = this.currentMap!.goals.find(g => g.id == edge.to?.toString() ?? '');
+
+    const fromStart = from?.id == this.currentMap!.start.id;
+    const fromEnd = from?.id == this.currentMap!.stop.id;
+    const toStart = to?.id == this.currentMap!.start.id;
+    const toEnd = to?.id == this.currentMap!.stop.id;
+
+    if( from == undefined || to == undefined) {
+      this._snackBar.open('You have to choose two Goals to create a Strategy', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    }else if (from.id == to.id){
+      this._snackBar.open('You have to choose 2 different nodes', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    } else if(fromEnd){
+      this._snackBar.open('You cannot choose Stop as a source goal', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    } else if(toStart){
+      this._snackBar.open('You cannot choose Start as a target goal', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    } else if(fromStart && toEnd){
+      this._snackBar.open('You cannot connect Start & Stop directly', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    } else if(this.currentMap!.strategies.find(s => s.name == this.mapEditFormGroup.controls['strategyName']?.value) != undefined){
+      this._snackBar.open('Strategy with the same name is already assigned', 'X', {duration: 2000, panelClass: ['blue-snackbar']});
+      return false;
+    }
+    return true;
+  }
+
+  createNewStrategy(edgeData: Edge, callback: (edgeData: Edge) => void) {
+    console.log("Create new strategy", edgeData, this.mapFormGroup, this.mapEditFormGroup);
+    if (this.evaluateCanCreateNewStrategy(edgeData)) {
+      const fromPos = this.networkGraph!.getPosition(edgeData.from!);
+      const toPos = this.networkGraph!.getPosition(edgeData.to!);
+      const body = {
+        id: 'S_' + uuidv4(),
+        name: this.mapEditFormGroup.controls['strategyName'].value,
+        goal_src: edgeData.from?.toString() ?? '',
+        goal_tgt: edgeData.to?.toString() ?? '',
+        x: ((fromPos.x + toPos.x) / 2),
+        y: ((fromPos.y + toPos.y) / 2),
+        map: this.currentMap!.id,
+      };
+      this.endpointService.addNewStrategy(body).subscribe( data => {
+        console.log("New Strategy", data, Strategy.fromJson(data));
+        const newStrategy = Strategy.fromJson(data);
+        this.currentMap!.strategies.push(newStrategy);
+        this._snackBar.open("Strategy added", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+        this.buildNetworkGraph(this.currentMap); // rebuild graph
+      });
+    } 
+    this.toggleAddElement(EditMode.None);
+  }
+
+  updateSelectedElement() {
+    console.log("Update selected element", this.selectedId, this.currentMap, this);
+    const newValue = this.mapEditFormGroup.controls['updateName'].value;
+    if (this.selectedId == undefined){
+      this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    } else if (newValue != '') {
+      this._snackBar.open("Error! New name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    } else {
+      const goal = this.currentMap!.goals.find(g => g.id == this.selectedId);
+      const strategy = this.currentMap!.strategies.find(Strategy.findByIdType);
+      const data = {
+        name: newValue,
+        x: goal?.x ?? strategy?.x,
+        y: goal?.y ?? strategy?.y,
+      }
+      if (goal != undefined && strategy == undefined) {
+        this.endpointService.updateGoal(goal.id, data).subscribe((_) => {
+          this.currentMap!.goals = this.currentMap!.goals.filter(g => g.id != this.selectedId);
+          this.currentMap!.goals.push(Goal.fromJson(_));
+          this.buildNetworkGraph(this.currentMap);
+          this._snackBar.open("Goal updated", 'X', { duration: 3000, panelClass: ['blue-snackbar'] });
+        });
+      } else if (goal == undefined && strategy != undefined) {
+        this.endpointService.updateStrategy(strategy.id, data).subscribe((_) => {
+          this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
+          this.currentMap!.strategies.push(Strategy.fromJson(_));
+          this.buildNetworkGraph(this.currentMap);
+          this._snackBar.open("Strategy updated", 'X', { duration: 3000, panelClass: ['blue-snackbar'] });
+        });
+      } else {
+        this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+      }
+    }
+  }
+
+  deleteSelectedElement() {
+    const goal = this.currentMap!.goals.find(g => g.id == this.selectedId);
+    const strategy = this.currentMap!.strategies.find(Strategy.findByIdType);
+    if (goal != undefined && strategy == undefined) {
+      this.deleteGoal(goal, this.currentMap!.strategies.filter(s => s.goal_src == goal!.id || s.goal_tgt == goal!.id));
+    } else if (goal == undefined && strategy != undefined) {
+      this.deleteStartegy(strategy);
+    } else {
+      this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    }
+  }
+
+  deleteGoal(goal: Goal, relatedStrategies: Strategy[]) {
+    console.log("Delete goal", goal);
+    if (goal!.name == 'Start' || goal!.name == 'End') {
+      this._snackBar.open("Error! Cannot delete Start or End goals", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+    } else {
+      var confirmDialog = this.dialogs.open(ConfirmDialogComponent, { width: '500px' });
+      confirmDialog.componentInstance.confirmMessage = "Are you sure you want to delete this goal?";
+      if(relatedStrategies.length > 0) {
+        confirmDialog.componentInstance.confirmMessage += "\nThis goal is used in " + relatedStrategies.length + " strategies.\n Deleting this goal will also delete the connected strategies.";
+      }
+      confirmDialog.afterClosed().subscribe((result) => {
+        if (result) {
+          console.log("Delete selected element", goal);
+          this.endpointService.deleteGoalfromMap(this.selectedId).subscribe((_) => {
+            this._snackBar.open("Goal deleted", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+            this.currentMap!.goals = this.currentMap!.goals.filter(g => g.id != this.selectedId);
+            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.goal_src != this.selectedId || s.goal_tgt != this.selectedId);
+            this.networkGraph!.deleteSelected();
+            this.selectedId = undefined;
+          });
+        } else
+          console.log("Cancel delete");
+      });
+      
+    }
+  }
+
+  deleteStartegy(strategy: Strategy) {
+    var confirmDialog = this.dialogs.open(ConfirmDialogComponent, { width: '500px' });
+    confirmDialog.componentInstance.confirmMessage = "Are you sure you want to delete this strategy?\n The Strategy could be associated with a MethodChunk."; 
+    confirmDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log("Delete selected element", strategy);
+        this.endpointService.deleteStrategyfromMap(this.selectedId).subscribe((_) => {
+          this._snackBar.open("Strategy deleted", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+          this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
+          this.networkGraph!.deleteSelected();
+          this.selectedId = undefined;
+        });
+      } else
+        console.log("Cancel delete");
+    });
+  }
+
+  deleteMap() {
+    console.log("Delete map");
   }
 }
 
+//#region Instructions Dialog
+@Component({
+  selector: 'instructions-dialog',
+  template: `
+  <h1 mat-dialog-title> Instructions </h1>
+  <div>
+    <h2>1. Create Goal</h2>
+    <p>Write the name of the goal in the designated area</p>
+    <p>Click Create New Goal</p>
+    <p>Select the position in the graph where the goal will be created</p>
+    <h2>2. Create Strategy</h2>
+    <p>Write the name of the strategy in the designated area</p>
+    <p>Click Create New Strategy</p>
+    <p>Select the source Goal on the graph and drag the mouse to the Target Goal</p>
+    <h2>3. Update Element</h2>
+    <p>Select a Strategy or a Goal clicking on it, the color of the selected element will slightly change</p>
+    <p>Click on Update Selected Element</p>
+    <p>Write the new Name on the designated area and click save</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button class="button-instruction" (click)="closeDialog()"> Close </button>
+  </div>
+  `,
+  styles: [`
+    .button-instruction {
+      background-color: #ffe066;
+      border-width: 0;
+      color: #333333;
+      cursor: pointer;
+      display: inline-block;
+      font-family: Roboto, "Helvetica Neue", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      list-style: none;
+      margin: 0;
+      text-align: center;
+      transition: all 200ms;
+      vertical-align: baseline;
+      white-space: nowrap;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      margin-top: 30px;
+      box-sizing: border-box;
+      position: relative;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+      min-width: 64px;
+      line-height: 36px;
+      padding: 0 16px;
+      border-radius: 4px;
+      overflow: visible;
+      transform: translate3d(0, 0, 0);
+      transition: background 400ms cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    }`,
+    `p { margin-left: 1rem; }`
+  ],
+})
+export class InstructionsDialog {
+  constructor(
+    public dialogRef: MatDialogRef<InstructionsDialog>,
+  ) { }
 
+  closeDialog(): void {
+    this.dialogRef.close(0);
+  }
+}
+//#endregion

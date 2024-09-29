@@ -162,7 +162,10 @@ export class MethodChunkComponent implements OnInit {
   public intentionSelected(event) {
     this.hasChanges = true;
     let index = this.navigatorService.goalList.findIndex(goal => goal.name == event.option.value)
-    if(index !== -1) this.methodChunk.intention = new Goal(this.navigatorService.goalList[index]['id'], event.option.value)
+    if(index !== -1) {
+      const goalData = this.navigatorService.goalList[index]; 
+      this.methodChunk.intention = new Goal(goalData.id, event.option.value, goalData.x, goalData.y, goalData.map);
+    }
   }
 
   public strategySelected(event) {
@@ -200,7 +203,7 @@ export class MethodChunkComponent implements OnInit {
   }
 
   private parseMethodChunk(data) {
-    const goal = new Goal(data['Intention']['id'], data['Intention']['name']);
+    const goal = new Goal(data['Intention']['id'],data['Intention']['name'],0,0, "" ); // TODO: parse goal
     let tools: MethodElement[] = [];
     let productPart: MethodElement[] = [];
     let roles: any[] = [];

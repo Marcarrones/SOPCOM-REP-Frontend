@@ -1,4 +1,68 @@
 .button-custom {
     color: #656565;
     background-color: #ffe066;
+    border-radius: 8px;
+    border-width: 0;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Arial';
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 10px 12px;
+    text-align: center;
+    transition: all 200ms;
+    vertical-align: baseline;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin-top: 30px;
+}
+
+#mynetwork {
+  width: 600px;
+  height: 400px;
+  border: 1px solid lightgray;
+}
+
+.row {
+    display: flex; 
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+ }
+.controls {
+    justify-content: space-evenly;
+    margin: 0 5px;
+}
+ .controls > * {
+    height: 40px;
+    width: 100%;
+}
+
+.controls > input {
+    margin-bottom: -1px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.btn-primary {
+    background-color: #ffe066;
+    border-color: #ffe066;
+    color: #333333;
+}
+
+.btn-cancel {
+    background-color: #ff572d;
+    border-color: #ff572d;
+    color: #ffffff;
+    width: 40px !important;
 }

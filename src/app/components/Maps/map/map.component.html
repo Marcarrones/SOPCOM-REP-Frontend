@@ -1,76 +1,62 @@
-    <style type="text/css">
-      #mynetwork {
-        width: 600px;
-        height: 400px;
-        border: 1px solid lightgray;
-      }
-    </style>
-
-<!--Si entra a map per EDITAR/VISUALITZAR ()-->
-
-<ng-container *ngIf="!this.edit">
+<ng-container>
   <h1 style="text-transform: capitalize;"> Map </h1>
 <mat-divider style="margin-top: 10px;"></mat-divider>
 
 <h2>General information</h2>
-
-<form>
-  <mat-form-field>
-    <mat-label> ID </mat-label>
-    <input matInput [disabled]="!this.editable" [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
-  </mat-form-field>
-<br>
-<mat-form-field>
-  <mat-label> Name </mat-label>
-  <input matInput [disabled]="!this.editable" [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
-</mat-form-field>
-<button *ngIf="!this.edit" [disabled]="!this.editable" mat-icon-button (click)="openEditMapDialog()"> <mat-icon> edit </mat-icon> </button>
-</form>
-
-
-<mat-divider style="margin-top: 10px;"></mat-divider>
-<h2>Graph</h2>
-
-
-<app-graf [readMapid]="this.map.id" [acceso]="true"></app-graf>
-</ng-container>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--Si entra a map per CREAR (+)-->
-
-
-<ng-container *ngIf="this.edit;">
-  <h1 style="text-transform: capitalize;"> Map </h1>
-  <mat-divider style="margin-top: 10px;"></mat-divider>
-  
-  <h2>General information</h2>
-    <mat-form-field *ngIf="this.edit">
+<div class="row" >
+  <div class="col" style="width: 50%;">
+    <form [formGroup]="mapFormGroup">
+      <mat-form-field style="max-width: 300px; margin: 0 1rem;">
         <mat-label> ID </mat-label>
-        <input matInput [formControl]="this.idFormControl" style="width: 100%;" autocomplete="off">
-    </mat-form-field>
-    <br>
-    <mat-form-field *ngIf="this.edit">
+        <input matInput formControlName="mapId" style="width: 100%;" autocomplete="off">
+      </mat-form-field>
+      <mat-form-field style="max-width: 300px; margin:0 1rem">
         <mat-label> Name </mat-label>
-        <input matInput [formControl]="this.nameFormControl" style="width: 100%;" autocomplete="off">
-    </mat-form-field>
-    <br>
-    <button style="margin-top: 5px; color: #656565; background-color: #ffe066;" mat-raised-button (click)="submitMap()">Submit Map</button>
-
-<br><br>
-
-<app-graf style="display: none;" #compGraf [prueba_id]="this.map.id" [prueba_name]="this.map.name" ></app-graf>
+        <input matInput formControlName="mapName" style="width: 100%;" autocomplete="off">
+      </mat-form-field>
+    </form>
+    <div class="row">
+      <button [disabled]="!editable" style="margin: .5rem 1rem; color: #656565; background-color: #ffe066;" mat-raised-button (click)="this.submitMap()">Submit Map</button>
+      <button *ngIf="currentMap!= undefined" [disabled]="!editable" style="margin: .5rem ; color: #656565; background-color: #ffe066;" mat-raised-button (click)="deleteMap();"><mat-icon> delete </mat-icon> Delete Map</button>  
+    </div>
+  </div>
+<ng-container *ngIf="this.currentMap != undefined && this.editable">
+  <form [formGroup]="mapEditFormGroup">
+    <div class="row" style="width: 50%;">
+      <div class="col controls">
+        <button (click)="toggleAddElement(EditMode.Goal)"  mat-raised-button class="btn btn-primary"><mat-icon>add</mat-icon>Create New Goal</button>
+        <button (click)="toggleAddElement(EditMode.Strategy)"  mat-raised-button class="btn btn-primary"><mat-icon>add</mat-icon>Create Strategy</button>
+        <button class="btn btn-primary" [disabled]="selectedId == undefined" mat-raised-button (click)="updateSelectedElement();">Update Selected Element</button>  
+      </div>
+      <div class="col controls">
+        <mat-form-field>
+          <mat-label>Goal</mat-label>
+          <input matInput formControlName="goalName" type="text" placeholder="Goal Name" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Strategy</mat-label>
+          <input matInput formControlName="strategyName" type="text" placeholder="Strategy Name"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Update</mat-label>
+          <input matInput formControlName="updateName" type="text" placeholder="New Name"/>
+        </mat-form-field>
+      </div>
+      <div class="col controls">
+        <button (click)="toggleAddElement(EditMode.None)" mat-raised-button class="btn btn-cancel" [disabled]="this.editMode != EditMode.Goal" ><mat-icon>cancel</mat-icon></button>
+        <button (click)="toggleAddElement(EditMode.None)" mat-raised-button class="btn btn-cancel" [disabled]="this.editMode != EditMode.Strategy"><mat-icon>cancel</mat-icon></button>
+        <button (click)="deleteSelectedElement()" [disabled]="selectedId == undefined" mat-raised-button class="btn btn-secondary" [disabled]="this.editMode != EditMode.Strategy"><mat-icon>delete</mat-icon></button>
+      </div>
+    </div>
+  </form>
+</ng-container>
+</div>
+</ng-container>
+<ng-container *ngIf="this.currentMap != undefined">
+  <mat-divider style="margin-top: 10px; margin-bottom: 1rem;"></mat-divider>
+  <h2>Graph</h2>
+</ng-container>
+<div id="id-map" #map style="width: 99%; height: 600px; border: 1px solid lightgray;"></div>
+<p *ngIf="currentMap != undefined" id="p1" style="font-size: 12px; color: #808080; text-align: center; justify-content: center;">Changes in the graphical map editor are saved automatically once done
+    <button mat-icon-button style="border-radius: 100px;" (click)="instructions_popup();"><mat-icon>help</mat-icon></button>
+</p>
