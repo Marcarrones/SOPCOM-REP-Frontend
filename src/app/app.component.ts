@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   public selectedRepository : Repository | null;
 
   constructor(
-    private endpointSertvice : EndpointService,
+    public endpointSertvice : EndpointService,
     private matDialog: MatDialog
   )
   { }

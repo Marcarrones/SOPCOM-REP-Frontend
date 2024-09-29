@@ -42,6 +42,7 @@ import { GrafComponent } from './components/Maps/graf/graf.component';
 import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
 import { NoRepositorySelectedComponent } from './components/no-repository-selected/no-repository-selected.component';
 import { MatCardModule } from '@angular/material/card';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,7 @@ import { MatCardModule } from '@angular/material/card';
     GrafComponent,
     RepositoryModalComponent,
     NoRepositorySelectedComponent,
-    
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

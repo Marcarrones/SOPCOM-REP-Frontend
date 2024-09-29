@@ -1,17 +1,10 @@
 import { Injectable, NgModule } from '@angular/core';
 import { Routes, RouterModule, CanDeactivate } from '@angular/router';
 import { MethodChunkComponent } from './components/method-chunk/method-chunk.component';
-import { HomeComponent } from './components/home/home/home.component';
 import { MethodElementDetailComponent } from './components/method-element/method-element-detail/method-element-detail.component';
-import { MethodElementListComponent } from './components/method-element/method-element-list/method-element-list.component';
-import { MethodChunkListComponent } from './components/method-chunk/method-chunk-list/method-chunk-list.component';
 import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
-import { CriterionListComponent } from './components/criterion/criterion-list/criterion-list.component';
-import { MethodElementComponent } from './components/method-element/method-element.component';
-import { CriterionComponent } from './components/criterion/criterion.component';
 import { MapComponent } from './components/Maps/map/map.component';
-
-
+import { NavigatorService } from './services/navigator.service';
 
 
 @Injectable()
@@ -26,8 +19,11 @@ export class ConfirmDeactivateGuardMC implements CanDeactivate<MethodChunkCompon
 
 @Injectable()
 export class ConfirmDeactivateGuardME implements CanDeactivate<MethodElementDetailComponent> {
+    constructor(
+        private navigatorService: NavigatorService
+    ) {}
     canDeactivate(target: MethodElementDetailComponent) {
-        if (target.navigatorService.allowChange) {
+        if (this.navigatorService.allowChange) {
             return window.confirm('You have unsaved changes. Are you sure you want to leave?');
         }
         return true;
@@ -35,8 +31,11 @@ export class ConfirmDeactivateGuardME implements CanDeactivate<MethodElementDeta
 }
 @Injectable()
 export class ConfirmDeactivateGuardC implements CanDeactivate<CriterionDetailComponent> {
+    constructor(
+        private navigatorService: NavigatorService
+    ) {}
     canDeactivate(target: CriterionDetailComponent) {
-        if (target.navigatorService.allowChange) {
+        if (this.navigatorService.allowChange) {
             return window.confirm('You have unsaved changes. Are you sure you want to leave?');
         }
         return true;
@@ -47,7 +46,7 @@ export class ConfirmDeactivateGuardC implements CanDeactivate<CriterionDetailCom
 @Injectable()
 export class ConfirmDeactivateGuardM implements CanDeactivate<MapComponent> {
     canDeactivate(target: MapComponent) {
-        if (target.navigatorService.allowChange) {
+        if (target.hasUnsavedChanges) {
             return window.confirm('You have unsaved changes. Are you sure you want to leave?');
         }
         return true;
