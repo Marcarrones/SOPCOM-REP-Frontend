@@ -32,7 +32,7 @@ export class EndpointService {
 // --------------- REPOSITORIES --------------- 
   public isRepoPublic() { 
     console.log("isRepoPublic", this.selectedRepository.value);
-    return this.selectedRepository.value?.status.name == 'Public' ?? true;
+    return (this.selectedRepository.value?.status.name ?? 'Public') == 'Public';
   }
 
 

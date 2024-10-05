@@ -8,11 +8,12 @@ export class Strategy  {
         public y: number,
         public goal_tgt: string,
         public goal_src: string,
+        public methodChunkIds: string[] = [],
     ) { }
     
     
     static fromJson(json: any): Strategy {
-        return new Strategy (json.id, json.name, json.x, json.y, json.goal_tgt,  json.goal_src);
+        return new Strategy (json.id, json.name, json.x, json.y, json.goal_tgt,  json.goal_src, json.methodChunkIds ?? []);
     }
     
     public asNode() : Node {
@@ -32,7 +33,7 @@ export class Strategy  {
         return { from: src, to: tgt, arrows: 'middle', color: "#2B7CE9", smooth: { enabled: true, type: 'cubicBezier', roundness: 0.5 } }
     }
     // Returns true if the id of a Node is the same as the strategy id
-    public static findByIdType(strategy: Strategy, id: IdType) : boolean {
+    public static findByIdType(strategy: Strategy, id?: IdType) : boolean {
         return `S_${strategy.id}` === id; // S_ prefix is used in the vis-network graph
     }
 

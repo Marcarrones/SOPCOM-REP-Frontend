@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -38,14 +38,16 @@ export class MapComponent implements OnInit {
   // Network Graph element
   networkGraph: Network | undefined;
   // Graph options
+  // https://visjs.github.io/vis-network/docs/network/
   options: object = {
     physics: false,
+    configure: { enabled: false },
     interaction: { 
       hover: true, 
       dragView: true,
     },
     manipulation: {
-      enabled: true,
+      enabled: false, // code manipulations still apply
       addNode: (nodeData: Node, callback: any) => this.createNewGoal(nodeData, callback),
       addEdge: (edgeData: Edge, callback: any) => this.createNewStrategy(edgeData, callback),  
     },
@@ -62,9 +64,10 @@ export class MapComponent implements OnInit {
   constructor(
     private navigatorService: NavigatorService,
     private endpointService: EndpointService,
-    private route: ActivatedRoute,
     private dialogs: MatDialog,
     private _snackBar: MatSnackBar,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
       this.editable = !this.navigatorService.endpointService.isRepoPublic();
 
@@ -109,6 +112,7 @@ export class MapComponent implements OnInit {
   }
   
   submitMap(){
+    console.log("submitMap",this, this.currentMap, this.mapFormGroup, this.mapEditFormGroup);
     if (!this.editable)
       return; // Do nothing if not editable 
     var canSubmit = this.evaluateCanSubmit(this.currentMap != undefined);
@@ -125,8 +129,8 @@ export class MapComponent implements OnInit {
     // Add map
     else if (canSubmit) { 
       var body = {
-        id: this.mapFormGroup['mapId'].value,
-        name: this.mapFormGroup['mapName'].value,
+        id: this.mapFormGroup.controls['mapId'].value,
+        name: this.mapFormGroup.controls['mapName'].value,
         repository: this.endpointService.selectedRepository.value!.id
       };
 
@@ -166,20 +170,20 @@ export class MapComponent implements OnInit {
   } 
 
   //#region Network Graph Events
-  onSelectNode(selectEvent: any) {
+  onSelectNode(selectEvent: any) : Strategy | Goal | undefined {
     this.selectedId = selectEvent.nodes[0] ?? undefined;
-    const value = this.selectedId?.toString().startsWith('S_') ? 
-        this.currentMap!.strategies.find(Strategy.findByIdType)?.name : 
-        this.currentMap!.goals.find(g => g.id == this.selectedId)?.name ?? '';
-    this.mapEditFormGroup.controls['updateName'].setValue(value);
+    const node = this.selectedIsStrategy() ? 
+        this.currentMap!.strategies.find(s => Strategy.findByIdType(s, this.selectedId!)) : 
+        this.currentMap!.goals.find(g => g.id == this.selectedId);
+    this.mapEditFormGroup.controls['updateName'].setValue(node?.name ?? '');
     console.log("Select", this.selectedId, this);
+    return node;
   }
 
   onDragEnd(dragEndEvent: any) {
-    this.selectedId = dragEndEvent.nodes[0] ?? undefined;
+    const node = this.onSelectNode(dragEndEvent); // SelectEvent is called before DragEnd
+    
     if (this.selectedId != undefined) {
-      const isStrategy = this.selectedId.toString().startsWith('S_');
-      const node = isStrategy ? this.currentMap!.strategies.find(Strategy.findByIdType) : this.currentMap!.goals.find(g => g.id == this.selectedId);
       console.log("DragEnd", dragEndEvent.pointer.canvas, this.selectedId, node);
       if (node != undefined) {
         const body = {
@@ -187,9 +191,9 @@ export class MapComponent implements OnInit {
           x: dragEndEvent.pointer.canvas.x,
           y: dragEndEvent.pointer.canvas.y,
         };
-        if (isStrategy){
+        if (this.selectedIsStrategy()){
           this.endpointService.updateStrategy(node.id, body).subscribe((_) => {
-            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
+            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => !Strategy.findByIdType(s, this.selectedId!));
             this.currentMap!.strategies.push(Strategy.fromJson(_));
           });
         } else {
@@ -213,18 +217,22 @@ export class MapComponent implements OnInit {
 
     switch (editMode) {
       case EditMode.Goal:
-        if (this.mapEditFormGroup.controls['goalName'].value == '') 
+        if (this.mapEditFormGroup.controls['goalName'].value == '') {
+          editMode = EditMode.None;
           this._snackBar.open("Error! Goal name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-        else
+        } else
           this.networkGraph!.addNodeMode();
       break;
       case EditMode.Strategy:
-        if (this.mapEditFormGroup.controls['strategyName'].value == '') 
+        if (this.mapEditFormGroup.controls['strategyName'].value == '') {
+          editMode = EditMode.None;
           this._snackBar.open("Error! Strategy name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-        else
+        } else
           this.networkGraph!.addEdgeMode();
       break;
       default:
+        this.mapEditFormGroup.controls['goalName'].setValue('');
+        this.mapEditFormGroup.controls['strategyName'].setValue('');
         this.networkGraph!.disableEditMode();
       break;
     }
@@ -233,6 +241,7 @@ export class MapComponent implements OnInit {
   }
   //#endregion
 
+//#region Create New Element
   createNewGoal(nodeData: Node, callback:(nodeData: Node)=> void) {
     console.log("Create new goal", nodeData, this.mapFormGroup, this.mapEditFormGroup);
     const body  = { 
@@ -255,8 +264,8 @@ export class MapComponent implements OnInit {
 
   // Evaluate if can create a new strategy and show error message if not
   evaluateCanCreateNewStrategy(edge: Edge): boolean {
-    const from = this.currentMap!.goals.find(g => g.id == edge.from?.toString() ?? '');
-    const to = this.currentMap!.goals.find(g => g.id == edge.to?.toString() ?? '');
+    const from = this.currentMap!.goals.find(g => g.id == (edge.from?.toString() ?? ''));
+    const to = this.currentMap!.goals.find(g => g.id == (edge.to?.toString() ?? ''));
 
     const fromStart = from?.id == this.currentMap!.start.id;
     const fromEnd = from?.id == this.currentMap!.stop.id;
@@ -291,7 +300,7 @@ export class MapComponent implements OnInit {
       const fromPos = this.networkGraph!.getPosition(edgeData.from!);
       const toPos = this.networkGraph!.getPosition(edgeData.to!);
       const body = {
-        id: 'S_' + uuidv4(),
+        id: uuidv4(),
         name: this.mapEditFormGroup.controls['strategyName'].value,
         goal_src: edgeData.from?.toString() ?? '',
         goal_tgt: edgeData.to?.toString() ?? '',
@@ -309,17 +318,19 @@ export class MapComponent implements OnInit {
     } 
     this.toggleAddElement(EditMode.None);
   }
+//#endregion
 
+//#region Update Element
   updateSelectedElement() {
     console.log("Update selected element", this.selectedId, this.currentMap, this);
     const newValue = this.mapEditFormGroup.controls['updateName'].value;
     if (this.selectedId == undefined){
       this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-    } else if (newValue != '') {
+    } else if (newValue == '') {
       this._snackBar.open("Error! New name cannot be empty", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       const goal = this.currentMap!.goals.find(g => g.id == this.selectedId);
-      const strategy = this.currentMap!.strategies.find(Strategy.findByIdType);
+      const strategy = this.currentMap!.strategies.find(s => Strategy.findByIdType(s, this.selectedId!));
       const data = {
         name: newValue,
         x: goal?.x ?? strategy?.x,
@@ -344,10 +355,12 @@ export class MapComponent implements OnInit {
       }
     }
   }
+//#endregion
 
+//#region Delete Element
   deleteSelectedElement() {
     const goal = this.currentMap!.goals.find(g => g.id == this.selectedId);
-    const strategy = this.currentMap!.strategies.find(Strategy.findByIdType);
+    const strategy = this.currentMap!.strategies.find(s => Strategy.findByIdType(s, this.selectedId));
     if (goal != undefined && strategy == undefined) {
       this.deleteGoal(goal, this.currentMap!.strategies.filter(s => s.goal_src == goal!.id || s.goal_tgt == goal!.id));
     } else if (goal == undefined && strategy != undefined) {
@@ -359,7 +372,7 @@ export class MapComponent implements OnInit {
 
   deleteGoal(goal: Goal, relatedStrategies: Strategy[]) {
     console.log("Delete goal", goal);
-    if (goal!.name == 'Start' || goal!.name == 'End') {
+    if (goal!.name == 'Start' || goal!.name == 'End' || goal!.id == this.currentMap!.start.id || goal!.id == this.currentMap!.stop.id) {
       this._snackBar.open("Error! Cannot delete Start or End goals", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
     } else {
       var confirmDialog = this.dialogs.open(ConfirmDialogComponent, { width: '500px' });
@@ -373,9 +386,10 @@ export class MapComponent implements OnInit {
           this.endpointService.deleteGoalfromMap(this.selectedId).subscribe((_) => {
             this._snackBar.open("Goal deleted", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
             this.currentMap!.goals = this.currentMap!.goals.filter(g => g.id != this.selectedId);
-            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.goal_src != this.selectedId || s.goal_tgt != this.selectedId);
-            this.networkGraph!.deleteSelected();
-            this.selectedId = undefined;
+            this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.goal_src != this.selectedId && s.goal_tgt != this.selectedId);
+            //this.networkGraph!.deleteSelected();
+            this.buildNetworkGraph(this.currentMap); // rebuild graph
+            this.onSelectNode({ nodes: [ undefined ] }); // trigger onSelectedNode
           });
         } else
           console.log("Cancel delete");
@@ -390,11 +404,11 @@ export class MapComponent implements OnInit {
     confirmDialog.afterClosed().subscribe((result) => {
       if (result) {
         console.log("Delete selected element", strategy);
-        this.endpointService.deleteStrategyfromMap(this.selectedId).subscribe((_) => {
+        this.endpointService.deleteStrategyfromMap(strategy.id).subscribe((_) => {
           this._snackBar.open("Strategy deleted", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
-          this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
+          this.currentMap!.strategies = this.currentMap!.strategies.filter(s =>!Strategy.findByIdType(s, this.selectedId!));
           this.networkGraph!.deleteSelected();
-          this.selectedId = undefined;
+          this.onSelectNode({ nodes: [ undefined ] }); // trigger onSelectedNode
         });
       } else
         console.log("Cancel delete");
@@ -403,8 +417,25 @@ export class MapComponent implements OnInit {
 
   deleteMap() {
     console.log("Delete map");
+    var confirmDialog = this.dialogs.open(ConfirmDialogComponent, { width: '500px' });
+    confirmDialog.componentInstance.confirmMessage = "Are you sure you want to delete this map?";
+    confirmDialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.endpointService.deleteMap(this.currentMap!.id).subscribe((_) => {
+          this._snackBar.open("Map deleted", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
+          this.router.navigate(['/maps']);
+        });
+      } else
+        console.log("Cancel delete");
+    });
+  }
+  //#endregion
+
+  selectedIsStrategy() : boolean {
+    return this.selectedId != undefined && this.selectedId.toString().startsWith('S_');
   }
 }
+
 
 //#region Instructions Dialog
 @Component({

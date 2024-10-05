@@ -18,8 +18,9 @@ export class Map {
             data.name,
             data.repository,
             JSON.parse(data.strategies).map(Strategy.fromJson),
-            JSON.parse(data.goals).map(Goal.fromJson), Goal.fromJson(data.start),
-            Goal.fromJson(data.stop)
+            JSON.parse(data.goals).map(Goal.fromJson), 
+            Goal.fromJson(JSON.parse(data.start)),
+            Goal.fromJson(JSON.parse(data.stop))
         );
     }
 

@@ -42,16 +42,26 @@
     justify-content: space-evenly;
     margin: 0 5px;
 }
- .controls > * {
-    height: 40px;
-    width: 100%;
-}
+    .controls > * {
+        height: 40px;
+        width: 100%;
+        align-content: center;
+    }
+    .controls p { margin: 0; }
 
-.controls > input {
-    margin-bottom: -1px;
-    border-radius: 0;
-    border: none;
-    border-bottom: 1px solid #ccc;
+    .controls > input {
+        margin-bottom: -1px;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+.info {
+    font-size: 12px;
+    color: #808080; 
+    text-align: center; 
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-primary {
