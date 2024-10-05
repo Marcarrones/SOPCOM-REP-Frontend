@@ -36,9 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GoalComponent } from './components/goal/goal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MapComponent } from './components/Maps/map/map.component';
-import { MapDetailComponent } from './components/Maps/map-detail/map-detail.component';
-import { GrafComponent } from './components/Maps/graf/graf.component';
+import { MapComponent } from './components/map/map.component';
 import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
 import { NoRepositorySelectedComponent } from './components/no-repository-selected/no-repository-selected.component';
 import { MatCardModule } from '@angular/material/card';
@@ -65,8 +63,6 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     UpdateValueDialog,
     RemoveValueDialog,
     MapComponent,
-    MapDetailComponent,
-    GrafComponent,
     RepositoryModalComponent,
     NoRepositorySelectedComponent,
     ConfirmDialogComponent,

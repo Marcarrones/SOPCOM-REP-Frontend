@@ -3,7 +3,7 @@ import { Routes, RouterModule, CanDeactivate } from '@angular/router';
 import { MethodChunkComponent } from './components/method-chunk/method-chunk.component';
 import { MethodElementDetailComponent } from './components/method-element/method-element-detail/method-element-detail.component';
 import { CriterionDetailComponent } from './components/criterion/criterion-detail/criterion-detail.component';
-import { MapComponent } from './components/Maps/map/map.component';
+import { MapComponent } from './components/map/map.component';
 import { NavigatorService } from './services/navigator.service';
 
 

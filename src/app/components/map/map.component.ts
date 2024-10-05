@@ -10,7 +10,7 @@ import { Map } from 'src/app/models/map';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Goal } from 'src/app/models/goal';
 import { Strategy } from 'src/app/models/strategy';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { v4 as uuidv4 } from 'uuid';
 
 enum EditMode {
