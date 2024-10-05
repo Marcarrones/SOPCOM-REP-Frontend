@@ -3,6 +3,7 @@ import { Repository } from './models/repository';
 import { RepositoryModalComponent } from './components/repository-modal/repository-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EndpointService } from './services/endpoint.service';
+import { Values } from 'src/utils/values';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { EndpointService } from './services/endpoint.service';
 })
 export class AppComponent implements OnInit {
   public selectedRepository : Repository | null;
+  sopcomContUrl: string = Values.SERVER_URL + Values.CONT_PORT;
 
   constructor(
     public endpointSertvice : EndpointService,

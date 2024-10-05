@@ -31,7 +31,7 @@
     min-width: 50px; 
     border-radius: 10px;
     padding: 1em;
-    width: 100%;
+    width: auto;
     align-items: center;
     overflow-x: auto;
 }

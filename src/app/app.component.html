@@ -1,24 +1,31 @@
-<mat-toolbar style="height: 60px; position: fixed; z-index: 100; background: #99cccc;">
-  <a style="height: inherit;" href="https://dogo4ml.upc.edu/en" target="_blank">
-    <img style="height: inherit;" src="../assets/DOGO4ML.png" alt="DOGO4ML">
-  </a>
-  <h1 style="margin-left: 10px; font-size: 35px;"><a class="title">SOPCOM</a></h1>
-  <a style="height: inherit; right: 0; position: absolute;" href="https://gessi.upc.edu/en" target="_blank">
-    <img style="height: inherit;" src="../assets/GESSI.jpg" alt="Software and Services Engineering Group">
-  </a>
-  <mat-dialog-actions style="margin-left:auto; margin-right: 104px; padding:auto; margin-bottom: 0;">
-    <button mat-raised-button (click)="openRepositoryModal()"> {{this.selectedRepository?.name ?? "Select Repository"}} </button>
-    
-    <mat-icon *ngIf="this.selectedRepository != null && this.selectedRepository.status.name == 'Public'" style="margin-left: 10px; font-size: 30px;">lock</mat-icon>
-    <mat-icon *ngIf="this.selectedRepository != null && this.selectedRepository.status.name == 'Draft'" style="margin-left: 10px; font-size: 30px;">lock_open</mat-icon>
-  </mat-dialog-actions>
-</mat-toolbar>
-<div style="padding-top: 60px;">
-  <div style="width: 30%; height: -webkit-fill-available; position: fixed; border-right: 2px solid #99cccc; z-index: 99; background-color: white;">
-    <app-navigator ></app-navigator>
+<div class="container">
+  <div class="header-wrapper">
+    <mat-toolbar style="height: 60px; z-index: 100; background: #99cccc;">
+      <a style="height: inherit;" href="https://dogo4ml.upc.edu/en" target="_blank">
+        <img style="height: inherit;" src="../assets/DOGO4ML.png" alt="DOGO4ML">
+      </a>
+      <h1 class="title"><a [href]="sopcomContUrl">SOPCOM-REP</a></h1>
+      <a style="height: inherit; right: 0; position: absolute;" href="https://gessi.upc.edu/en" target="_blank">
+        <img style="height: inherit;" src="../assets/GESSI.jpg" alt="Software and Services Engineering Group">
+      </a>
+      <mat-dialog-actions style="margin-left:auto; margin-right: 104px; padding:auto; margin-bottom: 0;">
+        <button mat-raised-button (click)="openRepositoryModal()"> {{this.selectedRepository?.name ?? "Select Repository"}} </button>
+        
+        <mat-icon *ngIf="this.selectedRepository != null && this.selectedRepository.status.name == 'Public'" style="margin-left: 10px; font-size: 30px;">lock</mat-icon>
+        <mat-icon *ngIf="this.selectedRepository != null && this.selectedRepository.status.name == 'Draft'" style="margin-left: 10px; font-size: 30px;">lock_open</mat-icon>
+      </mat-dialog-actions>
+    </mat-toolbar>
   </div>
-  <div style="width: 65%; padding: 2em; margin-left: 30%;">
+  <div class="content-wrapper" #content>
+  <!-- <div style="padding-top: 60px;"> -->
+    <!-- <div style="width: 30%; height: -webkit-fill-available; position: fixed; border-right: 2px solid #99cccc; z-index: 99; background-color: white;"> -->
+    <div class="navigator-wrapper">
+      <app-navigator ></app-navigator>
+    </div>
+    <!-- <div style="width: 65%; padding: 2em; margin-left: 30%;"> -->
+    <div class="router-wrapper">
       <app-no-repository-selected *ngIf="this.selectedRepository == null"></app-no-repository-selected>
       <router-outlet *ngIf="this.selectedRepository != null"></router-outlet>
+    </div>
   </div>
 </div>

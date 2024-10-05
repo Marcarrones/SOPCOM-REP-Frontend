@@ -1,25 +1,61 @@
-.title {
-    font-size: 1.5em;
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+}
+
+.header-wrapper {
+    width: 100%;
+    height: 60px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.navigator-wrapper {
+    width: calc(30% - 2px);
+    max-height: calc(100vh - 60px);
+    border-right: 2px solid #99cccc;
+}
+
+.router-wrapper {
+    width: calc(70% - 1rem);
+    height: calc(100% - 1rem);
+    margin: 0.5rem;
+} 
+h1.title { margin-left: 10px; }
+h1.title a {
+    margin-left: 10px; 
+    font-size: 35px;
     color: #000;
     margin-bottom: 0;
     text-decoration: none;
-}   .title:hover {
+    font-weight: 500;
+    align-content: center;
+    cursor: pointer;
+}   h1.title a:hover {
         text-decoration: none;
-    } .title:active {
+    } h1.title a:active {
         text-decoration: none;
-    } .title:focus {
+    } h1.title a:focus {
         text-decoration: none;
-    } .title:visited {
+    } h1.title a:visited {
         text-decoration: none;
-    } .title:link {
+    } h1.title a:link {
         text-decoration: none;
-    } .title:after {
+    } h1.title a:after {
         content: "";
         display: block;
         width: 0;
         height: 2px;
         background: #000;
         transition: width .3s;
-    } .title:hover:after {
+    } h1.title a:hover:after {
         width: 100%;
     }
