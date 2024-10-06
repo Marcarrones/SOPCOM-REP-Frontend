@@ -17,7 +17,8 @@ export class RepositoryModalComponent implements OnInit {
   selectedTabIndex = 0;
   // Form
   showStatus = false;
-  
+
+  repositoryList: Repository[] = [];
   selectedRepository : Repository | null;
 
   selectRepositoryForm : FormGroup;
@@ -48,14 +49,17 @@ export class RepositoryModalComponent implements OnInit {
       repositoryStatusSelectControl: new FormControl(navigatorService.repositoryStatusList.find(s => s.name === 'Draft')?.id ?? 1),
     });
 
-    this.endpointService.selectedRepository.subscribe((value) => { this.setSelectedRepository(value) });
   }
-
+  
   ngOnInit(): void {
     this.updateRepositoryList();
     this.endpointService.selectedRepository.subscribe((value) => { 
       this.setSelectedRepository(value);
     });
+    this.navigatorService.repositoryList.subscribe((value) => { 
+      this.repositoryList = value;
+    });
+    
   }
 
   changeTab(tab: number){
@@ -102,15 +106,17 @@ export class RepositoryModalComponent implements OnInit {
 
   public onSubmit() {
     if (this.selectedTabIndex == 1) {
-      this.endpointService.updateRepository(this.selectedRepository?.id, this.serializeRepositoryForm(this.updateRepositoryForm, this.selectedRepository)).subscribe(_ => this.updateRepositoryList());
-    } else {
-      this.endpointService.addRepository(this.serializeRepositoryForm(this.createRepositoryForm)).subscribe(_ => {
+      this.endpointService.updateRepository(this.selectedRepository?.id, this.serializeRepositoryForm(this.updateRepositoryForm, this.selectedRepository)).subscribe(data => {
         this.updateRepositoryList();
-        this.navigatorService.repositoryList.subscribe((_) => {
-          this.setSelectedRepository(this.createRepositoryForm.controls['repositoryIdControl'].value);
-          this.changeTab(0);
-          this.navigatorService.repositoryList.unsubscribe();
-        });
+        this.endpointService.selectedRepository.next(Repository.fromJson(data)); // selectedRepository is set through subscription in ngOnInit
+      });
+    } else {
+      this.endpointService.addRepository(this.serializeRepositoryForm(this.createRepositoryForm)).subscribe(data => {
+        this.updateRepositoryList();
+        var repository = Repository.fromJson(data);
+        this.endpointService.selectedRepository.next(repository); // selectedRepository is set through subscription in ngOnInit
+        this._snackBar.open("Repository " + (repository?.name ?? "X") + " created", "Close", {duration: 5000});
+        this.changeTab(0);
       });
     }
     this.closeDialog();
@@ -120,10 +126,11 @@ export class RepositoryModalComponent implements OnInit {
     if (this.selectedRepository == null) {
       this._snackBar.open("No repository selected", "Close", {duration: 2000});
     } else {
-      this.endpointService.deleteRepository(this.selectedRepository.id);
-      this.endpointService.selectedRepository.next(null);
-      this.updateRepositoryList();
-      this._snackBar.open("Repository deleted successfully", "Close", {duration: 2000});
+      this.endpointService.deleteRepository(this.selectedRepository.id).subscribe(data => {
+        this.updateRepositoryList();
+        this.endpointService.selectedRepository.next(null);
+        this._snackBar.open("Repository deleted successfully", "Close", {duration: 2000});
+      });
     }
   }
 

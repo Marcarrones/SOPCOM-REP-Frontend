@@ -26,7 +26,7 @@
       <div class="col controls">
         <button (click)="toggleAddElement(EditMode.Goal)"  mat-raised-button class="btn btn-primary"><mat-icon>add</mat-icon>Create New Goal</button>
         <button (click)="toggleAddElement(EditMode.Strategy)"  mat-raised-button class="btn btn-primary"><mat-icon>add</mat-icon>Create Strategy</button>
-        <button class="btn btn-primary" [disabled]="selectedId == undefined" mat-raised-button (click)="updateSelectedElement();">Update Selected Element</button>  
+        <button (click)="updateSelectedElementName();" class="btn btn-primary" [disabled]="selectedId == undefined" mat-raised-button >Update Selected Element</button>  
       </div>
       <div class="col controls">
         <mat-form-field>

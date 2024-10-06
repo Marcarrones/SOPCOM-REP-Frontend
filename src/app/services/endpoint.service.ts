@@ -65,8 +65,12 @@ export class EndpointService {
   // DELETE /index.php/repository/id
   public deleteRepository(id){
     const request = this.URL + Values.RESOURCES.REPOSITORY + '/' + id;
-    console.log(request);
-    return this.http.delete<any[]>(request).subscribe((x) => console.log(x)) //.pipe(map(response => response));
+    var response = new BehaviorSubject<any>(1); // this is needed to ensure delete is sent even if caller isn't subscribing
+    this.http.delete<any[]>(request).subscribe((x) => {
+      response.next(x);
+      response.complete();
+    });
+    return response;
   }
 
 // --------------- METHOD CHUNKS --------------- 

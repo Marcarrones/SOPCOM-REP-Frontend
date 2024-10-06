@@ -321,8 +321,7 @@ export class MapComponent implements OnInit {
 //#endregion
 
 //#region Update Element
-  updateSelectedElement() {
-    console.log("Update selected element", this.selectedId, this.currentMap, this);
+  updateSelectedElementName() {
     const newValue = this.mapEditFormGroup.controls['updateName'].value;
     if (this.selectedId == undefined){
       this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
@@ -336,17 +335,19 @@ export class MapComponent implements OnInit {
         x: goal?.x ?? strategy?.x,
         y: goal?.y ?? strategy?.y,
       }
-      if (goal != undefined && strategy == undefined) {
-        this.endpointService.updateGoal(goal.id, data).subscribe((_) => {
+      if (!this.selectedIsStrategy() && goal != undefined && strategy == undefined) {
+        this.endpointService.updateGoal(goal.id, data).subscribe((res) => {
+          console.log("Update selected element", this.selectedId, this.currentMap, this);
           this.currentMap!.goals = this.currentMap!.goals.filter(g => g.id != this.selectedId);
-          this.currentMap!.goals.push(Goal.fromJson(_));
+          this.currentMap!.goals.push(Goal.fromJson(res));
           this.buildNetworkGraph(this.currentMap);
           this._snackBar.open("Goal updated", 'X', { duration: 3000, panelClass: ['blue-snackbar'] });
         });
       } else if (goal == undefined && strategy != undefined) {
-        this.endpointService.updateStrategy(strategy.id, data).subscribe((_) => {
-          this.currentMap!.strategies = this.currentMap!.strategies.filter(s => s.id != this.selectedId);
-          this.currentMap!.strategies.push(Strategy.fromJson(_));
+        this.endpointService.updateStrategy(strategy.id, data).subscribe((res) => {
+          console.log("Update selected element", this.selectedId, this.currentMap, res);
+          this.currentMap!.strategies = this.currentMap!.strategies.filter(s => !Strategy.findByIdType(s, this.selectedId));
+          this.currentMap!.strategies.push(Strategy.fromJson(res));
           this.buildNetworkGraph(this.currentMap);
           this._snackBar.open("Strategy updated", 'X', { duration: 3000, panelClass: ['blue-snackbar'] });
         });
@@ -355,6 +356,7 @@ export class MapComponent implements OnInit {
       }
     }
   }
+
 //#endregion
 
 //#region Delete Element
@@ -363,7 +365,7 @@ export class MapComponent implements OnInit {
     const strategy = this.currentMap!.strategies.find(s => Strategy.findByIdType(s, this.selectedId));
     if (goal != undefined && strategy == undefined) {
       this.deleteGoal(goal, this.currentMap!.strategies.filter(s => s.goal_src == goal!.id || s.goal_tgt == goal!.id));
-    } else if (goal == undefined && strategy != undefined) {
+    } else if (goal == undefined && strategy != undefined){
       this.deleteStartegy(strategy);
     } else {
       this._snackBar.open("Error! No element selected", 'X', {duration: 3000, panelClass: ['blue-snackbar']});
