@@ -13,12 +13,13 @@ export class Map {
     ) { }
 
     public static fromJson(data: any): Map {
+        console.log("Map.fromJson", data);
         return new Map(
             data.id, 
             data.name,
             data.repository,
-            JSON.parse(data.strategies).map(Strategy.fromJson),
-            JSON.parse(data.goals).map(Goal.fromJson), 
+            JSON.parse(data?.strategies ?? "[]").map(Strategy.fromJson),
+            JSON.parse(data?.goals ?? "[]").map(Goal.fromJson), 
             Goal.fromJson(JSON.parse(data.start)),
             Goal.fromJson(JSON.parse(data.stop))
         );

@@ -134,11 +134,11 @@ export class MapComponent implements OnInit {
         repository: this.endpointService.selectedRepository.value!.id
       };
 
-      this.endpointService.addMap(body).subscribe((_) => {
+      this.endpointService.addMap(body).subscribe((map) => {
         this._snackBar.open("Map added!", 'X', {duration: 3000, panelClass: ['green-snackbar']});
         this.navigatorService.refreshMapList();
-        this.currentMap = Map.fromJson(body);
-        console.log("create", this.currentMap);
+        this.currentMap = Map.fromJson(map);
+        this.buildNetworkGraph(this.currentMap);
       });
     }
   }
