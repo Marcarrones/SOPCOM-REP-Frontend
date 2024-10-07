@@ -106,10 +106,16 @@ export class RepositoryModalComponent implements OnInit {
 
   public onSubmit() {
     if (this.selectedTabIndex == 1) {
-      this.endpointService.updateRepository(this.selectedRepository?.id, this.serializeRepositoryForm(this.updateRepositoryForm, this.selectedRepository)).subscribe(data => {
-        this.updateRepositoryList();
-        this.endpointService.selectedRepository.next(Repository.fromJson(data)); // selectedRepository is set through subscription in ngOnInit
-      });
+      if (!this.selectedRepository?.inUse) {
+        this.endpointService.updateRepository(this.selectedRepository?.id, this.serializeRepositoryForm(this.updateRepositoryForm, this.selectedRepository)).subscribe(data => {
+          this.updateRepositoryList();
+          var repository = Repository.fromJson(data);
+          this.endpointService.selectedRepository.next(repository); // selectedRepository is set through subscription in ngOnInit
+          this._snackBar.open("Repository " + (repository?.name ?? "X") + " updated", "Close", {duration: 5000});
+        });
+      } else {
+        this._snackBar.open("Repository is in use and cannot be updated", "Close", {duration: 2000});
+      }
     } else {
       this.endpointService.addRepository(this.serializeRepositoryForm(this.createRepositoryForm)).subscribe(data => {
         this.updateRepositoryList();
