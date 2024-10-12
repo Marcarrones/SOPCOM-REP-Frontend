@@ -58,21 +58,21 @@ export class ConfirmDeactivateGuardM implements CanDeactivate<MapComponent> {
 
 
 const routes: Routes = [
-  {path: 'method-chunk/:id', component: MethodChunkComponent, canDeactivate:[ConfirmDeactivateGuardMC]},
-  {path: 'method-chunk', component: MethodChunkComponent, canDeactivate:[ConfirmDeactivateGuardMC]},
-  {path: 'tool/:id', component: MethodElementDetailComponent, data: {type: 1, typeStr: "tool"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'tool', component: MethodElementDetailComponent, data: {type: 1, typeStr: "tool"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'artefact/:id', component: MethodElementDetailComponent, data: {type: 2, typeStr: "artefact"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'artefact', component: MethodElementDetailComponent, data: {type: 2, typeStr: "artefact"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'activity/:id', component: MethodElementDetailComponent, data: {type: 3, typeStr: "activity"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'activity', component: MethodElementDetailComponent, data: {type: 3, typeStr: "activity"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'role/:id', component: MethodElementDetailComponent, data: {type: 4, typeStr: "role"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'role', component: MethodElementDetailComponent, data: {type: 4, typeStr: "role"}, canDeactivate:[ConfirmDeactivateGuardME]},
-  {path: 'criterion/:id', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
-  {path: 'criterion', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
-  {path: 'map/:id', component: MapComponent},
-  {path: 'map', component: MapComponent},
-  {path: '**', redirectTo: 'method-chunk', pathMatch: 'full'},  
+  { path: 'method-chunk/:id', component: MethodChunkComponent, canDeactivate:[ConfirmDeactivateGuardMC]},
+  { path: 'method-chunk', component: MethodChunkComponent, canDeactivate:[ConfirmDeactivateGuardMC]},
+  { path: 'tool/:id', component: MethodElementDetailComponent, data: {type: 1, typeStr: "tool"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'tool', component: MethodElementDetailComponent, data: {type: 1, typeStr: "tool"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'artefact/:id', component: MethodElementDetailComponent, data: {type: 2, typeStr: "artefact"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'artefact', component: MethodElementDetailComponent, data: {type: 2, typeStr: "artefact"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'activity/:id', component: MethodElementDetailComponent, data: {type: 3, typeStr: "activity"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'activity', component: MethodElementDetailComponent, data: {type: 3, typeStr: "activity"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'role/:id', component: MethodElementDetailComponent, data: {type: 4, typeStr: "role"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'role', component: MethodElementDetailComponent, data: {type: 4, typeStr: "role"}, canDeactivate:[ConfirmDeactivateGuardME]},
+  { path: 'criterion/:id', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
+  { path: 'criterion', component: CriterionDetailComponent, canDeactivate:[ConfirmDeactivateGuardC]},
+  { path: 'map/:id', component: MapComponent},
+  { path: 'map', component: MapComponent},
+  { path: '**', redirectTo: 'method-chunk', pathMatch: 'full'},  
 ];
 
 @NgModule({
