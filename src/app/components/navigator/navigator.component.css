@@ -1,29 +1,29 @@
-:host /deep/ .mat-tab-group {
+:host ::ng-deep .mat-tab-group {
   flex-direction: row;
 }
-:host /deep/ .mat-tab-header {
+:host ::ng-deep .mat-tab-header {
   border-bottom: none;
 }
-:host /deep/ .mat-tab-header-pagination {
+:host ::ng-deep .mat-tab-header-pagination {
   display: none !important;
 }
-:host /deep/ .mat-tab-labels {
+:host ::ng-deep .mat-tab-labels {
   min-width: 100px;
   flex-direction: column;
 }
-:host /deep/ .mat-ink-bar {
+:host ::ng-deep .mat-ink-bar {
   display: none;
 }
-:host /deep/ .mat-tab-body-wrapper {
+:host ::ng-deep .mat-tab-body-wrapper {
   flex: 1 1 auto;
   margin-left: 10px;
 }
 
-:host /deep/ .mat-tab-label {
+:host ::ng-deep .mat-tab-label {
   font-size: 15px;
 }
 
-:host /deep/ .mat-tab-label.mat-tab-label-active {
+:host ::ng-deep .mat-tab-label.mat-tab-label-active {
   background-color: #ffe066;
   color: black;
   border-right: 2px solid #ffcc00;

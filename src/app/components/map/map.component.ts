@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, Inject} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataSet } from "vis-data/peer/esm/vis-data";
-import { Network, Node, Edge, Data, IdType } from "vis-network/peer/esm/vis-network";
+import { DataSet } from "vis-data";
+import { Network, Node, Edge, Data, IdType } from "vis-network";
 import { Map } from 'src/app/models/map';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Goal } from 'src/app/models/goal';
