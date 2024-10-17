@@ -8,11 +8,12 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 # install package.json (o sea las dependencies)
 RUN npm install -g @angular/cli@13.0
-COPY package.json /usr/src/app/
+COPY package*.json ./
 RUN npm install
+RUN npm install @egjs/hammerjs component-emitter keycharm vis-data vis-util ajv --save
 
 # add app
-COPY . /usr/src/app
+COPY . .
 
 # build app
 RUN npx ng build
