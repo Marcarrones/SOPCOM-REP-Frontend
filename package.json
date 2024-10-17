@@ -20,11 +20,11 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
-    "@ng-select/ng-select": "^2.16.0",
+    "@ng-select/ng-select": "^8.1.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
     "rxjs": "~7.5.0",
-    "uuid": "^7.0.0",
+    "uuid": "^10.0.0",
     "vis-network": "^9.1.6",
     "zone.js": "~0.11.4"
   },
