@@ -1,12 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { EndpointService } from 'src/app/services/endpoint.service';
 import { MethodElement } from 'src/app/models/method-element';
 import { MethodChunk } from 'src/app/models/method-chunk';
 import { Goal } from 'src/app/models/goal';
-import { Criterion } from 'src/app/models/criterion';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { FormControl, FormGroup, Validators, FormsModule } from '@angular/forms';
-import { MatDialog, MatDialogClose } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MethodElementDialogComponent } from '../method-element/method-element-dialog/method-element-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigatorService } from 'src/app/services/navigator.service';
@@ -17,7 +16,6 @@ import {map, startWith} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { CriterionComponent } from '../criterion/criterion.component';
 import { CriterionDialogComponent } from '../criterion/criterion-dialog/criterion-dialog.component';
 
 

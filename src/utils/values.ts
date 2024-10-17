@@ -3,8 +3,8 @@ import { environment } from "src/environments/environment.prod";
 export class Values {
     // TODO: make env values run params
     
-    //static SERVER_URL = "http://gessi3.essi.upc.edu"; //Crides SOPCO fan servir aquests
-    static SERVER_URL = "http://localhost";
+    static SERVER_URL = "http://gessi3.essi.upc.edu";
+    //static SERVER_URL = "http://localhost";
     
     //CRIDES SOPCOM_V3 fa servir aquesta variable
     static SERVER_PORT_V3 = ":1036";

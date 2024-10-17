@@ -31,24 +31,24 @@ export class RepositoryModalComponent implements OnInit {
     public endpointService : EndpointService,
     public _snackBar: MatSnackBar
   ) {  
+    // SELECT REPOSITORY FORM
     this.selectRepositoryForm = new FormGroup({
       selectedRepositoryControl: new FormControl()
     });
-
+    // UPDATE REPOSITORY FORM
     this.updateRepositoryForm = new FormGroup({
       repositoryIdControl: new FormControl({value: '', disabled: true}),
       repositoryNameControl: new FormControl(''),
       repositoryDescriptionControl: new FormControl(),
       repositoryStatusSelectControl: new FormControl(),
     });
-
+    // CREATE REPOSITORY FORM
     this.createRepositoryForm = new FormGroup({
       repositoryIdControl: new FormControl(''),
       repositoryNameControl: new FormControl(''),
       repositoryDescriptionControl: new FormControl(''),
       repositoryStatusSelectControl: new FormControl(navigatorService.repositoryStatusList.find(s => s.name === 'Draft')?.id ?? 1),
     });
-
   }
   
   ngOnInit(): void {

@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { Criterion } from 'src/app/models/criterion';
 import { NavigatorService } from 'src/app/services/navigator.service';
 
 @Component({
